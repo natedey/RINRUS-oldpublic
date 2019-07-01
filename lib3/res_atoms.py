@@ -1,3 +1,8 @@
+"""
+This is a program written by Qianyi Cheng in DeYonker Research Group
+at University of Memphis.
+"""
+
 #res_atoms_all = {
 #'ALA': ['N', 'CA', 'C', 'O', 'CB', 'H', 'HA', '1HB', '2HB', '3HB'],
 #'ARG': ['N', 'CA', 'C', 'O', 'CB', 'CG', 'CD', 'NE', 'CZ', 'NH1', 'NH2', 'H', 'HA', '2HB', '3HB', '2HG', '3HG', '2HD', '3HD', 'HE', '1HH1', '2HH1', '1HH2', '2HH2'],
