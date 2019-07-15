@@ -1,4 +1,4 @@
-# The python3 library is lib3
+# The python3 library is lib3, add path by adding "export PYTHONPATH=$PATHONPATH:$HOME/git/RINRUS/lib3"
 # Most of the scripts are in bin
 
 # After get a raw pdb file (raw.pdb), check ambiguous atoms, clean up
