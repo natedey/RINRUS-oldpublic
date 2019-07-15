@@ -69,7 +69,7 @@ def pdb_replace(tmppdb,newpdb,parts):
 
     return tmp_pdb, tot_charge_t #, xyz, atom, hold
 
-def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge):
+def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_count):
     ### inp_name default can be 1.inp, but first is name.input such as 9.input
     ### inp_type list which includes [small/large, level_theory, basis, opt, freq,  
     ### input_template line0: size
@@ -82,7 +82,7 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge):
     ### input_template line7: scf_info
     ### input_template line8: scrf_info
 
-    print("charge= %d, tot_charge= %d"%(charge,tot_charge))
+    print("charge= %d, tot_charge_without'-c'= %d"%(charge,tot_charge))
     with open(inp_temp) as f:
         lines = f.readlines()
 
@@ -121,7 +121,8 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge):
             inp.write("%s "%lines[l].strip())
 
     inp.write("\n\n")
-    inp.write("info_line\n")
+#    inp.write("info_line\n")
+    inp.write("%s\n"%res_count)
     inp.write("\n")
     inp.write("%d %d\n"%(charge+tot_charge,multiplicity))
 
@@ -167,7 +168,7 @@ def gen_pdbfiles(wdir,step,tmppdb):
         system_run('mkdir %s'%new_dir)
     os.chdir(new_dir)
 #    system_run('gopt_to_pdb.py %s %s/step-%s-out 0'%(tmppdb,wdir,step))
-    system_run('gopt_to_pdb.py -p %s -o %s/step-%s-out -f -1'%(tmppdb,wdir,step))
+    system_run('python3 $HOME/git/RINRUS/bin/gopt_to_pdb.py -p %s -o %s/step-%s-out -f -1'%(tmppdb,wdir,step))
     os.chdir('%s'%wdir)
     pdb_name = []
     for pdbf in glob('%s/*.pdb'%new_dir):
@@ -225,7 +226,8 @@ if __name__ == '__main__':
 
     if step == 0:
         pic_atom, tot_charge = pdb_after_addh(nohpdb,adhpdb)
-        write_pdb('%s'%tmp_pdb,pic_atom)
+        res_count = adhpdb.split('_')[1]
+        write_pdb('%s'%tmp_pdb,pic_atom,res_count)
     elif step == 1:
         i_name = []
         for gau_input in glob('%s/*inp'%wdir):
@@ -252,12 +254,15 @@ if __name__ == '__main__':
             else:
                 print("check if the files are propagated correctly!")
                 sys.exit()
+        res_count = 'step-%s'%i_step
         if step == 1:
             pdb_file, new_dir = gen_pdbfiles(wdir,i_step,tmp_pdb)
             pic_atom, res_info, tot_charge = read_pdb('%s/%s.pdb'%(new_dir,pdb_file))
     elif step == 2:
         newpdb = args.new_pdb
         pic_atom, res_info, tot_charge = read_pdb(newpdb)
+        print('What to put on info_line')
+        res_count = input()
     elif step == 3:
         pdb1 = args.pdb1
         pdb2 = args.pdb2
@@ -269,5 +274,7 @@ if __name__ == '__main__':
            for line in plines:
                parts.append(line.split())
         pic_atom, tot_charge = pdb_replace(pdb1,pdb2,parts)    
-    write_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge)
+        print('What to put on info_line')
+        res_count = input()
+    write_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
         
