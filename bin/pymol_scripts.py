@@ -3,6 +3,7 @@ This is a program written by qianyi cheng in deyonker research group
 at university of memphis.
 """
 import os, sys
+import subprocess
 
 def system_run(cmd):
     print(cmd)
@@ -22,4 +23,7 @@ elif len(sys.argv) == 2:
     logf.write('load %s\ncmd.h_add("%s")\ncmd.save("./%s")'%(input,name,ouput))
 else:
     print("Something is wrong!")
-print("Please run 'pymol -qc log.pml'")
+logf.close()
+#print("Please run 'pymol -qc log.pml'")
+cmd = '/home/qcheng1/bin/pymol -qc log.pml'
+system_run(cmd)
