@@ -61,14 +61,17 @@ j = len(sel_key)
 for i in range(sm):
     print(lines[i].split())
     c = lines[i].split()
-    if c[0] in ['A','B','C','D','E','F','G','H','I','J','K']:
+    if c[0] in ['A','B','C','D','E','F','G','H','I','J','K','S']:
         cha = c[0]
         res = int(c[1])
         freq = int(c[2])
         if (cha,res) in sel_key: continue
         j += 1
         qf[j] = deepcopy(qf[j-1])
-        qf[j][cha].append(res)
+        try:
+            qf[j][cha].append(res)
+        except:
+            qf[j][cha] = [res]
     else:
         cha = ' '
         res = int(c[0])
@@ -76,7 +79,10 @@ for i in range(sm):
         if res in sel_key: continue
         j += 1
         qf[j] = deepcopy(qf[j-1])
-        qf[j][cha].append(res)
+        try:
+            qf[j][cha].append(res)
+        except:
+            qf[j][cha] = [res]
 
 ### read in probe file ###
 res_atom, res_name, res_cout = get_probe_atoms(probe,res_name,res_atom,res_cout)
