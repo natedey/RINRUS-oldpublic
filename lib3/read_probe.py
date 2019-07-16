@@ -8,12 +8,19 @@ import sys, os
 from numpy import *
 from res_atoms import *
 
-def get_sel_atoms(pdb,res_list,res_atom,res_name,res_info,pdb_res_name):   # res_list in format ('A',400,'A',62)
+def get_sel_atoms(pdb,res_list,res_atom,res_name,res_info,pdb_res_name):   # res_list in format ('A':400,'A':62)
     #pdb [ record, serial, atomname, altloc, resname, chain, resnum, achar, x, y, z, occ, tfactor, segid, elsymbol, charge.strip(), fix ] 
     # 1      0       1       2       3       4           5   6       7      8  9  10 11   12         13      14      15              16
-    for i in range(0,len(res_list),2):
-        chain = res_list[i]
-        resnum = res_list[i+1]
+#    for i in range(0,len(res_list),2):
+#        chain = res_list[i]
+#        resnum = res_list[i+1]
+    for i in res_list.split(','):
+        v = i.split(':')
+        if v[0] == '':
+            chain = ' '
+        else:
+            chain = v[0]
+        resnum = int(v[1])
         key = (chain,resnum)
         res_atom[key] = []
         for j in pdb:
