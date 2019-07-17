@@ -110,7 +110,7 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_co
             lmod = []
             for pair in pairs:
                 ar = pair.split(',')
-                lmod.append(len(ar)/2)
+                lmod.append(int(len(ar)/2))
                 for i in range(0,len(ar),2):
                     for atom in pic_atom:
                         if ar[i] in atom[2] and ar[i+1] in atom[4]:

@@ -61,7 +61,8 @@ j = len(sel_key)
 for i in range(sm):
     print(lines[i].split())
     c = lines[i].split()
-    if c[0] in ['A','B','C','D','E','F','G','H','I','J','K','S']:
+    Alist = [chr(i) for i in range(ord('A'),ord('Z')+1)]
+    if c[0] in Alist:
         cha = c[0]
         res = int(c[1])
         freq = int(c[2])
