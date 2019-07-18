@@ -128,7 +128,8 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_co
 
     if lines[5][0] == '#':
         ### pm7 with opt only will be relax h step/ pm7 with opt(modred) otherwise
-        if lines[1][0] != '#' and 'pm' in lines[1] and lines[2].strip() == 'opt':
+#        if lines[1][0] != '#' and 'pm' in lines[1] and lines[2].strip() == 'opt':
+        if lines[1][0] != '#' and 'sto-3g' in lines[1] and lines[2].strip() == 'opt':
             for atom in pic_atom:
                 if atom[14].strip() == 'H':
                     inp.write("%4s %6s         %8.3f %8.3f %8.3f\n"%(atom[14].strip(),'0',atom[8],atom[9],atom[10])) 

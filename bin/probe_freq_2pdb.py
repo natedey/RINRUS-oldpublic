@@ -99,7 +99,7 @@ for nm_res in sorted(qf.keys()):
 #        print("Chain %s:"%key_sub, sorted(qf[nm_res][key_sub]))
         res_detailf.write("Chain %s"%key_sub)
         for res_ids in sorted(qf[nm_res][key_sub]):
-            res_detailf.write("%6d"%res_ids)
+            res_detailf.write(" %d"%res_ids)
         res_detailf.write('\n')    
     for key in res_list.keys():
         for res in sorted(res_list[key]):
