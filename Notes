@@ -19,6 +19,7 @@
 
 # Run freq_per_res.dat file for trim residues
 # Example: python3 $HOME/git/RINRUS/bin/probe_freq_2pdb.py 3bwm_h_mg.ent 3bwm_h.probe freq_per_res.dat A:300,A:301,A:302
+# Now it will also print out a "model_detail.dat" file, tells which residues in various size model
 
 # Use raw_h.pdb, freq_per_res.dat, and other needed files run probe_freq_2pdb.py
 # Run pymol_scripts.py to add H to the trimmed pdb files for differnt size model
