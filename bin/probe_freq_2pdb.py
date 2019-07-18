@@ -90,11 +90,17 @@ res_atom, res_name, res_cout = get_probe_atoms(probe,res_name,res_atom,res_cout)
 
 #res_list = get_res_list(res_atom)
 #nres_list = get_res_list(res_atom)
+res_detailf = open('model_detail.dat', 'w')
 for nm_res in sorted(qf.keys()):
+    res_detailf.write("%s residue model\n"%nm_res)
     res_list = qf[nm_res]
     print(nm_res, qf[nm_res])
     for key_sub in sorted(qf[nm_res].keys()):
-        print("Chain %s:"%key_sub, sorted(qf[nm_res][key_sub]))
+#        print("Chain %s:"%key_sub, sorted(qf[nm_res][key_sub]))
+        res_detailf.write("Chain %s"%key_sub)
+        for res_ids in sorted(qf[nm_res][key_sub]):
+            res_detailf.write("%6d"%res_ids)
+        res_detailf.write('\n')    
     for key in res_list.keys():
         for res in sorted(res_list[key]):
             if (key,res) in sel_key or res_name[(key,res)] in ['HOH','WAT'] or res_name[(key,res)][:2] == 'WT':
@@ -123,3 +129,4 @@ for nm_res in sorted(qf.keys()):
     res_pick = final_pick(pdb,nres_atom,res_info)
     outf = 'res_%s.pdb'%str(nm_res)
     write_pdb(outf,res_pick)
+res_detailf.close()    
