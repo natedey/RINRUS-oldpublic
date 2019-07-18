@@ -59,7 +59,7 @@ with open(freqf) as f:
 sm = len(lines)
 j = len(sel_key)
 for i in range(sm):
-    print(lines[i].split())
+#    print(lines[i].split())
     c = lines[i].split()
     Alist = [chr(i) for i in range(ord('A'),ord('Z')+1)]
     if c[0] in Alist:
@@ -93,6 +93,8 @@ res_atom, res_name, res_cout = get_probe_atoms(probe,res_name,res_atom,res_cout)
 for nm_res in sorted(qf.keys()):
     res_list = qf[nm_res]
     print(nm_res, qf[nm_res])
+    for key_sub in sorted(qf[nm_res].keys()):
+        print("Chain %s:"%key_sub, sorted(qf[nm_res][key_sub]))
     for key in res_list.keys():
         for res in sorted(res_list[key]):
             if (key,res) in sel_key or res_name[(key,res)] in ['HOH','WAT'] or res_name[(key,res)][:2] == 'WT':
@@ -105,6 +107,7 @@ for nm_res in sorted(qf.keys()):
     for key in res_list.keys():
         for res in sorted(res_list[key]):
             key1 = (key,res)
+#            print(key1)
             if res_name[key1] == 'HOH': 
                 res_info[key1] = []
                 nres_atom[key1] = cres_atom[key1]
