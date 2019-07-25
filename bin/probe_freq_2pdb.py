@@ -77,7 +77,7 @@ for i in range(sm):
         cha = ' '
         res = int(c[0])
         freq = int(c[1])
-        if res in sel_key: continue
+        if (cha,res) in sel_key: continue
         j += 1
         qf[j] = deepcopy(qf[j-1])
         try:
@@ -96,11 +96,10 @@ for nm_res in sorted(qf.keys()):
     res_list = qf[nm_res]
     print(nm_res, qf[nm_res])
     for key_sub in sorted(qf[nm_res].keys()):
-#        print("Chain %s:"%key_sub, sorted(qf[nm_res][key_sub]))
-        res_detailf.write("Chain %s"%key_sub)
+        res_detailf.write("Chain %s, "%key_sub)
         for res_ids in sorted(qf[nm_res][key_sub]):
             res_detailf.write(" %d"%res_ids)
-        res_detailf.write('\n')    
+    res_detailf.write('\n')    
     for key in res_list.keys():
         for res in sorted(res_list[key]):
             if (key,res) in sel_key or res_name[(key,res)] in ['HOH','WAT'] or res_name[(key,res)][:2] == 'WT':
