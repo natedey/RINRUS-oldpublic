@@ -1,6 +1,6 @@
 small
 b3lyp/genecp
-opt(ts,noeigen,modred) SD,SAM,CE,SAM;CE,SAM,O2,DNC F 
+opt(ts,noeigen,modred) SD,301,CE,301;CE,301,O2,302 F 
 #freq
 #guess=read
 #geom=(checkpoint,step=10)
