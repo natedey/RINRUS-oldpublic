@@ -50,15 +50,15 @@ def pdb_replace(tmppdb,newpdb,parts):
     tmp_xyz = []
     new_xyz = []
     for i in tmp_pdb:
-        tmp_xyz.append([i[4].strip(),i[2].strip()])
+        tmp_xyz.append([i[6].strip(),i[2].strip()])
     new_pdb, binfo, tot_charge = read_pdb(newpdb)     #can be just xyz files from cerius or pymol
     for i in new_pdb:
-        new_xyz.append([i[4].strip(),i[2].strip()])
+        new_xyz.append([i[6].strip(),i[2].strip()])
     print(new_xyz[0])
 
     if parts == None:   #newpdb has the entire thing to replace the tmppdb
         for line in new_pdb:
-            resatom = [line[4].strip(),line[2].strip()]
+            resatom = [line[6].strip(),line[2].strip()]
             idx = tmp_xyz.index(resatom)
             tmp_pdb[idx] = line
     else:
