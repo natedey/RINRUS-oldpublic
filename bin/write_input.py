@@ -63,8 +63,8 @@ def pdb_replace(tmppdb,newpdb,parts):
             tmp_pdb[idx] = line
     else:
         for i in range(len(parts)):
-            idx1 = new_xyz.index([parts[i][0],parts[i][1]])
-            idx2 = tmp_xyz.index([parts[i][0],parts[i][1]])
+            idx1 = new_xyz.index([int(parts[i][0]),parts[i][1]])
+            idx2 = tmp_xyz.index([int(parts[i][0]),parts[i][1]])
             tmp_pdb[idx2] = new_pdb[idx1]
 
     return tmp_pdb, tot_charge_t #, xyz, atom, hold
