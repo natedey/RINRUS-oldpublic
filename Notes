@@ -6,7 +6,7 @@
 # Run reduce, generate a new H added pdb file (raw_h.pdb) 
 # Example: $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.ent
 
-# Check the new pdb file, if there is metal, replace with an atom with same coordination (such as replace Mg with O)
+# Check the new pdb file, if there is metal, replace with an atom with same coordination (such as replace Mg with O, and save as a new pdb file)
 # Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain condition)
 # If there is atom "CA" or "CB" in ligands, replace with "CA'" and "CB'"
 # After previous 3 check stpes, save the file to a new file (raw_h_modify.pdb)
