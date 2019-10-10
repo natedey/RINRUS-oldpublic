@@ -18,7 +18,7 @@ name  = input.split('.')[0]
 ouput = name+'_h.pdb'
 logf = open('log.pml','w')
 if len(sys.argv) == 3:
-    logf.write('load %s\ncmd.select("sel","%s and not resi %s")\ncmd.h_add("sel")\ncmd.save("./%s")'%(input,name,sys.argv[2],ouput))
+    logf.write('load %s\ncmd.select("sel","%s and not resi %s and not name NH1 and not name NH2")\ncmd.h_add("sel")\ncmd.save("./%s")'%(input,name,sys.argv[2],ouput))
 elif len(sys.argv) == 2:
     logf.write('load %s\ncmd.h_add("%s")\ncmd.save("./%s")'%(input,name,ouput))
 else:
