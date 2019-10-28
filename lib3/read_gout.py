@@ -137,6 +137,8 @@ def gaussian_atom_names(lines,natoms):
     atom_name = []
     for i in range(len(lines)):
         if "Redundant internal coordinates found in file." in lines[i]:
+            if "Recover coordinates from OT file" in lines[i+1]:
+                i += 1
             for idx in range(i+1,i+1+natoms):
                 if ',' in lines[idx]:
                     atom_name.append(lines[idx][:-1].split(','))
