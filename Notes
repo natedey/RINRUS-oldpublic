@@ -31,3 +31,12 @@
 
 # Run write_input.py to generate template file and input file
 # Example: python3 bin/write_input.py -noh res_*.pdb -adh res_*_h.pdb -intmp input_templat
+
+
+### Distance based rules ###
+#   Run "python3 ~/git/RINRUS/bin/pdb_2dist_freq.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -cut 5"
+#   this will generate a file named "dist_per_res-5.00.dat"
+#   Then Run "python3 ~/git/RINRUS/bin/pdb_dist_2pdb.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -cut 5"
+#   This will generate a set of trimmed pdb files such as "dres_3.pdb, dres_4.pdb..."
+#   Then run "python3 ~/git/RINRUS/bin/pymol_scripts.py dres_3.pdb dres_3_h.pdb"
+#   This will generate the H added pdb files.
