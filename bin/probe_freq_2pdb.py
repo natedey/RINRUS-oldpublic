@@ -16,7 +16,7 @@ from copy import *
 ###################################################################
 
 
-pdb, res_info, tot_charge = read_pdb(sys.argv[1])
+pdb, tres_info, ttot_charge = read_pdb(sys.argv[1])
 probe = sys.argv[2]
 freqf = sys.argv[3]
 list4 = sys.argv[4]
