@@ -113,9 +113,14 @@ for nm_res in sorted(qf.keys()):
         for res in sorted(res_list[key]):
             key1 = (key,res)
 #            print(key1)
-            if res_name[key1] == 'HOH': 
+#            if res_name[key1] == 'HOH': 
+#                res_info[key1] = []
+#                nres_atom[key1] = cres_atom[key1]
+            if res_name[key1] in ['HOH','WAT','WT1']: 
                 res_info[key1] = []
                 nres_atom[key1] = cres_atom[key1]
+                for iatom in ['O','H', 'H1', 'H2']:
+                    nres_atom[key1].append(iatom)
             else:
                 nres_atom, res_info, res_name = check_b(key,res,cres_atom[key1],res_info,nres_atom,res_name,pdb_res_name)
                 nres_atom, res_info = check_s(key,res,cres_atom[key1],res_info,nres_atom)
