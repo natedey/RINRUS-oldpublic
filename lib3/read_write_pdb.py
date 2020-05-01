@@ -130,3 +130,17 @@ def get_ca(pdb):
             xyz_i.append(pdb[i][8:11])
     return map, array(xyz_i)
 
+def get_coord(pdb):
+    coord = []
+    for p in pdb:
+        coord.append((p[8],p[9],p[10]))
+    return coord
+
+def get_frozen(pdb):
+    map_i = []
+    xyz_i = []
+    for i in range(len(pdb)):
+        if pdb[i][-1] == '-1':
+            map_i.append(i)
+            xyz_i.append(pdb[i])
+    return map_i, xyz_i
