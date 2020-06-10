@@ -23,6 +23,7 @@ def main():
     if args.frozen_only:
         map1,pdb1 = get_frozen(pdb1)
         map2,pdb2 = get_frozen(pdb2)
+#        print(map2)
         if map1 != map2:
             print("The frozen atoms do not match between pdb1 and pdb2!")
 #        else:
@@ -31,6 +32,7 @@ def main():
 
     c1 = get_coord(pdb1)
     c2 = get_coord(pdb2)
+#    print(c2)
 
     rmsd = rms.rmsd(c1,c2)[0]
     print(rmsd)
