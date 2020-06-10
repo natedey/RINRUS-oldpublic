@@ -23,6 +23,10 @@ def check_mc(res,value):
     case2 = ['C','O']
     case3 = ['N','CA','C','O','H','HA','HA2','HA3']
     case4 = ['CA','HA','HA2','HA3']
+    ### if res name is PRO, then include entire residue ###
+    if res == 'PRO':
+        value = res_atoms_all[res]
+
     if bool(set(value)&set(case1)) and 'C' not in value and 'O' not in value:
         for i in ['N','CA','H','HA','HA2','HA3']:
             if i not in value:
@@ -44,16 +48,26 @@ def check_mc(res,value):
             value.append(i)
     return value
 
-def check_sc(res,value):
-    if bool(set(value)&set(res_atoms_sc[res])):
-        for i in res_atoms_sc[res]:
-            if i not in value:
-                value.append(i)
+def check_sc(res,value,cres_atoms_sc):
+    if res in res_atoms_sc.keys():
+        if bool(set(value)&set(res_atoms_sc[res])):
+            for i in res_atoms_sc[res]:
+                if i not in value:
+                    value.append(i)
+    elif res in cres_atoms_sc.keys():
+        if bool(set(value)&set(cres_atoms_sc[res])):
+            for i in cres_atoms_sc[res]:
+                if i not in value:
+                    value.append(i)
+    else:   
+        print("This residue is either canonical or nocanonical, please check!")
     return value
 
 def final_check_mc(chain,id,res_atom):
-    case1 = ['N','H']
-    case2 = ['C','O']
+    case1 = ['N','H','HA','HA2','HA3']
+    case2 = ['C','O','HA','HA2','HA3']
+    case3 = ['CA','C','O','H','HA','HA2','HA3']
+    
     if (chain,id-1) in res_atom.keys():
         if 'CA' in res_atom[(chain,id)] and 'C' in res_atom[(chain,id-1)]:
             for i in case1:
@@ -64,28 +78,15 @@ def final_check_mc(chain,id,res_atom):
             for i in case2:
                 if i not in res_atom[(chain,id)]:
                     res_atom[(chain,id)].append(i)
+    if 'CA' in res_atom[(chain,id)] and not bool(set(res_atom[(chain,id)])&set(['N','C','O','CB'])):
+        if 'CA' in res_atom[(chain,id+1)]:
+            for i in case3:
+                if i not in res_atom[(chain,id)]:
+                    res_atom[(chain,id)].append(i)
+            for i in case1:
+                if i not in res_atom[(chain,id+1)]:
+                    res_atom[(chain,id+1)].append(i)
     return res_atom
-
-#def get_res_parts(res,value):   # res is res_name[key], value is res_atom[key] check mainchain sidechain
-#    case1 = ['N','H']
-#    case2 = ['C','O']
-#    case3 = ['N','CA','C','O','H','HA','HA2','HA3']
-#
-#    #if res in ['PRO','GLY']:
-#    #    print res
-#    #    atoms = res_atoms_all[res]
-#    if res == 'PRO':
-#        atoms = res_atoms_all[res]
-#    else:
-#        if bool(set(value)&set(case3)) and bool(set(value)&set(res_atoms_sc[res])):
-#            atoms = res_atoms_all[res]
-#        elif bool(set(value)&set(case3)) and not bool(set(value)&set(res_atoms_sc[res])):
-#            atoms = check_mc(res,value)
-#        elif not bool(set(value)&set(case3)) and bool(set(value)&set(res_atoms_sc[res])):
-#            atoms = check_sc(res,value)
-#        else:
-#            print("Something is wrong!")
-#    return atoms
 
 ### check self ###
 def check_s(chain,id,atom,res_info,res_atom):
@@ -117,8 +118,10 @@ def check_a(chain,id,atom,res_info,res_atom):
         if (chain,id+1) not in res_atom.keys(): 
             res_atom[(chain,id+1)] = ['N','CA']
         else:
-            res_atom[(chain,id+1)].append('N')
-            res_atom[(chain,id+1)].append('CA')
+            if 'N' not in res_atom[(chain,id+1)]:
+                res_atom[(chain,id+1)].append('N')
+            if 'CA' not in res_atom[(chain,id+1)]:
+                res_atom[(chain,id+1)].append('CA')
         if (chain,id+1) not in res_info.keys():
             res_info[(chain,id+1)] = ['CA']
         else:
@@ -132,9 +135,12 @@ def check_b(chain,id,atom,res_info,res_atom):
         if (chain,id-1) not in res_atom.keys():
             res_atom[(chain,id-1)] = ['CA','C','O']
         else:
-            res_atom[(chain,id-1)].append('CA')
-            res_atom[(chain,id-1)].append('C')
-            res_atom[(chain,id-1)].append('O')
+            if 'CA' not in res_atom[(chain,id-1)]:
+                res_atom[(chain,id-1)].append('CA')
+            if 'C' not in res_atom[(chain,id-1)]:
+                res_atom[(chain,id-1)].append('C')
+            if 'O' not in res_atom[(chain,id-1)]:
+                res_atom[(chain,id-1)].append('O')
         if (chain,id-1) not in res_info.keys():
             res_info[(chain,id-1)] = ['CA']
         else:
@@ -146,11 +152,15 @@ def check_b(chain,id,atom,res_info,res_atom):
 def check_bb(chain,id,res_atom):
     if 'CA' in res_atom[(chain,id)]:
         if (chain,id-1) in res_atom.keys() and 'CA' in res_atom[(chain,id-1)]:
-            res_atom[(chain,id)].append('N') 
-            res_atom[(chain,id)].append('H') 
+            if 'N' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('N') 
+            if 'H' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('H') 
         if (chain,id+1) in res_atom.keys() and 'CA' in res_atom[(chain,id+1)]:
-            res_atom[(chain,id)].append('C')
-            res_atom[(chain,id)].append('O')
+            if 'C' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('C')
+            if 'O' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('O')
     return res_atom
 
 def final_pick(pdb,nres_atom,nres_info,sel_key):
@@ -169,4 +179,22 @@ def final_pick(pdb,nres_atom,nres_info,sel_key):
             else:
                 continue
     return res_pick
+
+def get_noncanonical_resinfo(cres):
+    with open(cres) as f:
+        lines = f.readlines()
+    cres_atoms_all = {}
+    cres_atoms_sc = {}
+    for i in range(len(lines)):
+        c = lines[i].split()
+        if c[0] not in cres_atoms_all.keys():
+            cres_atoms_all[c[0]] = []
+            for j in range(1,len(c)):
+                cres_atoms_all[c[0]].append(c[j])
+        else:
+            if c[0] not in cres_atoms_sc.keys():
+                cres_atoms_sc[c[0]] = []
+                for j in range(1,len(c)):
+                    cres_atoms_sc[c[0]].append(c[j])
+    return cres_atoms_all, cres_atoms_sc
 

@@ -10,8 +10,10 @@ from copy import *
 from check_ss_ab import *
 import argparse
 
-######################################   Example   ########################################
-### python3 rinrus_trim_pdb.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -ratom res_atoms.dat 
+######################################   Example   #############################################################
+### python3 rinrus_trim_pdb.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -ratom res_atoms.dat -cres cres_atom.dat
+### cres is a file for generate noncanonical residue main/side chain atom information ##########################
+
 
 if __name__ == '__main__':
     
@@ -19,12 +21,19 @@ if __name__ == '__main__':
     parser.add_argument('-pdb', dest='r_pdb', default='None', help='protonated pdbfile')
     parser.add_argument('-s', dest='seed', default='None', help='Chain:Resid,Chain:Resid')
     parser.add_argument('-ratom', dest='r_atom', default='res_atoms.dat', help='atom info for each residue')
+    parser.add_argument('-cres', dest='cres', default='None', help='Noncanonical residue information')
 
     args = parser.parse_args()
 
     r_pdb = args.r_pdb
     seed  = args.seed
     atomf = args.r_atom
+    cres  = args.cres
+    if cres is not 'None':
+        cres_atoms_all, cres_atoms_sc = get_noncanonical_resinfo(cres)
+    else:
+        cres_atoms_all = {}
+        cres_atoms_sc = {}
     pdb, tres_info, ttot_charge = read_pdb(r_pdb)
     sel_key = get_sel_keys(seed)
     with open(atomf) as f:
@@ -76,8 +85,8 @@ if __name__ == '__main__':
             if key in sel_key or pdb_res_name[key] in ('HOH', 'WAT','O'):
                 res_part_list[cha][res_id] = pdb_res_atom[key]
             else:
+                res_part_list[cha][res_id] = check_sc(pdb_res_name[key],res_part_list[cha][res_id],cres_atoms_sc)
                 res_part_list[cha][res_id] = check_mc(pdb_res_name[key],res_part_list[cha][res_id])
-                res_part_list[cha][res_id] = check_sc(pdb_res_name[key],res_part_list[cha][res_id])
     ### check residue atoms according to residue before and after ###
     for cha in res_part_list.keys():
         for j in range(len(cha_res_list[cha])):
@@ -91,7 +100,6 @@ if __name__ == '__main__':
                 res_info[key] = []
             else:
                 res_atom[key] = deepcopy(res_part_list[cha][res_id])
-#                res_atom[key] = get_res_parts(pdb_res_name[key],res_atom[key])
                 if j == 0:
                     res_atom, res_info = check_s(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
                     res_atom, res_info = check_a(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
@@ -102,6 +110,7 @@ if __name__ == '__main__':
                     res_atom, res_info = check_b(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
                     res_atom, res_info = check_a(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
                     res_atom, res_info = check_s(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
+
     ### Second check residue atoms itself according to pdb file ###
     for key in res_atom.keys():
         if key in sel_key or pdb_res_name[key] in ('HOH', 'WAT','O'):
