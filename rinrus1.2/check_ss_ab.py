@@ -45,9 +45,10 @@ def check_mc(res,value):
     return value
 
 def check_sc(res,value):
-    for i in res_atoms_sc[res]:
-        if i not in value:
-            value.append(i)
+    if bool(set(value)&set(res_atoms_sc[res])):
+        for i in res_atoms_sc[res]:
+            if i not in value:
+                value.append(i)
     return value
 
 def final_check_mc(chain,id,res_atom):
