@@ -12,7 +12,6 @@ import argparse
 
 ######################################   Example   #############################################################
 ### python3 rinrus_trim_pdb.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -ratom res_atoms.dat -cres cres_atom.dat
-### cres is a file for generate noncanonical residue main/side chain atom information ##########################
 
 
 if __name__ == '__main__':
@@ -121,7 +120,7 @@ if __name__ == '__main__':
             res_atom = final_check_mc(chain,resid,res_atom)
     
     res_num = len(res_atom.keys())
-    res_pick = final_pick(pdb,res_atom,res_info,sel_key)
+    res_pick,res_info = final_pick(pdb,res_atom,res_info,sel_key)
     f1 = open('res_%s_atom_info.dat'%str(res_num),'w')        
     f2 = open('res_%s_froz_info.dat'%str(res_num),'w')        
     for key in res_atom.keys():

@@ -170,14 +170,22 @@ def final_pick(pdb,nres_atom,nres_info,sel_key):
         if (line[5],line[6]) in nres_atom.keys() and line[2].strip() in nres_atom[(line[5],line[6])]:
             if line[2].strip() == 'CA':
                 res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
+                if 'CA' not in nres_info[(line[5],line[6])]:
+                    nres_info[(line[5],line[6])].append('CA')
             elif line[2].strip() == 'CB':
-                if line[4].strip() in list_cb:
+                if line[4].strip() in list_cb and 'CG' in nres_atom[(line[5],line[6])]:
                     res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
+                    if 'CB' not in nres_info[(line[5],line[6])]:
+                        nres_info[(line[5],line[6])].append('CB')
+                elif line[4].strip() not in list_cb and 'CA' not in nres_atom[(line[5],line[6])]:
+                    res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
+                    if 'CB' not in nres_info[(line[5],line[6])]:
+                        nres_info[(line[5],line[6])].append('CB')
                 else:
                     res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],' 0'] )
             else:
                 res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],' 0'] )
-    return res_pick
+    return res_pick,nres_info
 
 
 #def final_pick(pdb,nres_atom,nres_info,sel_key):
