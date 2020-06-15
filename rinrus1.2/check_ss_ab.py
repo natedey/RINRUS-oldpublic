@@ -60,7 +60,7 @@ def check_sc(res,value,cres_atoms_sc):
                 if i not in value:
                     value.append(i)
     else:   
-        print("This residue is either canonical or nocanonical, please check!")
+        print("Residue %s is either canonical or nocanonical, please check!"%res)
     return value
 
 def final_check_mc(chain,id,res_atom):
