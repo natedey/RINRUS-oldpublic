@@ -63,7 +63,7 @@ def check_sc(res,value,cres_atoms_sc):
         print("This residue is either canonical or nocanonical, please check!")
     return value
 
-def final_check_mc(chain,id,res_atom):
+def final_check_mc(chain,id,res_atom,res_info):
     case1 = ['N','H','HA','HA2','HA3']
     case2 = ['C','O','HA','HA2','HA3']
     case3 = ['CA','C','O','H','HA','HA2','HA3']
@@ -78,7 +78,12 @@ def final_check_mc(chain,id,res_atom):
             for i in case2:
                 if i not in res_atom[(chain,id)]:
                     res_atom[(chain,id)].append(i)
-    if 'CA' in res_atom[(chain,id)] and not bool(set(res_atom[(chain,id)])&set(['N','C','O','CB'])):
+    if (chain,id-1) not in res_atom.keys() and (chain,id+1) not in res_atom.keys():
+        if 'CA' in res_atom[(chain,id)] and not bool(set(res_atom[(chain,id)])&set(['N','C','O','CB'])):
+            print("There will be a floating CA methyl of residue %d, it will be deleted!"%id)
+            res_atom[(chain,id)] = []
+            res_info[(chain,id)] = []
+    if 'CA' in res_atom[(chain,id)] and not bool(set(res_atom[(chain,id)])&set(['N','C','O','CB'])) and (chain,id+1) in res_atom.keys():
         if 'CA' in res_atom[(chain,id+1)]:
             for i in case3:
                 if i not in res_atom[(chain,id)]:
@@ -86,7 +91,7 @@ def final_check_mc(chain,id,res_atom):
             for i in case1:
                 if i not in res_atom[(chain,id+1)]:
                     res_atom[(chain,id+1)].append(i)
-    return res_atom
+    return res_atom, res_info
 
 ### check self ###
 def check_s(chain,id,atom,res_info,res_atom):

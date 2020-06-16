@@ -100,6 +100,7 @@ if __name__ == '__main__':
             else:
                 res_atom[key] = deepcopy(res_part_list[cha][res_id])
                 if j == 0:
+                    res_atom, res_info = check_b(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
                     res_atom, res_info = check_s(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
                     res_atom, res_info = check_a(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
                 elif j == len(cha_res_list[cha])-1:
@@ -117,7 +118,7 @@ if __name__ == '__main__':
         else:
             chain = key[0]
             resid = key[1]
-            res_atom = final_check_mc(chain,resid,res_atom)
+            res_atom, res_info = final_check_mc(chain,resid,res_atom,res_info)
     
     res_num = len(res_atom.keys())
     res_pick,res_info = final_pick(pdb,res_atom,res_info,sel_key)
