@@ -3,11 +3,12 @@ This is a program written by qianyi cheng in deyonker research group
 at university of memphis.
 Version 1.2 
 Read in residue atom information for trimming pdb
+Date 6.18.2020
 """
 import os, sys, re
 from read_write_pdb import *
 from copy import *
-from check_ss_ab import *
+from check_residue_atom import *
 import argparse
 
 ######################################   Example   #############################################################
@@ -85,6 +86,8 @@ if __name__ == '__main__':
                 res_part_list[cha][res_id] = pdb_res_atom[key]
             else:
                 res_part_list[cha][res_id] = check_sc(pdb_res_name[key],res_part_list[cha][res_id],cres_atoms_sc)
+                if not bool(set(res_part_list[cha][res_id])&set(['N','CA','C','O','H','HA','HA2','HA3'])):
+                    res_info[key] = ['CB']
                 res_part_list[cha][res_id] = check_mc(pdb_res_name[key],res_part_list[cha][res_id])
     ### check residue atoms according to residue before and after ###
     for cha in res_part_list.keys():
@@ -99,32 +102,17 @@ if __name__ == '__main__':
                 res_info[key] = []
             else:
                 res_atom[key] = deepcopy(res_part_list[cha][res_id])
-                if j == 0:
-                    res_atom, res_info = check_b(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                    res_atom, res_info = check_s(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                    res_atom, res_info = check_a(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                elif j == len(cha_res_list[cha])-1:
-                    res_atom, res_info = check_b(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                    res_atom, res_info = check_s(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                else:
-                    res_atom, res_info = check_b(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                    res_atom, res_info = check_a(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
-                    res_atom, res_info = check_s(cha,res_id,res_part_list[cha][res_id],res_info,res_atom)
+                if key not in res_info.keys():
+                    res_info[key] = []
+                res_atom = check_b(cha,res_id,res_atom)
+                res_atom = check_a(cha,res_id,res_atom)
+                res_atom[key] = check_mc(pdb_res_name[key],res_atom[key])
 
-    ### Second check residue atoms itself according to pdb file ###
-    for key in res_atom.keys():
-        if key in sel_key or pdb_res_name[key] in ('HOH', 'WAT','O'):
-            continue
-        else:
-            chain = key[0]
-            resid = key[1]
-            res_atom, res_info = final_check_mc(chain,resid,res_atom,res_info)
-    
     res_num = len(res_atom.keys())
     res_pick,res_info = final_pick(pdb,res_atom,res_info,sel_key)
     f1 = open('res_%s_atom_info.dat'%str(res_num),'w')        
     f2 = open('res_%s_froz_info.dat'%str(res_num),'w')        
-    for key in res_atom.keys():
+    for key in sorted(res_atom.keys()):
         f1.write('%2s %5d '%(key[0],key[1]))
         f2.write('%2s %5d '%(key[0],key[1]))
         for atom in res_atom[key]:
