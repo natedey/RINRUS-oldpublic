@@ -11,8 +11,7 @@ from res_atoms import *
 
 tail = ['CA','C','O','HA','HA2','HA3']
 head = ['CA','HA','HA2','HA3','N','H']
-tailb = ['CA','C','O','HA','HA2','HA3','CB']
-headb = ['CA','HA','HA2','HA3','N','H','CB']
+caca = ['CA','HA','HA2','HA3']
 
 ### check one residue before ###
 def check_b(chain,id,res_atom):
@@ -20,13 +19,21 @@ def check_b(chain,id,res_atom):
     if (chain,id-1) not in res_atom.keys():
         if bool(set(atom1)&set(['N','H'])):
             res_atom[(chain,id-1)]= tail
+            if 'CA' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('CA')
     else:
         atom0 = res_atom[(chain,id-1)]
-        if bool(set(atom0)&set(tailb)) and bool(set(atom1)&set(head)) or bool(set(atom0)&set(tail)) and bool(set(atom1)&set(headb)):
-            for atom in tail:
+        if bool(set(atom1)&set(['N','H'])):
+            for atom in ['CA','C','O']:
                 if atom not in res_atom[(chain,id-1)]:
                     res_atom[(chain,id-1)].append(atom)
-            for atom in head:
+            if 'CA' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('CA')
+        if bool(set(atom0)&set(caca)) and bool(set(atom1)&set(caca)):
+            for atom in ['CA','C','O']:
+                if atom not in res_atom[(chain,id-1)]:
+                    res_atom[(chain,id-1)].append(atom)
+            for atom in ['N','CA']:
                 if atom not in res_atom[(chain,id)]:
                     res_atom[(chain,id)].append(atom)
     return res_atom
@@ -37,15 +44,45 @@ def check_a(chain,id,res_atom):
     if (chain,id+1) not in res_atom.keys():
         if bool(set(atom1)&set(['C','O'])):
             res_atom[(chain,id+1)]= head 
+            if 'CA' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('CA')
     else:
         atom0 = res_atom[(chain,id+1)]
-        if bool(set(atom0)&set(headb)) and bool(set(atom1)&set(tail)) or bool(set(atom0)&set(head)) and bool(set(atom1)&set(tailb)):
+        if bool(set(atom1)&set(['C','O'])):
+            for atom in ['N','CA']:
+                if atom not in res_atom[(chain,id+1)]:
+                    res_atom[(chain,id+1)].append(atom)
+            if 'CA' not in res_atom[(chain,id)]:
+                res_atom[(chain,id)].append('CA')
+            if bool(set(atom0)&set(caca)) and bool(set(atom1)&set(caca)):
+                for atom in ['CA','C','O']:
+                    if atom not in res_atom[(chain,id)]:
+                       res_atom[(chain,id)].append(atom)
+                for atom in ['N','CA']:
+                    if atom not in res_atom[(chain,id+1)]:
+                        res_atom[(chain,id+1)].append(atom)
+    return res_atom
+
+### check one residue after ###
+def check_a(chain,id,res_atom):
+    atom1 = res_atom[(chain,id)]
+    if (chain,id+1) not in res_atom.keys():
+        if bool(set(atom1)&set(['C','O'])):
+            res_atom[(chain,id+1)]= head 
+    else:
+        atom0 = res_atom[(chain,id+1)]
+        if bool(set(atom1)&set(['C','O'])):
             for atom in head:
                 if atom not in res_atom[(chain,id+1)]:
                     res_atom[(chain,id+1)].append(atom)
-            for atom in tail:
+            for atom in caca:
                 if atom not in res_atom[(chain,id)]:
-                    res_atom[(chain,id)].append(atom)
+                    if atom not in res_atom[(chain,id)]:
+                        res_atom[(chain,id)].append(atom)
+            if bool(set(atom0)&set(caca)) and bool(set(atom1)&set(caca)):
+                for atom in tail:
+                    if atom not in res_atom[(chain,id)]:
+                       res_atom[(chain,id)].append(atom)
     return res_atom
 
 def check_mc(res,value):
@@ -125,7 +162,6 @@ def final_pick(pdb,res_atom,res_info,sel_key):
                         res_info[(line[5],line[6])].append('CA')
             elif line[2].strip() == 'CB':
                 if line[4].strip() in list_cb and 'CG' in res_atom[(line[5],line[6])]:
-#                if line[4].strip() in list_cb and 'CG' in res_atom[(line[5],line[6])] or 'N' not in res_atom[(line[5],line[6])] and 'C' in res_atom[(line[5],line[6])] or 'C' not in res_atom[(line[5],line[6])] and 'N' in res_atom[(line[5],line[6])]:
                     res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
                     if 'CB' not in res_info[(line[5],line[6])]:
                         res_info[(line[5],line[6])].append('CB')

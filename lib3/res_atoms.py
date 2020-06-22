@@ -96,7 +96,7 @@ res_atoms_sc = {
 'HID': ['CB', 'CG', 'CD2', 'ND1', 'CE1', 'NE2', 'HB2', 'HB3', 'HD2', 'HE1', 'HD1'],
 'HIE': ['CB', 'CG', 'CD2', 'ND1', 'CE1', 'NE2', 'HB2', 'HB3', 'HD2', 'HE1', 'HE2'],
 'ILE': ['CB', 'CG1', 'CG2', 'CD1', 'HB', 'HG12', 'HG13', 'HG21', 'HG22', 'HG23', 'HD11', 'HD12', 'HD13'],
-'LEU': ['CB', 'CG', 'CD1', 'CD2', 'HB2', 'HB3', 'HG', 'HD11', 'HD12', 'HD13', 'HD21', 'HD22', 'HD23'],
+'LEU': ['CB', 'CG', 'CD1', 'CD2', 'HB2', 'HB3', 'HG', 'HD11', 'HD12', 'HD13', 'HD21', 'HD22', 'HD23','HB1'],
 'LYS': ['CB', 'CG', 'CD', 'CE', 'NZ', 'HB2', 'HB3', 'HG2', 'HG3', 'HD2', 'HD3', 'HE2', 'HE3', 'HZ1', 'HZ2', 'HZ3'],
 'MET': ['CB', 'CG', 'SD', 'CE', 'HB2', 'HB3', 'HG2', 'HG3', 'HE1', 'HE2', 'HE3'],
 'MSE': ['CB', 'CG', 'SE', 'CE', 'HB2', 'HB3', 'HG2', 'HG3', 'HE1', 'HE2', 'HE3'],

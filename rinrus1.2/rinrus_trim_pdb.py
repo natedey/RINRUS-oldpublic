@@ -88,6 +88,7 @@ if __name__ == '__main__':
                 res_part_list[cha][res_id] = check_sc(pdb_res_name[key],res_part_list[cha][res_id],cres_atoms_sc)
                 if not bool(set(res_part_list[cha][res_id])&set(['N','CA','C','O','H','HA','HA2','HA3'])):
                     res_info[key] = ['CB']
+                    res_atom[key] = ['CA']
                 res_part_list[cha][res_id] = check_mc(pdb_res_name[key],res_part_list[cha][res_id])
     ### check residue atoms according to residue before and after ###
     for cha in res_part_list.keys():
