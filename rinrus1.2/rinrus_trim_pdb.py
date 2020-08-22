@@ -109,6 +109,9 @@ if __name__ == '__main__':
                         for atom in ['CA','C','O','HA','HA2','HA3']:
                             if atom not in res_atom[(cha,res_id-1)]:
                                 res_atom[(cha,res_id-1)].append(atom)
+                    if (cha,res_id-1) not in res_info.keys():
+                        print("%d is added CA 1 residue before %d"%(res_id-1,res_id))
+                        res_info[(cha,res_id-1)] = ['CA']
             ### Check one residue after according to "C and O" ###    
                 if bool(set(res_atom[key])&set(['C','O'])):
                     if (cha,res_id+1) not in res_atom.keys():
@@ -117,6 +120,9 @@ if __name__ == '__main__':
                         for atom in ['CA','HA','HA2','HA3','N','H']:
                             if atom not in res_atom[(cha,res_id+1)]:
                                 res_atom[(cha,res_id+1)].append(atom)
+                    if (cha,res_id+1) not in res_info.keys():
+                        print("%d is added CA 1 residue after %d"%(res_id+1,res_id))
+                        res_info[(cha,res_id+1)] = ['CA']
 
     ### Check one "CACA" ###    
     for key in sorted(res_atom.keys()):
@@ -137,7 +143,7 @@ if __name__ == '__main__':
 
 
     res_num = len(res_atom.keys())
-    res_pick,res_info = final_pick(pdb,res_atom,res_info,sel_key)
+    res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
     f1 = open('res_%s_atom_info.dat'%str(res_num),'w')        
     f2 = open('res_%s_froz_info.dat'%str(res_num),'w')        
     for key in sorted(res_atom.keys()):

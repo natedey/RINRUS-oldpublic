@@ -52,7 +52,7 @@ def check_sc(res,value,cres_atoms_sc):
                 if i not in value:
                     value.append(i)
     else:   
-        print("This residue is either canonical or nocanonical, please check!")
+        print("Residue %s is either canonical or nocanonical, please check!"%res)
     return value
 
 def get_noncanonical_resinfo(cres):
@@ -95,6 +95,21 @@ def final_pick(pdb,res_atom,res_info,sel_key):
             else:
                 res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],' 0'] )
     return res_pick,res_info
+
+def final_pick2(pdb,res_atom,res_info,sel_key):
+    list_cb = ['ARG','LYS','GLU','GLN','MET','TRP','TYR','PHE']
+    res_pick = []
+    for line in pdb:
+        if (line[5],line[6]) in res_atom.keys() and line[2].strip() in res_atom[(line[5],line[6])]:
+            if line[2].strip() in res_info[(line[5],line[6])]:
+                res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
+#            elif line[2].strip() not in res_info[(line[5],line[6])]:
+#                if line[2].strip() == 'CA':
+#                    res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
+#                    res_info[(line[5],line[6])] = ['CA']
+            else:
+                res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],' 0'] )
+    return res_pick, res_info
 
 def get_sel_keys(seed_list):  
     seeds = seed_list.split(',')
