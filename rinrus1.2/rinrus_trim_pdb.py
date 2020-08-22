@@ -96,7 +96,6 @@ if __name__ == '__main__':
                 else:
                     res_info[key] = ['CA']
                     res_atom[key] = check_mc(pdb_res_name[key],res_atom[key])
-
     for cha in res_part_list.keys():
         for res_id in sorted(res_part_list[cha].keys()):
             key = (cha,res_id)
@@ -109,9 +108,6 @@ if __name__ == '__main__':
                         for atom in ['CA','C','O','HA','HA2','HA3']:
                             if atom not in res_atom[(cha,res_id-1)]:
                                 res_atom[(cha,res_id-1)].append(atom)
-                    if (cha,res_id-1) not in res_info.keys():
-                        print("%d is added CA 1 residue before %d"%(res_id-1,res_id))
-                        res_info[(cha,res_id-1)] = ['CA']
             ### Check one residue after according to "C and O" ###    
                 if bool(set(res_atom[key])&set(['C','O'])):
                     if (cha,res_id+1) not in res_atom.keys():
@@ -120,9 +116,6 @@ if __name__ == '__main__':
                         for atom in ['CA','HA','HA2','HA3','N','H']:
                             if atom not in res_atom[(cha,res_id+1)]:
                                 res_atom[(cha,res_id+1)].append(atom)
-                    if (cha,res_id+1) not in res_info.keys():
-                        print("%d is added CA 1 residue after %d"%(res_id+1,res_id))
-                        res_info[(cha,res_id+1)] = ['CA']
 
     ### Check one "CACA" ###    
     for key in sorted(res_atom.keys()):
@@ -141,6 +134,15 @@ if __name__ == '__main__':
                         if atom not in res_atom[(cha,res_id+1)]:
                             res_atom[(cha,res_id+1)].append(atom)
 
+    ### Check frozen info ###
+    for key in sorted(res_atom.keys()):
+        if key not in res_info.keys():
+            res_info[key] = ['CA']
+#    for key in sorted(res_atom.keys()):
+#        if 'CB' in res_info[key]: 
+#            chainid, resid = key 
+#            if (chainid,resid+1) in res_info.keys() or (chainid,resid+1) in res_info.keys():
+#                res_info[key].pop('CB')
 
     res_num = len(res_atom.keys())
     res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
