@@ -100,6 +100,10 @@ def final_pick2(pdb,res_atom,res_info,sel_key):
     list_cb = ['ARG','LYS','GLU','GLN','MET','TRP','TYR','PHE']
     res_pick = []
     for line in pdb:
+        if (line[5],line[6]) in res_atom.keys() and line[4].strip() in list_cb:
+            if 'CB' not in res_info[(line[5],line[6])]:
+                res_info[(line[5],line[6])].append('CB')
+                res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
         if (line[5],line[6]) in res_atom.keys() and line[2].strip() in res_atom[(line[5],line[6])]:
             if line[2].strip() in res_info[(line[5],line[6])]:
                 res_pick.append( [line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],line[10],line[11],line[12],line[13],line[14],line[15],'-1'] )
