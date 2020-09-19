@@ -130,6 +130,15 @@ def get_ca(pdb):
             xyz_i.append(pdb[i][8:11])
     return map, array(xyz_i)
 
+def get_fatom(pdb):
+    map = []
+    xyz_i = []
+    for i in range(len(pdb)):
+        if pdb[i][-1].strip() == '-1':
+            map.append(i)
+            xyz_i.append(pdb[i][8:11])
+    return map, array(xyz_i)
+
 def get_coord(pdb):
     coord = []
     for p in pdb:

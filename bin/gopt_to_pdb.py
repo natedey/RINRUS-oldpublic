@@ -23,7 +23,8 @@ if __name__ == '__main__':
     output = args.output
 
     pdb, res_info, tot_charge = read_pdb(pdbf)
-    map, xyz_i = get_ca(pdb)
+#    map, xyz_i = get_ca(pdb)
+    map, xyz_i = get_fatom(pdb)
     
     natoms = len(pdb)
     
