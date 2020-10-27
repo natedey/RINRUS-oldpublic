@@ -92,8 +92,10 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_co
 
     if 'small' in lines[0]:
         inp.write("%mem=20GB\n")        #use memory if it is large job use 80GB
-    else:
+    elif 'large' in lines[0]:
         inp.write("%mem=80GB\n")
+    else:
+        inp.write("%mem="+lines[0].strip()+"\n")
     inp.write("#P ")      
 
     if lines[1][0] != '#':
@@ -263,8 +265,7 @@ if __name__ == '__main__':
     elif step == 2:
         newpdb = args.new_pdb
         pic_atom, res_info, tot_charge = read_pdb(newpdb)
-        print('What to put on info_line')
-        res_count = input()
+        res_count = args.new_pdb
     elif step == 3:
         pdb1 = args.pdb1
         pdb2 = args.pdb2
@@ -276,7 +277,6 @@ if __name__ == '__main__':
            for line in plines:
                parts.append(line.split())
         pic_atom, tot_charge = pdb_replace(pdb1,pdb2,parts)    
-        print('What to put on info_line')
-        res_count = input()
+        res_count = args.pdb1
     write_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
         
