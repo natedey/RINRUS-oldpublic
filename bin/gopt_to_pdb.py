@@ -39,14 +39,18 @@ if __name__ == '__main__':
             sel_atom = update_xyz(pdb,xyz_n)
             name = str(key)+'.pdb'
             write_pdb(name,sel_atom)
-    elif args.frame == '-1':
-        key = -1
+    elif int(args.frame) >= -1 and int(args.frame) < len(rot_opt):
+        key = int(args.frame)
         xyz_c = array(rot_opt[key])
         (c_trans,U,ref_trans) = rms_fit(xyz_i,xyz_c[map])
         xyz_n = dot( xyz_c-c_trans, U ) + ref_trans
         sel_atom = update_xyz(pdb,xyz_n)
-        name = str(len(rot_opt)-1)+'.pdb'
-        write_pdb(name,sel_atom)
+        if key == -1:
+            name = str(len(rot_opt)-1)+'.pdb'
+            write_pdb(name,sel_atom)
+        else:
+            name = args.frame+'.pdb'
+            write_pdb(name,sel_atom)
     else:
         print("The frame is not clear!")
         sys.exit()
