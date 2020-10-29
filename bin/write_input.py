@@ -116,7 +116,7 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_co
                 for i in range(0,len(ar),2):
                     for atom in pic_atom:
 #                        if ar[i] in atom[2] and ar[i+1] in atom[4]:
-                        if ar[i] in atom[2] and int(ar[i+1]) == atom[6]:
+                        if ar[i] == atom[2].strip() and int(ar[i+1]) == atom[6]:
                             f_atom.append(pic_atom.index(atom)+1)
     for l in range(3,9):
 #        if bool(lines[l].strip()):
