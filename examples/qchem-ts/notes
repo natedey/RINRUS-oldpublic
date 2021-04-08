@@ -11,3 +11,4 @@ The met.pdb is a flat methyl that is inbetween substrate SAM and CAT which is cl
 """python3 write_input.py -step 3 -pdb1 reactant.pdb -pdb2 met.pdb -intmp qcinput_temp -c 2"""
 
 The qcinput_temp is set for opt not ts, please revise the input file before you run a ts search.
+Several things also need to be revised/added such as solvation, basis set, freq.
