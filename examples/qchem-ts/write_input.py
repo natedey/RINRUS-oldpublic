@@ -210,10 +210,12 @@ def write_qchem_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,
 
     inp.write("$rem\n")
     inp.write("jobtype %s\n"%jobtype[0])
+    inp.write("method %s\n" % method)
     inp.write("basis %s\n"%basis)
     inp.write("ecp %s\n"%ecp)
     inp.write("solvent_method pcm\n")
     inp.write("symmetry false\n")
+    inp.write("sym_ignore true\n")
     inp.write("no_reorient true\n")
     inp.write("geom_opt_max_cycles 1500\n")
     inp.write("mem_total 120000\n")
