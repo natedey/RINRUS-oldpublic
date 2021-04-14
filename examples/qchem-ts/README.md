@@ -9,11 +9,11 @@ Or you can help revise the qcinput_temp and the write_input.py to make it more g
 ``` bash
 python3 write_input.py -step 3 -pdb1 template.pdb -pdb2 met.pdb -intmp qcinput_temp -c 2
 ```
-The `met.pdb` is a flat methyl that is inbetween substrate SAM and CAT which is closer to the true methyl group in TS in larger models
+The `met.pdb` is a flat methyl that is inbetween substrate SAM and CAT which is closer to the true methyl group in TS in larger models. See `2.inp`.
 
 3. If you want to make a input file for TS search from the optimized reactant (`reactant.pdb`), you run
 ```bash
 python3 write_input.py -step 3 -pdb1 reactant.pdb -pdb2 met.pdb -intmp qcinput_temp -c 2
 ```
-The `qcinput_temp` is set for opt not ts, please revise the input file before you run a ts search.
+The `qcinput_temp` is set for opt not ts, please revise the input file before you run a ts search. See `3.inp`.
 Several things also need to be revised/added such as solvation, basis set, freq.
