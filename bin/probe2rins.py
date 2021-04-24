@@ -36,7 +36,7 @@ def get_res_type(resID, atom):
         else:
             side = 'sc'
     else:
-        if resID == 'HOH':
+        if resID == 'HOH' or resID == 'WAT':
             side = 'solvent'
         else:
             side = 'ligand'
