@@ -218,6 +218,7 @@ $end
 
 $rem
 jobtype freq
+method b3lyp
 basis gen
 ecp gen
 solvent_method pcm

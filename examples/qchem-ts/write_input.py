@@ -240,6 +240,7 @@ def write_qchem_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,
             inp.write("$end\n\n")
             inp.write("$rem\n")
             inp.write("jobtype %s\n"%jobtype[j])
+            inp.write("method %s\n" % method)
             inp.write("basis %s\n"%basis)
             inp.write("ecp %s\n"%ecp)
             inp.write("solvent_method pcm\n")
