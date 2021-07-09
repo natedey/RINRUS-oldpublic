@@ -1,5 +1,8 @@
 # RINRUS
-Residue Interaction Network-based ResidUe Selector (RINRUS) is a QM-cluster model building tool which starts from a raw PDB file. After seriers procedures, important residues for certain chemical reactions will be selected and trimmed PDB files as well as quantum mechanics (QM) input files will be generated.
+
+Residue Interaction Network-based ResidUe Selector (RINRUS) is a QM-cluster model building tool.  Starting from a raw PDB file, after running a series of preparation tasks, the tool will
+- select important residues for chemical reactions, and
+- generate trimmed PDB files with the corresponding quantum chemical inputs.
 
 ## Installation
 
@@ -24,6 +27,8 @@ For certain scripts (optional),
 - [probe](https://github.com/rlabduke/probe)
 - [reduce](https://github.com/rlabduke/reduce)
 
+Currently, a precompiled copy of each is present in `bin/`.
+
 which both require
 - CMake >= 3.10
 - Any C/C++ compiler suite with C++11 support
@@ -39,9 +44,9 @@ $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.ent
 
 3. Check the new PDB file. If there is metal, replace with an atom with same coordination (such as replace Mg with O), and save as a new PDB file.
 
-4. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain condition)
+4. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions)
 
-5. If there is atom "CA" or "CB" in ligands, replace with "CA'" and "CB'"
+5. If there are any "CA" or "CB" atoms in ligands, replace them with "CA'" and "CB'", respectively.
 
 6. After previous 3 check stpes, save the file to a new file (`3bwm_h_modify.pdb`)
 
