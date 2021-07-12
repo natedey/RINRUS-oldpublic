@@ -5,25 +5,36 @@ at university of memphis.
 import os, sys
 import subprocess
 
+
 def system_run(cmd):
     print(cmd)
     exit = os.system(cmd)
-    if ( exit != 0 ):
-        print('failed to run:')
+    if exit != 0:
+        print("failed to run:")
         print(cmd)
         sys.exit()
 
-input = sys.argv[1]
-name  = input.split('.')[0]
-ouput = name+'_h.pdb'
-logf = open('log.pml','w')
-if len(sys.argv) == 3:
-    logf.write('load %s\ncmd.select("sel","%s and not resi %s and not name NH1 and not name NH2")\ncmd.h_add("sel")\ncmd.save("./%s")'%(input,name,sys.argv[2],ouput))
-elif len(sys.argv) == 2:
-    logf.write('load %s\ncmd.h_add("%s")\ncmd.save("./%s")'%(input,name,ouput))
-else:
-    print("Something is wrong!")
-logf.close()
-#print("Please run 'pymol -qc log.pml'")
-cmd = '/home/qcheng1/bin/pymol -qc log.pml'
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("pdbfilename", nargs="+")
+parser.add_argument("--resids")
+args = parser.parse_args()
+
+with open("log.pml", "w") as logf:
+    for pdbfilename in args.pdbfilename:
+        name = os.path.splitext(pdbfilename)[0]
+        outputfilename = f"{name}_h.pdb"
+        logf.write(f"load {pdbfilename}\n")
+        if args.resids is not None:
+            logf.write(
+                f'cmd.select("sel","{name} and not resi {args.resids} and not name NH1 and not name NH2")\n'
+            )
+            logf.write('cmd.h_add("sel")\n')
+        else:
+            logf.write(f'cmd.h_add("{name}")\n')
+        logf.write(f'cmd.save("./{outputfilename}")\n')
+
+cmd = "pymol -qc log.pml"
 system_run(cmd)
