@@ -17,6 +17,8 @@ export PYTHONPATH="~/git/RINRUS/lib3:$PYTHONPATH"
 
 - Python >= 3.x
 - NumPy
+- pymol
+  - If installing via conda, it's under `-c conda-forge pymol-open-source`.
 
 For certain scripts (optional),
 - matplotlib
@@ -48,7 +50,7 @@ $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.ent
 
 5. If there are any "CA" or "CB" atoms in ligands, replace them with "CA'" and "CB'", respectively.
 
-6. After previous 3 check stpes, save the file to a new file (`3bwm_h_modify.pdb`)
+6. After previous 3 check steps, save the file to a new file (`3bwm_h_modify.pdb`)
 
 7. Use this new PDB file (`3bwm_h_modify.pdb`) to run `probe` and save the result to `*.probe`:
 ``` bash
