@@ -67,18 +67,21 @@ This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 ``` bash
 python3 $HOME/git/RINRUS/bin/probe_freq_2pdb.py 3bwm_h_mg.ent 3bwm_h.probe freq_per_res.dat 'A:300,A:301,A:302'
 ```
-This creates a `model_detail.dat` file that associates model sizes (residue count) with the residue numbers in that model, plus a `res_NNN.pdb` for each model.
+This creates a `model_detail.dat` file that associates model sizes (residue count) with the residue numbers in that model, plus a `res_NNN.pdb` for each model, where `NNN` is the number of residues in that model.
+- For example, if the largest model generated from the network has 34 residues, and the network seed contained 3 residues, then 32 files will be created: `res_34.pdb`, `res_33.pdb`, ..., `res_4.pdb`, and `res_3.pdb`.
 
-10. Run `pymol_scripts.py` to add hydrogens to `res_*.pdb`, which generates a `log.pml` file:
+10. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
 ```bash
-python3 $HOME/git/RINRUS/bin/pymol_scripts.py res_*.pdb 300,301,302
-# no need to run "pymol -qc log.pml" now
+python3 $HOME/git/RINRUS/bin/pymol_scripts.py res_NNN.pdb [res_NNN-1.pdb ...] --resids 300,301,302
 ```
+which
+- generates a `log.pml` PyMOL input file containing commands that perform the hydrogen addition, and then
+- runs PyMOL to perform the addition.
+If `--resids` is specified, those residue IDs will not have hydrogens added.
 
-11. Run `write_input.py` to generate template file and input file
-Example:
+11. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
-python3 bin/write_input.py -noh res_*.pdb -adh res_*_h.pdb -intmp input_templat
+python3 $HOME/git/RINRUS/bin/write_input.py -noh res_NNN.pdb -adh res_NNN_h.pdb -intmp input_template
 ```
 
 ### Distance based rules
