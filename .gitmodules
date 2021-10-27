@@ -1,0 +1,3 @@
+[submodule "DeYonker-lab-scripts"]
+	path = DeYonker-lab-scripts
+	url = git@github.com:natedey/DeYonker-lab-scripts.git

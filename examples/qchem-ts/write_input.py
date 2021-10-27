@@ -312,7 +312,7 @@ if __name__ == '__main__':
 
     nohpdb   = args.no_h_pdb
     adhpdb   = args.h_add_pdb
-#    newpdb   = args.new_pdb
+    newpdb   = args.new_pdb
     int_tmp  = args.input_tmp
     gauout   = args.gau_out
     inp_name = args.inp_name
