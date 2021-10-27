@@ -41,12 +41,14 @@ def check_mc(res,value):
     return value
 
 def check_sc(res,value,cres_atoms_sc):
-    if res in res_atoms_sc.keys():
+    if res == 'PRO':
+        value = res_atoms_all[res]
+    elif res != 'PRO' and res in res_atoms_sc.keys():
         if bool(set(value)&set(res_atoms_sc[res])):
             for i in res_atoms_sc[res]:
                 if i not in value:
                     value.append(i)
-    elif res in cres_atoms_sc.keys():
+    elif res != 'PRO' and res in cres_atoms_sc.keys():
         if bool(set(value)&set(cres_atoms_sc[res])):
             for i in cres_atoms_sc[res]:
                 if i not in value:
