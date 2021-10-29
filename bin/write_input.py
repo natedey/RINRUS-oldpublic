@@ -189,11 +189,15 @@ if __name__ == '__main__':
     ### Run: write_input.py -step 2 -intmp modred_temp -m 1 -c 2 -new step1pdbs/33.pdb (will take the selected pdb and write "1.inp")
     #########################################################################################################################################################
 
-    parser = argparse.ArgumentParser(description='Prepare template PDB files, write input files, save output PDB files in working directory')
+    parser = argparse.ArgumentParser(description='Prepare template PDB files, write input files, save output PDB files in working directory',formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-step', dest='step', default=0, type=int, 
-            help='step0: read noh, addh pdbs, write_final_pdb and read input_template write_first_inp,\
-          step1: read outputwrite_modred_inp, input_template, write_second_inp,\
-          step2: read outputwrite_modred_inp, input_template, write_new_inp')
+            help='step0: read noh, addh pdbs, write_final_pdb and read input_template write_first_inp, \n' + 
+            'step1: read outputwrite_modred_inp, input_template, write_second_inp, \n' +
+            'step2: read outputwrite_modred_inp, input_template, write_new_inp')
+#    parser.add_argument('-step', dest='step', default=0, type=int, 
+#            help='step0: read noh, addh pdbs, write_final_pdb and read input_template write_first_inp,\
+#          step1: read outputwrite_modred_inp, input_template, write_second_inp,\
+#          step2: read outputwrite_modred_inp, input_template, write_new_inp')
     parser.add_argument('-wdir', dest='output_dir', default=os.path.abspath('./'), help='working dir')
     parser.add_argument('-tmp', dest='tmp_pdb', default=None, help='template_pdb_file')
     parser.add_argument('-noh', dest='no_h_pdb', default=None, help='trimmed_pdb_file')
@@ -207,6 +211,7 @@ if __name__ == '__main__':
     parser.add_argument('-pdb1', dest='pdb1', default=None, help='minima_pdb_file')
     parser.add_argument('-pdb2', dest='pdb2', default=None, help='ts_pdb_file')
     parser.add_argument('-parts', dest='parts', default=None, help='ts_frag_indo')
+#    parser.print_help()
 
     args = parser.parse_args()
 
@@ -219,7 +224,7 @@ if __name__ == '__main__':
 
     nohpdb   = args.no_h_pdb
     adhpdb   = args.h_add_pdb
-#    newpdb   = args.new_pdb
+#    newpdb   = args.new_pdb    # in step 2 it will all this
     int_tmp  = args.input_tmp
     gauout   = args.gau_out
     inp_name = args.inp_name
