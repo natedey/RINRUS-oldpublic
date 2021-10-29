@@ -88,14 +88,13 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_co
 
     inp = open('%s'%inp_name,'w')
     inp.write("%chk=1.chk\n")           #write check file into 1.chk
-    inp.write("%nprocshared=10\n")      #use 10 processors
-
-    if 'small' in lines[0]:
-        inp.write("%mem=20GB\n")        #use memory if it is large job use 80GB
-    elif 'large' in lines[0]:
-        inp.write("%mem=80GB\n")
+    v = lines[0].split()
+    if len(v) == 1:
+        inp.write("%nprocshared=10\n")      #use 10 processors
     else:
-        inp.write("%mem="+lines[0].strip()+"\n")
+        inp.write("%nprocshared="+v[-1]+'\n')
+    inp.write("%mem="+v[0]+'\n')
+
     inp.write("#P ")      
 
     if lines[1][0] != '#':
