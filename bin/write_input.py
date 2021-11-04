@@ -54,7 +54,6 @@ def pdb_replace(tmppdb,newpdb,parts):
     new_pdb, binfo, tot_charge = read_pdb(newpdb)     #can be just xyz files from cerius or pymol
     for i in new_pdb:
         new_xyz.append([i[6],i[2].strip()])
-    print(new_xyz[0])
 
     if parts == None:   #newpdb has the entire thing to replace the tmppdb
         for line in new_pdb:
@@ -154,7 +153,8 @@ def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_co
     if lines[10][0] != '#' and 'basis' in lines[10]:
         for l in lines[11:]:
             inp.write("%s"%l)
-        inp.write('\n')
+        if len(lines) <= 10:
+            inp.write('\n')
 
     if lines[8][0] != '#' and 'scrf' in lines[8]:
         inp.write('radii=uff\nalpha=1.2\neps=4.0\n\n')
@@ -193,7 +193,8 @@ if __name__ == '__main__':
     parser.add_argument('-step', dest='step', default=0, type=int, 
             help='step0: read noh, addh pdbs, write_final_pdb and read input_template write_first_inp, \n' + 
             'step1: read outputwrite_modred_inp, input_template, write_second_inp, \n' +
-            'step2: read outputwrite_modred_inp, input_template, write_new_inp')
+            'step2: read new pdb file, input_template, write_new_inp \n' +
+            'step3: read pdb1 and pdb2 for replacing the fragment in pdb1 with pdb2 coordinates and write new input')
 #    parser.add_argument('-step', dest='step', default=0, type=int, 
 #            help='step0: read noh, addh pdbs, write_final_pdb and read input_template write_first_inp,\
 #          step1: read outputwrite_modred_inp, input_template, write_second_inp,\
@@ -206,6 +207,7 @@ if __name__ == '__main__':
     parser.add_argument('-intmp', dest='input_tmp', default=None, help='template_for_write_input')
     parser.add_argument('-outf', dest='gau_out', default='1.out', help='output_name')
     parser.add_argument('-inpn', dest='inp_name', default='1.inp', help='input_name')
+    parser.add_argument('-ckp', dest='check_point', default=None, help='check_file_frame')
     parser.add_argument('-m', dest='multiplicity', default=1, type=int, help='multiplicity')
     parser.add_argument('-c', dest='ligand_charge', default=0, type=int, help='charge_of_ligand')
     parser.add_argument('-pdb1', dest='pdb1', default=None, help='minima_pdb_file')
@@ -250,7 +252,8 @@ if __name__ == '__main__':
                 system_run( 'cp 1.chk step-%s-chk'%(i_step) )
         else:
             i_step = max(i_name)
-            if filecmp.cmp('1.inp','%s/step-%s-inp'%(wdir,i_step)) is False and filecmp.cmp('1.out','%s/step-%s-out'%(wdir,i_step)) is False:
+#            if filecmp.cmp('1.inp','%s/step-%s-inp'%(wdir,i_step)) is False and filecmp.cmp('1.out','%s/step-%s-out'%(wdir,i_step)) is False:
+            if filecmp.cmp('1.out','%s/step-%s-out'%(wdir,i_step)) is False:
                 i_step += 1
                 system_run( 'cp 1.inp step-%s-inp'%(i_step) )
                 system_run( 'cp 1.out step-%s-out'%(i_step) )
@@ -261,7 +264,7 @@ if __name__ == '__main__':
 #                sys.exit()
             else:
                 print("check if the files are propagated correctly!")
-                sys.exit()
+#                sys.exit()
         res_count = 'step-%s'%i_step
         if step == 1:
             pdb_file, new_dir = gen_pdbfiles(wdir,i_step,tmp_pdb)
@@ -282,5 +285,5 @@ if __name__ == '__main__':
                parts.append(line.split())
         pic_atom, tot_charge = pdb_replace(pdb1,pdb2,parts)    
         res_count = args.pdb1
+
     write_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
-        
