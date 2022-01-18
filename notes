@@ -1,0 +1,8 @@
+### Pre Optimization Step
+1. from res_X.pdb res_X_h.pdb input_template charge 1
+   Run "python3 write_input.py -noh res_X.pdb -adh res_X_h.pdb -intmp input_template -c 1"
+
+### Create TS structure and input file with the pre-opitmized structure
+1. copy the fragement needs to be moved make a copy of it, and shift or rotate it, save as a fragment pdb in pymol
+2. modify the input_template file based on the atoms/bonds/torsions need to be frozen
+3. Run "python3 write_input.py -step 3 -pdb1 opt.pdb -pdb2 fragment.pdb -intmp input_template -c 1"
