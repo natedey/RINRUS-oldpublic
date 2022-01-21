@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os, sys, re
 from numpy import *
 from read_write_pdb import *

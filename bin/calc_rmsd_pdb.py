@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rms
 import argparse
 from read_write_pdb import *

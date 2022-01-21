@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This is a program written by qianyi cheng in deyonker research group
 at university of memphis.

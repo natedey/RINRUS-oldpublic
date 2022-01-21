@@ -1,12 +1,12 @@
 small
 b3lyp/genecp
-opt(ts,noeigen,modred) SD,301,CE,301;CE,301,O2,302 F 
-#freq
+opt(modred) SD,301,CE,301;CE,301,O2,302 F 
+freq
 #guess=read
 #geom=(checkpoint,step=10)
 #iop(1/8=1)
 scf=(xqc,maxcon=128,maxcyc=128)
-#scrf(cpcm,read,solvent=water) EmpiricalDispersion=GD3BJ
+scrf(cpcm,read,solvent=water) EmpiricalDispersion=GD3BJ
 
 basis:
 Mg     0                              

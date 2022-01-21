@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os, sys, re
 from glob import glob
 from numpy import *

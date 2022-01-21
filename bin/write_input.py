@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os, sys, re, filecmp
 from numpy import *
 import argparse
