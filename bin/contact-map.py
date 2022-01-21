@@ -127,8 +127,13 @@ Atoms = {'H' : [1,  1.00794],
          }
 
 
-def center_of_mass(mass,coord):
+def center_of_mass(atoms,coord):
+    mass = []
+    for atom in atoms:
+        mass.append(Atoms[atom][1])
+    mass = array(mass)
     mass = mass.astype(float)[:,newaxis]
+    coord = array(coord)
     coord = coord.astype(float)
     return sum(coord*mass,axis=0)/sum(mass)
 
@@ -184,63 +189,100 @@ def get_model_res(idx_list,freqf,res_id):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Distance rule based model generator')
     parser.add_argument('-pdb', dest='pdbf', default=None, help='pdb_to_treat')
-    parser.add_argument('-cut', dest='coff', default=3, help='cut_off_dist')
-    parser.add_argument('-s', dest='seed', default=None, help='center_residues, examples: A:300,A:301,A:302')
+#    parser.add_argument('-s', dest='seed', default=None, help='center_residues, examples: A:300,A:301,A:302')
 
     args = parser.parse_args()
-    res_atom = {}
-    res_name = {}
-    res_cout = {}
-    res_info = {}
-    pdb_res_name = {}
-    cres_atom = {}
-
-
     pdbf = args.pdbf
     pdb, res_info, tot_charge = read_pdb(pdbf)
 
-    cut = float(args.coff)
     
-    ###### Find center of mass point x,y,z ######
-    cres = args.seed
-    center_res = cres.split(',')
-    idx_list = []
-    res_id = {}
-    for i in range(len(center_res)):
-        a,b = center_res[i].split(':')
-        idx_list.append([a,int(b)])
-        res_id[(a,int(b))] = [0.00]
+    ###### Find center of mass point x,y,z for each residue ######
+    res_atom = {}
+    res_keys = []
 
-    sel_atoms = []
-    sel_coord = []
-    for i in range(len(center_res)):
-        for atom in pdb:
-            if idx_list[i][0] == atom[5].strip() and idx_list[i][1] == atom[6]:
-                sel_atoms.append(Atoms[atom[14].strip()][1])
-                sel_coord.append([atom[8],atom[9],atom[10]])
-    sel_coord = array(sel_coord)
-    sel_atoms = array(sel_atoms)
-    com = center_of_mass(sel_atoms,sel_coord)
+    res_cent = {}
+    res_cout = {}
+    res_info = {}
+    pdb_res_name = {}
+#    cres_atom = {}
+#    cres = args.seed
+#    center_res = cres.split(',')
 
-    ###### Calculate atom-pair distances ######
-    dist_atom = []
     for atom in pdb:
-        dist_atom.append([calc_dist(array([atom[8],atom[9],atom[10]]),com),atom[5].strip(),atom[6],atom[2].strip()])
+        if len(atom[5].strip()) != 0:
+            key = (atom[5],atom[6])  # key = (chain,resnum)
+        else:
+            key = ('NA',atom[6])
+        if key not in res_atom.keys():
+            res_keys.append(key)
+            res_atom[key] = [[atom[14].strip()],[[atom[8],atom[9],atom[10]]]] # value = [[atoms],[coordinates]]
+        else:
+            res_atom[key][0].append(atom[14].strip())
+            res_atom[key][1].append([atom[8],atom[9],atom[10]])
 
+    for key in res_keys:
+        res_cent[key] = center_of_mass(res_atom[key][0],res_atom[key][1])
+             
+    print(len(res_keys))
+    f = open('contact_map.dat','w')
+    dist_mat = zeros((len(res_keys),len(res_keys)))
+    for i in range(len(res_keys)):
+        for j in range(i+1,len(res_keys)):
+            dist_mat[i,j] = calc_dist(res_cent[res_keys[i]],res_cent[res_keys[j]])
+            f.write('%4s %6s %4s %6s %12.6f\n'%(res_keys[i][0],res_keys[i][1],res_keys[j][0],res_keys[j][1],dist_mat[i,j]))
 
-    for dist_p in dist_atom:
-        if dist_p[0] <= cut:
-            if (dist_p[1],dist_p[2]) not in res_id.keys():
-                res_id[(dist_p[1],dist_p[2])] = [dist_p[0],dist_p[3]]
-            else:
-                res_id[(dist_p[1],dist_p[2])][0] = min(dist_p[0],res_id[(dist_p[1],dist_p[2])][0])
-                res_id[(dist_p[1],dist_p[2])].append(dist_p[3])
-    res_id = dict(sorted(res_id.items(),key=lambda x:x[1]))
-    d_res = open('dist_per_res-%.2f.dat'%cut,'w')
-    for key in res_id.keys():
-        d_res.write('%-2s %-5s %-7.4f'%(key[0],key[1],res_id[key][0]))
-        for v in range(1,len(res_id[key])):
-            d_res.write(' %-6s'%res_id[key][v])
-        d_res.write('\n')
-    d_res.close()
+    f.close()
+#    print(dist_mat)
 
+#    idx_list = []
+#    res_id = {}
+#    for i in range(len(center_res)):
+#        a,b = center_res[i].split(':')
+#        idx_list.append([a,int(b)])
+#        res_id[(a,int(b))] = [0.00]
+#
+#    sel_atoms = []
+#    sel_coord = []
+#    for i in range(len(center_res)):
+#        for atom in pdb:
+#            if idx_list[i][0] == atom[5].strip() and idx_list[i][1] == atom[6]:
+#                sel_atoms.append(Atoms[atom[14].strip()][1])
+#                sel_coord.append([atom[8],atom[9],atom[10]])
+#    sel_coord = array(sel_coord)
+#    sel_atoms = array(sel_atoms)
+#    com = center_of_mass(sel_atoms,sel_coord)
+#
+#    ###### Calculate atom-pair distances ######
+#    dist_atom = []
+#    for atom in pdb:
+#        dist_atom.append([calc_dist(array([atom[8],atom[9],atom[10]]),com),atom[5].strip(),atom[6],atom[2].strip()])
+#
+#
+#    for dist_p in dist_atom:
+#        if dist_p[0] <= cut:
+#            if (dist_p[1],dist_p[2]) not in res_id.keys():
+#                res_id[(dist_p[1],dist_p[2])] = [dist_p[0],dist_p[3]]
+#            else:
+#                res_id[(dist_p[1],dist_p[2])][0] = min(dist_p[0],res_id[(dist_p[1],dist_p[2])][0])
+#                res_id[(dist_p[1],dist_p[2])].append(dist_p[3])
+#    res_id = dict(sorted(res_id.items(),key=lambda x:x[1]))
+#    d_res = open('dist_per_res.dat','w')
+#    for key in res_id.keys():
+#        d_res.write('%-2s %-5s %-7.4f'%(key[0],key[1],res_id[key][0]))
+#        for v in range(1,len(res_id[key])):
+#            d_res.write(' %-6s'%res_id[key][v])
+#        d_res.write('\n')
+#    d_res.close()
+#
+#    qf = get_model_res(idx_list,'dist_per_res.dat',res_id)
+#    res_pick = []
+#    for nm_res in sorted(qf.keys()):
+#        res_list = qf[nm_res]
+#        for key in res_list.keys():
+#            for res in sorted(res_list[key]):
+#                if (key,res) in idx_list:
+#
+#                if 
+#                if res == 'HOH' or res == 'WAT':
+#
+#                if res_name

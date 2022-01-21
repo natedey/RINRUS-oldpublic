@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os, sys, argparse
 from read_write_pdb import *
 
