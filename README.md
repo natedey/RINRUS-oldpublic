@@ -36,34 +36,56 @@ which both require
 - Any C/C++ compiler suite with C++11 support
 
 ## Usage example
+If your structure is not prepared then go through 1-4 steps to add H and cleanup.
+   ##this all corrections are users responsibility to check and recheck, since RINRUS will generate models from provided structure).
 
 1. After getting a raw PDB file (`3bwm.pdb`), check for ambiguous atoms and do general clean up.
+  (Example: if there is multiple conformation for residue then keep only one conformation, delete extra ions present in pdb)
+  (keep only chain A or keep only one chain to generate models properly by RINRUS)
+  (one sample example may be here of may be in tutorial example) 
+  (structure taken from md simulation might have Na Cl or other ions which is not reqiored)
+  (if structures is converted from other format like MD simulation file then need to check all atom names, residue names and number is correct).
+  (ligand and metal cordinated atoms need their protonation state carefully checked)
 
-2. Run `reduce` to generate a new H-added PDB file (`3bwm_h.pdb`):
+2. Run `reduce` to generate a new H-added PDB file (`3bwm_h.pdb`): (or protonate with other program of your choice)
 ```bash
-$HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.ent
-```
+$HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb 
+   ###(check other flags of reduce program for your case by US)
+```        (version of reduce, permission to distribue reduce)
 
-3. Check the new PDB file. If there is metal, replace with an atom with same coordination (such as replace Mg with O), and save as a new PDB file.
+3.save the file to a new file (`3bwm_h.pdb > 3bwm_h_modify.pdb`)
 
-4. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions)
+4. Check the new PDB file.If there is metal, replace with an atom with same coordination (if there is Mg, replace Mg with O), and save as a new PDB file.
+   ##if metal is going to be part of seed then we need to replace metal with O to get correct cordination for probe)
 
-5. If there are any "CA" or "CB" atoms in ligands, replace them with "CA'" and "CB'", respectively.
+5. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions)
+   ##user needs to protonate ligand and substrate properly since reduce does not able to recognize and add H properly sometimes)
+   ##check ligand table in rcsb website for more details of substrate Hydrogens).
+   ##this all corrections are users responsibility to check and recheck, since RINRUS will generate models from provided structure).
+   
+6. If there are any "CA" or "CB" atoms in ligands, replace them with "CA'" and "CB'", respectively. (This will decide Freezing patterns so we don't want to freeze something in substrate mostly).
+##THIS CAN BE AUTOMATED?? If ligand has canomical amino acids then many problems can arise later). eg. TDP1
 
-6. After previous 3 check steps, save the file to a new file (`3bwm_h_modify.pdb`)
-
-7. Use this new PDB file (`3bwm_h_modify.pdb`) to run `probe` and save the result to `*.probe`:
+7. Use this new PDB file (`3bwm_h_modify.pdb`) to run `probe` and save the result.
 ``` bash
-$HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_h_modify.probe
+$HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_h_modify.probe 
 ```
+(Default RIN generator is probe you can use arpeggio?) Instruction for arpeggio.
+(Instructions for Distance based model building).
 
-8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:
+What is seed?, how to choose residue number from pdb file for seed, user needs to have seed number ready for)
+(A good default seeds are substrates participating in chemical reaction is selected as seed by user.) 
+A second useful seeds are a substrate and any residues or co-factor,fragmens, which is breaking and forming bonds- This will generate much larger models compare to first seed example.
+For example of 3bwm we have selected 300(metal Mg2+),301 (SAM) and 302 (Catechol) as a seeds.
+ 
+8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chein:ResID)
 ``` bash
-python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h.probe -s 'A:300,A:301,A:302'
+python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:301,A:302'
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-9. Run `freq_per_res.dat` file for trim residues:
+9. Run "probe_freq_2pdb.py' to generate models, you need the correct pdb file probe file, and freq_per_res.dat file and the seed:
+(more description how to build the models, which critia, alternative building schemes)
 ``` bash
 python3 $HOME/git/RINRUS/bin/probe_freq_2pdb.py 3bwm_h_mg.ent 3bwm_h.probe freq_per_res.dat 'A:300,A:301,A:302'
 ```
