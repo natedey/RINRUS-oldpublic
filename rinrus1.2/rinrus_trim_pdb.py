@@ -101,7 +101,8 @@ if __name__ == '__main__':
             key = (cha,res_id)
             if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
             ### Check one residue before according to "N and H" ###    
-                if bool(set(res_atom[key])&set(['N','H'])):
+                #if bool(set(res_atom[key])&set(['N','H'])):
+                if bool(set(res_atom[key])&set(['N','H'])) and (cha,res_id-1) in pdb_res_name.keys():
                     if (cha,res_id-1) not in res_atom.keys():
                         res_atom[(cha,res_id-1)] = ['CA','C','O','HA','HA2','HA3']
                     else:
@@ -109,7 +110,8 @@ if __name__ == '__main__':
                             if atom not in res_atom[(cha,res_id-1)]:
                                 res_atom[(cha,res_id-1)].append(atom)
             ### Check one residue after according to "C and O" ###    
-                if bool(set(res_atom[key])&set(['C','O'])):
+                #if bool(set(res_atom[key])&set(['C','O'])):
+                if bool(set(res_atom[key])&set(['C','O'])) and (cha, res_id+1) in pdb_res_name.keys():
                     if (cha,res_id+1) not in res_atom.keys():
                         res_atom[(cha,res_id+1)] = ['CA','HA','HA2','HA3','N','H']
                     else:
