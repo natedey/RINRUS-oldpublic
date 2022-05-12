@@ -1,0 +1,34 @@
+A    6        C   
+A    7        C    CG   H    HA   HB2  HB3  HD2  HD3  HG2  HG3  HH11 HH12 HH21 HH22
+A    8        H   
+A    9        HA   HB3 
+A    48       C    HB3 
+A    78       CD  
+A    89       C
+A    90       C    CD   CZ   H    HA   HB3  HD2  HD3  HE   HG3  HH11 HH12 HH21 HH22
+A    91       N     C    HG23
+A    92       CB   HA   HG3 
+A    106      CE1  CG   HB3 
+A    108      HE1  HH  
+A    115      HB3  HD13 HD22
+A    128      C10  C11  C4   C5   H01  H02  H03  H04  H05  H06  H07  HO5 
+C    313      HB2 
+C    315      HB1  HB2 
+C    318      C    O
+C    319      C    CZ   HA   HD3  HG2  HH11 HH12 HH21 HH22
+C    320      N
+C    321      H   
+C    328      C    HA  
+C    329      H   
+C    330      HA   HG1  HG22 HG23
+C    331      H    HB2  HG  
+W    700      H2  
+W    2414     H1  
+W    2694     H2  
+W    3505     H2  
+W    4187     H1   H2  
+W    4821     H1   H2  
+W    7306     H2  
+W    7850     H1   H2  
+W    8222     H2  
+W    8538     H1  
