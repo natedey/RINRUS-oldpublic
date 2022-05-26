@@ -121,6 +121,19 @@ This will generate a set of trimmed pdb files such as `dres_3.pdb, dres_4.pdb...
 This will generate the H added pdb files.
 
 ## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking
+   Note: Before starting ensure that pdb is cleanes. Use step 1 to 7 above to clean your pdb
+1. With a clean pdb run 'openbabel/2.4.1' ensure you have openbabel/2.4.1 install on your computer
+````bash 
+module load openbabel/2.4.1
+```
+2. Run arpeggio.py script to generate the contact file 
+````bash
+python3 ../test/arpeggio/arpeggio_v0.py 2cht_h-TS.pdb***
+```
+After running arpeggio, it will generate 7 files but the most important file is the contact file (2cht_h-TS.contact) 
+Note: Arpeggio can be run on the web but Do not use the web base if the pdb is not clean because it does not take care of the conformation problem if some of the residue have more one conformation in the pdb. 
+3. Use the 'arpeggio-contact.py' script to generate contact list and res_atoms.dat file to generate models. 
+````bash
 
 ## Usage example 4 - generating a single or a few input files with manual ranking (from SAPT, ML, or from some scheme that doesn't yet interface with RINRUS automatically)
 
