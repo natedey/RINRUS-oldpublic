@@ -19,6 +19,7 @@ export PYTHONPATH="~/git/RINRUS/lib3:$PYTHONPATH"
 - NumPy
 - pymol
   - If installing via conda, it's under `-c conda-forge pymol-open-source`.
+- openbabel (required for Arpeggio)
 
 For certain scripts (optional),
 - matplotlib
@@ -67,21 +68,16 @@ $HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_
 ```
 NOTE: When creating QM-cluster models, remember to replace metal atom in PDB if it was replaced with O in step 4
 
-What is seed?, how to choose residue number from pdb file for seed, user needs to have seed number ready for)
-(A good default seeds are substrates participating in chemical reaction is selected as seed by user.) 
-A second useful seeds are a substrate and any residues or co-factor, fragment, which is breaking and forming bonds- This will generate much larger models compare to first seed example.
-For example of 3bwm we have selected 300(metal Mg2+),301 (SAM) and 302 (Catechol) as a seeds.
-
-# grabbed this from step 1 and needs to be improved. When seed is selected, appropriate chain needs to be selected...
-#Use a chain of your choice if there are multiple chains that make your selected pdb
-
+Step 8 is one of the most important steps of the QM-cluster model building process. The user must now define the "seed". What is the seed? Typically, the seed will be the substrate(s) (or ligand in biochemical terms) participating in the chemical reaction. Any amino acid residues, co-factors, or fragments which participate in the active site catalytic breaking and forming of chemical bonds may also need to be included as part of the seed, but this will generate much larger models compare to only using the substrate.
+Using the example of PDB:3BWM, we will select the PDB residue ID# of three fragments: 300(metal Mg2+), 301 (SAM) and 302 (Catechol - the substrate) as the seed. 3BWM only has one chain, so we must specify chain A throughout. If the PDB does not have chain identifiers, you will need specify ":XXX" where XXX is residue id number to use them in this step and beyond. If the protein is multimeric, use the chain of your choice for seed fragments. Note that some multimeric x-ray crystal structures may not necessarily have equivalent active sites!
+###Does this automatically use chain A if chain isn't specified? No, defaults are wonky, especially if there is no chain ID in the PDB. We need to make better defaults here. 
 8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chein:ResID)
 ``` bash
 python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:301,A:302'
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-**Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to run GenResAtoms.py to generate res_atom.dat file for all models in a single pass.
+#Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to run GenResAtoms.py to generate res_atom.dat file for all models in a single pass. THIS DOES NOT WORK AT ALL as of 5/18/2022! 
 
 ``` bash
 python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300,A:301,A:302
@@ -95,9 +91,10 @@ python3 $HOME/git/RINRUS/bin/probe_freq_2pdb.py 3bwm_h_mg.ent 3bwm_h.probe freq_
 This creates a `model_detail.dat` file that associates model sizes (residue count) with the residue numbers in that model, plus a `res_NNN.pdb` for each model, where `NNN` is the number of residues in that model.
 - For example, if the largest model generated from the network has 34 residues, and the network seed contained 3 residues, then 32 files will be created: `res_34.pdb`, `res_33.pdb`, ..., `res_4.pdb`, and `res_3.pdb`.
 
-
 10. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
 You will have to write a bash or python script to loop over all the models, which Dr. D hates
+#This doesn't work for Dr. D as of 5/18/2022
+#How does pymol_scripts read resids if they are in a different chain?!
 
 ```bash
 python3 $HOME/git/RINRUS/bin/pymol_scripts.py res_NNN.pdb [res_NNN-1.pdb ...] --resids 300,301,302
