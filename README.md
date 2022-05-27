@@ -29,6 +29,7 @@ For certain scripts (optional),
 
 - [probe](https://github.com/rlabduke/probe)
 - [reduce](https://github.com/rlabduke/reduce)
+- [arpeggio](http://biosig.unimelb.edu.au/arpeggioweb)
 
 Currently, a precompiled copy of each is present in `bin/`.
 
@@ -77,6 +78,16 @@ python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:30
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
+** For RINRUS version 1.2 use the following steps and ignor step 9 
+
+9a. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
+```bash
+python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
+```
+This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
+
+** Atsu 5/27/2022 
+
 #Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to run GenResAtoms.py to generate res_atom.dat file for all models in a single pass. THIS DOES NOT WORK AT ALL as of 5/18/2022! 
 
 ``` bash
@@ -120,20 +131,53 @@ This will generate a set of trimmed pdb files such as `dres_3.pdb, dres_4.pdb...
 3. Then run `python3 ~/git/RINRUS/bin/pymol_scripts.py dres_3.pdb dres_3_h.pdb`
 This will generate the H added pdb files.
 
-## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking
-   Note: Before starting ensure that pdb is cleanes. Use step 1 to 7 above to clean your pdb
-1. With a clean pdb run 'openbabel/2.4.1' ensure you have openbabel/2.4.1 install on your computer
+## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: Atsu is working on this 
+
+   Note: Before starting, ensure that the pdb is cleaned. Use step 1 to 7 above to clean your pdb
+1. With a clean pdb run 'openbabel/2.4.1' ensure you have openbabel/2.4.1 installed on your terminal 
 ````bash 
 module load openbabel/2.4.1
 ```
 2. Run arpeggio.py script to generate the contact file 
 ````bash
-python3 ../test/arpeggio/arpeggio_v0.py 2cht_h-TS.pdb***
+python3 ~/git/RINRUS/bin/arpeggio/arpeggio.py 2cht_h-TS.pdb
 ```
-After running arpeggio, it will generate 7 files but the most important file is the contact file (2cht_h-TS.contact) 
-Note: Arpeggio can be run on the web but Do not use the web base if the pdb is not clean because it does not take care of the conformation problem if some of the residue have more one conformation in the pdb. 
+
+After running arpeggio, The arpeggio.py will generate many files but the most important file is the contact file (2cht_h-TS.contact) 
+Note: Arpeggio can be run on the web but Do not use the web base 
+if the pdb is not clean because it does not take care of the conformation issue with some pdbs. 
+
 3. Use the 'arpeggio-contact.py' script to generate contact list and res_atoms.dat file to generate models. 
 ````bash
+python3 ~/git/arpeggio_contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
+```
+
+If you want to ignor proximal add '-p 1' at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
+This step generates 'contact_counts.dat', 'node_info.dat', 'res_atom.dat files'
+
+4. Open contact_counts.dat file and sort the first column according to decreasing order. Copy the edited file and rename as sorted_contact_counts.dat 
+
+5. With the res_atoms.dat file generated, run the script below to generate the trimmed PDB model using RINRUSv1.2 script
+````bash
+python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s C:202 -ratom res_atoms.dat -pdb 2cht_h-TS.pdb
+```
+This script produces `res_NN.pdb` for the largest model, where `NN` is the number of residues in that model.
+
+6. To add hydrogens to fill the place where bonds were broken when the model was trimmed away, run the command below.
+```bash
+python3 ~/git/RINRUS/bin/pymol_scripts.py res_16.pdb 202 
+```
+## NOTE: The pymol_scripts.py script does not  work for now, so you need to copy log.pml from some old directory and edit the res_NN and the substrates information accordingly in log.pml file
+ If this is your start time building models with RINRUS, copy log.pml file from here: /home/dagbaglo/chem/2cht/XTAL/arpeggio/res_13-ts-01
+ Run log.pm as:
+ ```bash
+ pymol -qc log.pml
+```
+
+7. Run `write_input.py` for a single model to generate a template file and input file:
+```bash
+python3 ~/git/RINRUS/bin/write_input.py -intmp modred_temp -c -2 -noh res_NN.pdb -adh res_NN_h.pdb
+```
 
 ## Usage example 4 - generating a single or a few input files with manual ranking (from SAPT, ML, or from some scheme that doesn't yet interface with RINRUS automatically)
 
