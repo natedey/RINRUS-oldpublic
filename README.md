@@ -93,7 +93,7 @@ New Step 8 using RINRUS 2 based on Arpeggio RIN analysis and select residues
 #Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to run GenResAtoms.py to generate res_atom.dat file for all models in a single pass. THIS DOES NOT WORK AT ALL as of 5/18/2022! 
 
 ``` bash
-python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300,A:301,A:302
+python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300 A:301 A:302
 ```
 
 9. Run "probe_freq_2pdb.py' to generate models, you need the correct pdb file probe file, and freq_per_res.dat file and the seed:
