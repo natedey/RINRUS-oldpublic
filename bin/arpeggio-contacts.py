@@ -99,7 +99,7 @@ def de_contacts(contactsf,seed,opt):
 if __name__ == '__main__':
 
     ################################################################################
-    ### python3 farpeggio.py -c 2cht_h-TS.contacts -s A:202 -p 1 ###
+    ### python3 arpeggio-contacts.py -c 2cht_h-TS.contacts -s A:202 -p 1 ###
     ################################################################################
 
     parser = argparse.ArgumentParser(description='Get contact information from Arpeggio output')
