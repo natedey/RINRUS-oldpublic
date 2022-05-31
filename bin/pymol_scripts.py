@@ -20,8 +20,8 @@ def system_run(cmd):
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("pdbfilename", nargs="+")
-parser.add_argument("--resids")
+parser.add_argument("-pdbfilename", nargs="+")
+parser.add_argument("-resids")
 args = parser.parse_args()
 
 with open("log.pml", "w") as logf:
