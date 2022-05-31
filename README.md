@@ -69,7 +69,7 @@ $HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_
 ```
 NOTE: When creating QM-cluster models, remember to replace metal atom in PDB if it was replaced with O in step 4
 
-### Step 8 and 9 are written for RINRUS v1 RIN analysis and residue selection ###
+### Step 8 and 9 are written for RINRUS v1 RIN analysis and residue selection based on program Probe ###
 ***Step 8 is one of the most important steps of the QM-cluster model building process. The user must now define the "seed". What is the seed? Typically, the seed will be the substrate(s) (or ligand in biochemical terms) participating in the chemical reaction. Any amino acid residues, co-factors, or fragments which participate in the active site catalytic breaking and forming of chemical bonds may also need to be included as part of the seed, but this will generate much larger models compare to only using the substrate***.
 Using the example of PDB:3BWM, we will select the PDB residue ID# of three fragments: 300(metal Mg2+), 301 (SAM) and 302 (Catechol - the substrate) as the seed. 3BWM only has one chain, so we must specify chain A throughout. If the PDB does not have chain identifiers, you will need specify ":XXX" where XXX is residue id number to use them in this step and beyond. If the protein is multimeric, use the chain of your choice for seed fragments. Note that some multimeric x-ray crystal structures may not necessarily have equivalent active sites!
 ###Does this automatically use chain A if chain isn't specified? No, defaults are wonky, especially if there is no chain ID in the PDB. We need to make better defaults here. 
@@ -79,7 +79,7 @@ Using the example of PDB:3BWM, we will select the PDB residue ID# of three fragm
 #```
 #This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-##** For RINRUS version 1.2 use the following steps and ignor step 9 
+### For RINRUS version 1.2 use the following steps and ignor step 9 ###
 ##
 ##9a. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
 ##```bash
