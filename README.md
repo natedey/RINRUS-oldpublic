@@ -86,7 +86,6 @@ NOTE: When creating QM-cluster models, remember to replace metal atom in PDB if 
 ##python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
 ##```
 ##This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
-###########################################################################################################################################
 
 New Step 8 using RINRUS 2 based on Arpeggio RIN analysis and select residues
 ** Atsu 5/27/2022 
