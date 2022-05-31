@@ -12,6 +12,7 @@ def system_run(cmd):
     exit = os.system(cmd)
     if exit != 0:
         print("failed to run:")
+        print("pymol may be set as an alias in your shell. Please run 'pymol -qc log.pml'")
         print(cmd)
         sys.exit()
 
