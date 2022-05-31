@@ -51,8 +51,9 @@ If your structure is not appropriately pre-processed then go through steps 1-4 t
 2. If the protein is not yet protonated, run `reduce` to generate a new protonated PDB file  (`3bwm_h.pdb`): (or protonate with other program of your choice). Skip this step if the pdb file is from MD simulation since it has been protonated already.
 ```bash
 $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb 
-   ###(check other flags of reduce program for your case by US)
-```        (version of reduce, permission to distribute reduce)
+```        
+###(we need to check other flags of reduce program for unusual cases?)
+###(version of reduce, permission to distribute reduce)
 
 3. copy the protonated PDB to a new filename (`3bwm_h.pdb > 3bwm_h_modify.pdb`)
 
@@ -61,53 +62,44 @@ $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb
 5. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions). The user needs to protonate ligand and substrate properly since reduce does not recognize most substrates and may add H improperly. Check the ligand 2D drawing for the PDB entry on rcsb website for some guidance on substrate protonation if starting from scratch. Perform this step correctly is the user's responsibility! RINRUS will generate models from provided structure and does not have comprehensive sanity checks!
    
 6. If there are any "CA" or "CB" atoms in substrate/ligands/noncanonical amino acids, replace them with "CA'" and "CB'", respectively. An example of this would be if the substrate is a polypeptide (like Tdp1). You would not want to freeze substrate Carbon alphas/betas. Renaming CA' / CA' will cause RINRUS to ignore these atoms when it makes the list of frozen atoms.  
-##CAN THIS BE AUTOMATED?? Like after we run probe, could RINRUS go back through the PDB and "unfreeze" frozen atoms in seed residues?
+###CAN THIS BE AUTOMATED?? Like after we run probe, could RINRUS go back through the PDB and "unfreeze" frozen atoms in seed residues?
 
 7. Use the new PDB file (`3bwm_h_modify.pdb`) to run `probe` to generate .probe file	
 ``` bash
 $HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_h_modify.probe 
 ```
-NOTE: When creating QM-cluster models, remember to replace metal atom in PDB if it was replaced with O in step 4
+###NOTE: When creating QM-cluster models, remember to replace metal atom in PDB if it was replaced with O in step 4
 
-### Step 8 and 9 are written for RINRUS v1 RIN analysis and residue selection based on program Probe ###
-***Step 8 is one of the most important steps of the QM-cluster model building process. The user must now define the "seed". What is the seed? Typically, the seed will be the substrate(s) (or ligand in biochemical terms) participating in the chemical reaction. Any amino acid residues, co-factors, or fragments which participate in the active site catalytic breaking and forming of chemical bonds may also need to be included as part of the seed, but this will generate much larger models compare to only using the substrate***.
-Using the example of PDB:3BWM, we will select the PDB residue ID# of three fragments: 300(metal Mg2+), 301 (SAM) and 302 (Catechol - the substrate) as the seed. 3BWM only has one chain, so we must specify chain A throughout. If the PDB does not have chain identifiers, you will need specify ":XXX" where XXX is residue id number to use them in this step and beyond. If the protein is multimeric, use the chain of your choice for seed fragments. Note that some multimeric x-ray crystal structures may not necessarily have equivalent active sites!
+***Step 8 is one of the most important steps of the QM-cluster model building process. The user must now define the "seed". What is the seed? Typically, the seed will be the substrate(s) (or ligand in biochemical terms) participating in the chemical reaction. Any amino acid residues, co-factors, or fragments which participate in the active site catalytic breaking and forming of chemical bonds may also need to be included as part of the seed, but this will generate much larger models compare to only using the substrate***
+
+##Using the example of PDB:3BWM, we will select the PDB residue ID# of three fragments: 300(metal Mg2+), 301 (SAM) and 302 (Catechol - the substrate) as the seed. 3BWM only has one chain, so we must specify chain A throughout. If the PDB does not have chain identifiers, you will need specify ":XXX" where XXX is residue id number to use them in this step and beyond. If the protein is multimeric, use the chain of your choice for seed fragments. Note that some multimeric x-ray crystal structures may not necessarily have equivalent active sites!
 ###Does this automatically use chain A if chain isn't specified? No, defaults are wonky, especially if there is no chain ID in the PDB. We need to make better defaults here. 
-#8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chein:ResID)
-#``` bash
-#python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:301,A:302'
-#```
-#This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
+8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chein:ResID)
+``` bash
+python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:301,A:302'
+```
+This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-### For RINRUS version 1.2 use the following steps and ignor step 9 ###
-##
-##9a. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
-##```bash
-##python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
-##```
-##This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
-
-New Step 8 using RINRUS 2 based on Arpeggio RIN analysis and select residues
-** Atsu 5/27/2022 
-
-#Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to run GenResAtoms.py to generate res_atom.dat file for all models in a single pass. THIS DOES NOT WORK AT ALL as of 5/18/2022! 
+9. Run "GenResAtoms.py" to generate models, you need the correct pdb file, probe file, and freq_per_res.dat file and the seed:
 
 ``` bash
 python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300 A:301 A:302
 ```
 
-9. Run "probe_freq_2pdb.py' to generate models, you need the correct pdb file probe file, and freq_per_res.dat file and the seed:
-(more description how to build the models, which critia, alternative building schemes)
-``` bash
-python3 $HOME/git/RINRUS/bin/probe_freq_2pdb.py 3bwm_h_mg.ent 3bwm_h.probe freq_per_res.dat 'A:300,A:301,A:302'
-```
-This creates a `model_detail.dat` file that associates model sizes (residue count) with the residue numbers in that model, plus a `res_NNN.pdb` for each model, where `NNN` is the number of residues in that model.
+This creates a `res_atoms_x.dat` file that associates model sizes (residue count) with the residue numbers in that model, plus a `res_NNN.pdb` for each model, where `NNN` is the number of residues in that model.
 - For example, if the largest model generated from the network has 34 residues, and the network seed contained 3 residues, then 32 files will be created: `res_34.pdb`, `res_33.pdb`, ..., `res_4.pdb`, and `res_3.pdb`.
 
-10. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
+10. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
+```bash
+python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
+```
+This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
+#Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to write a script to do everything in a single pass by iterating over the -ratom flag.
+
+11. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
 You will have to write a bash or python script to loop over all the models, which Dr. D hates
-#This doesn't work for Dr. D as of 5/18/2022
-#How does pymol_scripts read resids if they are in a different chain?!
+#The pymol script file (log.pml) is correct, but it currently doesn't run automatically. Need to manually run log.pml scripts in pymol to add hydrogens
+#How does pymol_scripts read resids if they are in a different chain?! - NJD
 
 ```bash
 python3 $HOME/git/RINRUS/bin/pymol_scripts.py res_NNN.pdb [res_NNN-1.pdb ...] --resids 300,301,302
@@ -117,7 +109,7 @@ which
 - runs PyMOL to perform the addition.
 If `--resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. 
 
-11. Run `write_input.py` for a single model to generate a template file and input file:
+12. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
 python3 $HOME/git/RINRUS/bin/write_input.py -noh res_NNN.pdb -adh res_NNN_h.pdb -intmp input_template
 ```
