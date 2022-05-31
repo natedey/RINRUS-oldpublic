@@ -91,7 +91,7 @@ This creates a `res_atoms_x.dat` file that associates model sizes (residue count
 
 10. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
 ```bash
-python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
+python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
 ```
 This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
 #Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to write a script to do everything in a single pass by iterating over the -ratom flag.
@@ -151,9 +151,9 @@ This step generates `contact_counts.dat`, `node_info.dat`, `res_atom.dat files`
 
 4. Open contact_counts.dat file and sort the first column according to decreasing order. Copy the edited file and rename as sorted_contact_counts.dat 
 
-5. With the res_atoms.dat file generated, run the script below to generate the trimmed PDB model using RINRUSv1.2 script
+5. With the res_atoms.dat file generated, run the script below to generate the trimmed PDB model using rinrus_trim_pdb script
 ````bash
-python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s C:202 -ratom res_atoms.dat -pdb 2cht_h-TS.pdb
+python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s C:202 -ratom res_atoms.dat -pdb 2cht_h-TS.pdb
 ````
 This script produces `res_NN.pdb` for the largest model, where `NN` is the number of residues in that model.
 
