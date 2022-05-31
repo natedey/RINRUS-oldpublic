@@ -102,12 +102,12 @@ You will have to write a bash or python script to loop over all the models, whic
 #How does pymol_scripts read resids if they are in a different chain?! - NJD
 
 ```bash
-python3 $HOME/git/RINRUS/bin/pymol_scripts.py res_NNN.pdb [res_NNN-1.pdb ...] --resids 300,301,302
+python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename res_.pdb
 ```
 which
 - generates a `log.pml` PyMOL input file containing commands that perform the hydrogen addition, and then
 - runs PyMOL to perform the addition.
-If `--resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. 
+If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. 
 
 12. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
