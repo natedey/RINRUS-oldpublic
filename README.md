@@ -80,7 +80,7 @@ python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:30
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-9. Run "GenResAtoms.py" to generate models, you need the correct pdb file, probe file, and freq_per_res.dat file and the seed:
+9. Run "GenResAtoms.py" to generate models. You need the correct freq_per_res.dat file and the res_atoms.dat file. This part is a little trickier because we will more broadly define the "seed" as any fragments or residues that must be in ALL models. This will often be a set of the seed and other residues. 
 
 ``` bash
 python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300 A:301 A:302
