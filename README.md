@@ -111,7 +111,7 @@ If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE
 
 12. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
-python3 $HOME/git/RINRUS/bin/write_input.py -noh res_NNN.pdb -adh res_NNN_h.pdb -intmp input_template
+python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.pdb -adh res_NN_h.pdb
 ```
 
 ## Usage example 2 - generating a single or a few input files with distance-based ranking: TJ is working on this
