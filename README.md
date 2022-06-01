@@ -80,7 +80,7 @@ python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:30
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-9. Run "GenResAtoms.py" to generate models, you need the correct pdb file, probe file, and freq_per_res.dat file and the seed:
+9. Run "GenResAtoms.py" to generate models. You need the correct freq_per_res.dat file and the res_atoms.dat file. This part is a little trickier because we will more broadly define the "seed" as any fragments or residues that must be in ALL models. This will often be a set of the seed and other residues. 
 
 ``` bash
 python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300 A:301 A:302
@@ -91,7 +91,7 @@ This creates a `res_atoms_x.dat` file that associates model sizes (residue count
 
 10. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
 ```bash
-python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
+python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
 ```
 This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
 #Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to write a script to do everything in a single pass by iterating over the -ratom flag.
@@ -102,16 +102,16 @@ You will have to write a bash or python script to loop over all the models, whic
 #How does pymol_scripts read resids if they are in a different chain?! - NJD
 
 ```bash
-python3 $HOME/git/RINRUS/bin/pymol_scripts.py res_NNN.pdb [res_NNN-1.pdb ...] --resids 300,301,302
+python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename res_.pdb
 ```
 which
 - generates a `log.pml` PyMOL input file containing commands that perform the hydrogen addition, and then
 - runs PyMOL to perform the addition.
-If `--resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. 
+If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. 
 
 12. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
-python3 $HOME/git/RINRUS/bin/write_input.py -noh res_NNN.pdb -adh res_NNN_h.pdb -intmp input_template
+python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.pdb -adh res_NN_h.pdb
 ```
 
 ## Usage example 2 - generating a single or a few input files with distance-based ranking: TJ is working on this
@@ -151,9 +151,9 @@ This step generates `contact_counts.dat`, `node_info.dat`, `res_atom.dat files`
 
 4. Open contact_counts.dat file and sort the first column according to decreasing order. Copy the edited file and rename as sorted_contact_counts.dat 
 
-5. With the res_atoms.dat file generated, run the script below to generate the trimmed PDB model using RINRUSv1.2 script
+5. With the res_atoms.dat file generated, run the script below to generate the trimmed PDB model using rinrus_trim_pdb script
 ````bash
-python3 ~/git/RINRUS/rinrus1.2/rinrus_trim_pdb.py -s C:202 -ratom res_atoms.dat -pdb 2cht_h-TS.pdb
+python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s C:202 -ratom res_atoms.dat -pdb 2cht_h-TS.pdb
 ````
 This script produces `res_NN.pdb` for the largest model, where `NN` is the number of residues in that model.
 
