@@ -12,6 +12,7 @@ def system_run(cmd):
     exit = os.system(cmd)
     if exit != 0:
         print("failed to run:")
+        print("pymol may be set as an alias in your shell. Please run 'pymol -qc log.pml'")
         print(cmd)
         sys.exit()
 
@@ -19,8 +20,8 @@ def system_run(cmd):
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("pdbfilename", nargs="+")
-parser.add_argument("--resids")
+parser.add_argument("-pdbfilename", nargs="+")
+parser.add_argument("-resids")
 args = parser.parse_args()
 
 with open("log.pml", "w") as logf:
