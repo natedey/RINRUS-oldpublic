@@ -243,4 +243,12 @@ if __name__ == '__main__':
             d_res.write(' %-6s'%res_id[key][v])
         d_res.write('\n')
     d_res.close()
+   ## On 7th June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
+    atom_res = open('res_atoms_%.2f.dat'%cut,'w')
+    for key in res_id.keys():
+        atom_res.write('%-2s %-5s '%(key[0],key[1]))
+        for v in range(1,len(res_id[key])):
+            atom_res.write(' %-6s'%res_id[key][v])
+        atom_res.write('\n')
+    atom_res.close()
 
