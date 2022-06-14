@@ -130,9 +130,9 @@ python3 ~/git/RINRUS/bin/GenResAtoms.py -freq dist_per_res-5.00.dat -atom res_at
 ```
 this will generate res_atom_XX.dat for all models separately which has information about all important atoms of main chain and side chain needs to be included in model.
 
-4. Then run (for res_atom_1.dat to res_atom_50.dat)
+4. Then run (for any number of res_atoms_XX.dat models)
 ````bash
-mkdir pdbs; for i in {1..50}; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
 ````
 This will generate the H added pdb files for all models from res_atoms_XX.dat in separate directories and generate pdbs folder containing all protonated pdb and res_atoms_xx.dat
 
