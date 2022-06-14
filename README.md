@@ -116,14 +116,27 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.
 
 ## Usage example 2 - generating a single or a few input files with distance-based ranking: TJ is working on this
 
-1. Run `python3 ~/git/RINRUS/bin/pdb_2dist_freq.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -cut 5`
-this will generate a file named `dist_per_res-5.00.dat`
+1. Follow step 1-5 from example 1 to get protonated pdb, in this case we will work with `3bwm.pdb` and after step 2 of example 1 it will generate `3bwm_h.pdb`, if you have modified anything from `3bwm_h.pdb` then use that for following process.
 
-2. Then Run `python3 ~/git/RINRUS/bin/pdb_dist_2pdb.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -cut 5`
-This will generate a set of trimmed pdb files such as `dres_3.pdb, dres_4.pdb...`
+2. Run (For 5 Angstrom from center of mass of seed residues A:300,A:301,A:302, change seed and distance as per requirement)
+```bash
+python3 ~/git/RINRUS/bin/pdb_2dist_freq.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5
+```
+this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atoms.dat` which contain information about important atoms to be included in selected residues. 
 
-3. Then run `python3 ~/git/RINRUS/bin/pymol_scripts.py dres_3.pdb dres_3_h.pdb`
-This will generate the H added pdb files.
+3. Then run 
+```bash
+python3 ~/git/RINRUS/bin/GenResAtoms.py -freq dist_per_res-5.00.dat -atom res_atoms_5.00.dat -seed A:300,A:301,A:302
+```
+this will generate res_atom_XX.dat for all models separately which has information about all important atoms of main chain and side chain needs to be included in model.
+
+4. Then run (for res_atom_1.dat to res_atom_50.dat)
+````bash
+mkdir pdbs; for i in {1..50}; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
+````
+This will generate the H added pdb files for all models from res_atoms_XX.dat in separate directories and generate pdbs folder containing all protonated pdb and res_atoms_xx.dat
+
+5. follow step 12 of example 1 to generate a template file and input file.
 
 ## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: Atsu is working on this 
 
