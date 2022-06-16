@@ -156,7 +156,7 @@ if the pdb is not clean because it does not take care of the conformation issue 
 
 3. Use the `arpeggio-contact.py` script to generate contact list and res_atoms.dat file to generate models. 
 ````bash
-python3 ~/git/arpeggio_contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
+python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
 ````
 
 If you want to ignor proximal add `-p 1` at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
