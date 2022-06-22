@@ -116,14 +116,27 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.
 
 ## Usage example 2 - generating a single or a few input files with distance-based ranking: TJ is working on this
 
-1. Run `python3 ~/git/RINRUS/bin/pdb_2dist_freq.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -cut 5`
-this will generate a file named `dist_per_res-5.00.dat`
+1. Follow step 1-5 from example 1 to get protonated pdb, in this case we will work with `3bwm.pdb` and after step 2 of example 1 it will generate `3bwm_h.pdb`, if you have modified anything from `3bwm_h.pdb` then use that for following process.
 
-2. Then Run `python3 ~/git/RINRUS/bin/pdb_dist_2pdb.py -pdb 3bwm_h_mg.ent -s A:300,A:301,A:302 -cut 5`
-This will generate a set of trimmed pdb files such as `dres_3.pdb, dres_4.pdb...`
+2. Run (For 5 Angstrom from center of mass of seed residues A:300,A:301,A:302, change seed and distance as per requirement)
+```bash
+python3 ~/git/RINRUS/bin/pdb_2dist_freq.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5
+```
+this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atoms.dat` which contain information about important atoms to be included in selected residues. 
 
-3. Then run `python3 ~/git/RINRUS/bin/pymol_scripts.py dres_3.pdb dres_3_h.pdb`
-This will generate the H added pdb files.
+3. Then run 
+```bash
+python3 ~/git/RINRUS/bin/GenResAtoms.py -freq dist_per_res-5.00.dat -atom res_atoms_5.00.dat -seed A:300,A:301,A:302
+```
+this will generate res_atom_XX.dat for all models separately which has information about all important atoms of main chain and side chain needs to be included in model.
+
+4. Then run (for any number of res_atoms_XX.dat models)
+````bash
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
+````
+This will generate the H added pdb files for all models from res_atoms_XX.dat in separate directories and generate pdbs folder containing all protonated pdb and res_atoms_xx.dat
+
+5. follow step 12 of example 1 to generate a template file and input file.
 
 ## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: Atsu is working on this 
 
@@ -143,11 +156,12 @@ if the pdb is not clean because it does not take care of the conformation issue 
 
 3. Use the `arpeggio-contact.py` script to generate contact list and res_atoms.dat file to generate models. 
 ````bash
-python3 ~/git/arpeggio_contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
+python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
 ````
+ Run this command to sort contact_counts.dat file "sort -nr contact_counts.dat > sort_counts.dat" 
 
 If you want to ignor proximal add `-p 1` at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
-This step generates `contact_counts.dat`, `node_info.dat`, `res_atom.dat files`
+This step generates `sort_counts.dat`, `node_info.dat`, `res_atom.dat files`
 
 4. Open contact_counts.dat file and sort the first column according to decreasing order. Copy the edited file and rename as sorted_contact_counts.dat 
 
