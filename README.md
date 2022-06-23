@@ -138,7 +138,7 @@ This will generate the H added pdb files for all models from res_atoms_XX.dat in
 
 5. follow step 12 of example 1 to generate a template file and input file.
 
-## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: Atsu is working on this 
+## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: 
 
    Note: Before starting, ensure that the pdb is cleaned. Use step 1 to 7 above to clean your pdb
 1. With a clean pdb run 'openbabel/2.4.1' ensure you have openbabel/2.4.1 installed on your terminal 
@@ -191,3 +191,40 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp modred_temp -c -2 -noh res_NN.pdb
 
 ## Usage example 5 - GENERATE ALL THE THINGS!!! Combinatorial model building from probe and arpeggio
 
+## Usage example 5a - Combinatorial model building from arpeggio
+1. Refer to usage example 3 steps 1 to 3 to generate arpeggio contact files to compute combinations
+
+2. Run combifromcontacts.py script with the defined seed (chain/residue numbers) which takes combinations of the different interactions 
+```bash
+python3 ~/git/RINRUS/combi_script/combifromcontacts.py 2cht_h.contacts A/203 2cht_h.sift 
+```
+This generates LongCombi.dat, SimpCombi.dat, and ModSimpCombi.dat
+
+3. Run genmodelfiles.py to remove redundant models ModSimpCombi.dat file
+```bash
+python3 ~/git/RINRUS/combi_script/genmodelfiles.py ModSimpCombi.dat
+```
+
+4. Use res_atoms_*.dat files generated to prepare modified list of models. The res_atoms_*.dat files are then translated   into their corresponding PDB files 
+```bash 
+ls res_atoms_*.dat > list
+```
+
+5. Open the list and remove "res_atoms_" and ".dat" to leave only the model numbers within list, run the command below after you 
+```bash
+for i in `cat list`; do python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -pdb 2cht_h.pdb -s A:203 -ratom res_atoms_${i}.dat; mv res_*_atom_info.dat atom_info_${i}.dat; mv res_*_froz_info.dat froz_info_${i}.dat; mv res_*.pdb model_${i}.pdb; done
+```
+
+6. To identify which pdbs are identical, create a new list of the various model pdb names and run the identifiles.py script
+```bash
+ls model_*.pdb > list
+```
+```bash
+python3 ~/git/RINRUS/combi_script/identifiles.py list
+```
+The generated file (UniqueModels.dat) lists all the unique models and removes redundant models
+
+7. Complete the valences by adding protons to severed bonds and waters via PyMol
+ ```bash 
+ for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; ~qcheng1/bin/pymol -qc log.pml; done
+ ```
