@@ -39,6 +39,10 @@ def write_input(inp_f,dir1,dir2,irc1,irc2,atom_name,charge,multip,scale):
     if 'opt' not in lines[3]:
         index = lines[3].find('freq')
         lines[3] = lines[3][:index]+'opt(nomicro) '+lines[3][index:]
+    elif 'opt' in lines[3]:
+        index1 = lines[3].find('opt')
+        index2 = lines[3].find('freq')
+        lines[3] = lines[3][:index1]+'opt(nomicro) '+lines[3][index2:]
     for i in range(5):
         f1_list.append(lines[i])
         f2_list.append(lines[i])
