@@ -130,15 +130,15 @@ python3 ~/git/RINRUS/bin/GenResAtoms.py -freq dist_per_res-5.00.dat -atom res_at
 ```
 this will generate res_atom_XX.dat for all models separately which has information about all important atoms of main chain and side chain needs to be included in model.
 
-4. Then run (for res_atom_1.dat to res_atom_50.dat)
+4. Then run (for any number of res_atoms_XX.dat models)
 ````bash
-mkdir pdbs; for i in {1..50}; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
 ````
 This will generate the H added pdb files for all models from res_atoms_XX.dat in separate directories and generate pdbs folder containing all protonated pdb and res_atoms_xx.dat
 
 5. follow step 12 of example 1 to generate a template file and input file.
 
-## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: Atsu is working on this 
+## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: 
 
    Note: Before starting, ensure that the pdb is cleaned. Use step 1 to 7 above to clean your pdb
 1. With a clean pdb run 'openbabel/2.4.1' ensure you have openbabel/2.4.1 installed on your terminal 
@@ -156,11 +156,12 @@ if the pdb is not clean because it does not take care of the conformation issue 
 
 3. Use the `arpeggio-contact.py` script to generate contact list and res_atoms.dat file to generate models. 
 ````bash
-python3 ~/git/arpeggio_contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
+python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
 ````
+ Run this command to sort contact_counts.dat file "sort -nr contact_counts.dat > sort_counts.dat" 
 
 If you want to ignor proximal add `-p 1` at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
-This step generates `contact_counts.dat`, `node_info.dat`, `res_atom.dat files`
+This step generates `sort_counts.dat`, `node_info.dat`, `res_atom.dat files`
 
 4. Open contact_counts.dat file and sort the first column according to decreasing order. Copy the edited file and rename as sorted_contact_counts.dat 
 
@@ -190,3 +191,40 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp modred_temp -c -2 -noh res_NN.pdb
 
 ## Usage example 5 - GENERATE ALL THE THINGS!!! Combinatorial model building from probe and arpeggio
 
+## Usage example 5a - Combinatorial model building from arpeggio
+1. Refer to usage example 3 steps 1 to 3 to generate arpeggio contact files to compute combinations
+
+2. Run combifromcontacts.py script with the defined seed (chain/residue numbers) which takes combinations of the different interactions 
+```bash
+python3 ~/git/RINRUS/combi_script/combifromcontacts.py 2cht_h.contacts A/203 2cht_h.sift 
+```
+This generates LongCombi.dat, SimpCombi.dat, and ModSimpCombi.dat
+
+3. Run genmodelfiles.py to remove redundant models ModSimpCombi.dat file
+```bash
+python3 ~/git/RINRUS/combi_script/genmodelfiles.py ModSimpCombi.dat
+```
+
+4. Use res_atoms_*.dat files generated to prepare modified list of models. The res_atoms_*.dat files are then translated   into their corresponding PDB files 
+```bash 
+ls res_atoms_*.dat > list
+```
+
+5. Open the list and remove "res_atoms_" and ".dat" to leave only the model numbers within list, run the command below after you 
+```bash
+for i in `cat list`; do python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -pdb 2cht_h.pdb -s A:203 -ratom res_atoms_${i}.dat; mv res_*_atom_info.dat atom_info_${i}.dat; mv res_*_froz_info.dat froz_info_${i}.dat; mv res_*.pdb model_${i}.pdb; done
+```
+
+6. To identify which pdbs are identical, create a new list of the various model pdb names and run the identifiles.py script
+```bash
+ls model_*.pdb > list
+```
+```bash
+python3 ~/git/RINRUS/combi_script/identifiles.py list
+```
+The generated file (UniqueModels.dat) lists all the unique models and removes redundant models
+
+7. Complete the valences by adding protons to severed bonds and waters via PyMol
+ ```bash 
+ for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; ~qcheng1/bin/pymol -qc log.pml; done
+ ```

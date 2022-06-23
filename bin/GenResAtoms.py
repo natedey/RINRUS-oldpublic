@@ -5,7 +5,7 @@ import argparse, re
 parser = argparse.ArgumentParser(description='generates res_atoms.dat files for probe freq models from freq_per_res.dat and master res_atoms.dat files')
 parser.add_argument('-freq', default='freq_per_res.dat', help='freq_per_res.dat file')
 parser.add_argument('-atom', default='res_atoms.dat', help='master res_atoms.dat file')
-parser.add_argument('-seed', nargs='+', help='seed selection written in format A:1,A:2,A:3')
+parser.add_argument('-seed', default=None, help='seed selection written in format A:1,A:2,A:3')
 args = parser.parse_args()
 
 #Extract atom information
@@ -26,7 +26,7 @@ with open(args.freq, 'r') as freqfile:
         freqorder.append(chain+":"+res)
 
 #Find largest seed index
-tres = args.seed[0].split(',')
+tres = args.seed.split(',')
 start = max([freqorder.index(x) for x in tres])
 
 for i in range(start, len(freqorder)):
