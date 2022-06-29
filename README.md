@@ -159,8 +159,9 @@ if the pdb is not clean because it does not take care of the conformation issue 
 python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
 ````
  Run this command to sort contact_counts.dat file 
- "sort -nr contact_counts.dat > sort_counts.dat" 
-
+ ```bash
+ sort -nr contact_counts.dat > sort_counts.dat
+```
 If you want to ignor proximal add `-p 1` at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
 This step generates `sort_counts.dat`, `node_info.dat`, `res_atom.dat files`
 
