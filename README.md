@@ -158,8 +158,10 @@ if the pdb is not clean because it does not take care of the conformation issue 
 ````bash
 python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
 ````
- Run this command to sort contact_counts.dat file "sort -nr contact_counts.dat > sort_counts.dat" 
-
+ Run this command to sort contact_counts.dat file 
+ ```bash
+ sort -nr contact_counts.dat > sort_counts.dat
+```
 If you want to ignor proximal add `-p 1` at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
 This step generates `sort_counts.dat`, `node_info.dat`, `res_atom.dat files`
 
@@ -228,3 +230,18 @@ The generated file (UniqueModels.dat) lists all the unique models and removes re
  ```bash 
  for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; ~qcheng1/bin/pymol -qc log.pml; done
  ```
+## Usage example 5b - Combinatorial model building from probe
+1. Refer to usage example 1 steps 1 to 7 to generate arpeggio probe files to compute combinations
+
+2. Run gen-probe-combi.py script with the defined seed (chain/residue numbers/atom(s)) which takes combinations of the different interactions 
+```bash
+python3 ~/git/RINRUS/git/combi_script/gen-probe-combi.py -f 2cht_h_ac_aligned.probe -seed A/203/C1,O1,C2,O2,C3,O3,C4,O4,C5,O5,C6,O7,C8,C9, C10,C11,HO5,H01,H02,H03,H04,H05,H06,H07
+```
+Note: Multiple seed indices can be indicated by space separation as A/202 A/202 
+
+3. Run the next step which combine multiple step but remember to edit the necessary part
+
+```bash
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:203 -ratom res_atoms_${i}.dat -pdb ../2cht_h_ac_aligned.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 203 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done
+```
+Be aware that while the res_atoms_#.dat model sets generated are technically unique to each other, once RINRUS generates the full trimmed QM-models, a lot of the them will no longer be unique and will be identical to others. So there a need to check to determine which QM-models are still unique (and not redundant)
