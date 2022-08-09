@@ -1,0 +1,34 @@
+A    301      4090     wc:ligand_sc         wc:ligand_mc         wc:ligand_solvent    wc:ligand_ligand     cc:ligand_sc         cc:ligand_mc         cc:ligand_ligand     cc:ligand_solvent    so:ligand_sc         so:ligand_mc         so:ligand_ligand     so:ligand_solvent    bo:ligand_sc         hb:ligand_mc         hb:ligand_solvent    hb:ligand_sc        
+A    302      1100     wc:ligand_sc         wc:ligand_ligand     cc:ligand_sc         cc:ligand_ligand     so:ligand_sc         so:ligand_ligand     bo:ligand_sc         hb:ligand_sc         wc:ligand_solvent    bo:ligand_ligand     hb:ligand_solvent   
+A    300      554      wc:ligand_sc         cc:ligand_sc         cc:ligand_ligand     so:ligand_ligand     so:ligand_sc         so:ligand_solvent    bo:ligand_sc         bo:ligand_ligand     bo:ligand_solvent    hb:ligand_solvent   
+A    40       491      wc:sc_ligand         wc:mc_ligand         cc:sc_ligand         cc:mc_ligand         so:sc_ligand        
+A    141      478      wc:sc_ligand         wc:mc_ligand         cc:sc_ligand         cc:mc_ligand         so:sc_ligand         so:mc_ligand         bo:sc_ligand        
+A    143      378      wc:sc_ligand         wc:mc_ligand         cc:sc_ligand         cc:mc_ligand         so:sc_ligand         bo:sc_ligand        
+A    91       335      wc:sc_ligand         wc:mc_ligand         cc:sc_ligand         cc:mc_ligand         so:sc_ligand         hb:mc_ligand        
+A    170      304      wc:sc_ligand         cc:sc_ligand         so:sc_ligand         bo:sc_ligand         hb:sc_ligand        
+A    68       294      wc:mc_ligand         wc:sc_ligand         cc:mc_ligand         cc:sc_ligand         so:sc_ligand        
+A    411      285      wc:solvent_ligand    cc:solvent_ligand    so:solvent_ligand    bo:solvent_ligand    hb:solvent_ligand   
+A    72       278      wc:sc_ligand         wc:mc_ligand         cc:sc_ligand         cc:mc_ligand         so:sc_ligand         hb:mc_ligand         hb:sc_ligand        
+A    66       275      wc:mc_ligand         cc:mc_ligand         so:mc_ligand         hb:mc_ligand        
+A    142      266      wc:sc_ligand         wc:mc_ligand         cc:mc_ligand         cc:sc_ligand         so:mc_ligand         so:sc_ligand        
+A    90       264      wc:mc_ligand         wc:sc_ligand         cc:sc_ligand         cc:mc_ligand         hb:sc_ligand        
+A    199      183      wc:sc_ligand         cc:sc_ligand         so:sc_ligand         hb:sc_ligand        
+A    441      166      wc:solvent_ligand    hb:solvent_ligand    cc:solvent_ligand    so:solvent_ligand   
+A    119      158      wc:sc_ligand         wc:mc_ligand         cc:mc_ligand         cc:sc_ligand         hb:mc_ligand        
+A    144      133      wc:sc_ligand         cc:sc_ligand         so:sc_ligand         hb:sc_ligand        
+A    402      98       cc:solvent_ligand    so:solvent_ligand    hb:solvent_ligand   
+A    42       96       wc:sc_ligand         cc:sc_ligand         cc:mc_ligand         hb:mc_ligand        
+A    458      96       wc:solvent_ligand    cc:solvent_ligand    hb:solvent_ligand   
+A    174      81       wc:sc_ligand         cc:sc_ligand        
+A    67       67       wc:mc_ligand         cc:mc_ligand        
+A    169      54       so:sc_ligand         bo:sc_ligand        
+A    41       53       wc:mc_ligand         cc:mc_ligand        
+A    89       52       wc:mc_ligand         wc:sc_ligand         cc:sc_ligand         so:sc_ligand        
+A    118      51       wc:mc_ligand         cc:mc_ligand         so:mc_ligand        
+A    71       51       cc:sc_ligand         so:sc_ligand        
+A    198      46       cc:sc_ligand         so:sc_ligand        
+A    120      45       wc:sc_ligand         cc:sc_ligand         hb:sc_ligand        
+A    38       36       wc:sc_ligand         cc:sc_ligand        
+A    139      29       wc:sc_ligand         cc:sc_ligand        
+A    146      29       wc:sc_ligand        
+A    117      8        wc:mc_ligand        
