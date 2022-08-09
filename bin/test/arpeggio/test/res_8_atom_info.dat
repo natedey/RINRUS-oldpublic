@@ -1,0 +1,11 @@
+ A    40    C    O   CE   CB   SD   CA   CG  HB2  HB3  HG2  HG3  HE1  HE2  HE3   HA  HA2  HA3 
+ A    41   CA   HA  HA2  HA3    N    H 
+ A    71   CA    C    O   HA  HA2  HA3 
+ A    72   CA   CB    N   OG  HB2  HB3   HG    H   HA  HA2  HA3 
+ A   141  OD1  OD2   CG   CB    O   CA    C  HB2  HB3   HA  HA2  HA3 
+ A   142   CA   HA  HA2  HA3    N    H    C    O 
+ A   143  CZ3  CH2  CZ2  CE2  CE3  CD2    N  NE1   CA  CD1   CG   CB  HB2  HB3  HD1  HE1  HE3  HZ2  HZ3  HH2    H   HA  HA2  HA3 
+ A   170  ND2   CG  OD1   CB  HB2  HB3 HD21 HD22   CA   HA  HA2  HA3 
+ A   300   MG 
+ A   301    N   CA    C    O  OXT   CB   CG   SD   CE  C5'  C4'  O4'  C3'  O3'  C2'  O2'  C1'   N9   C8   N7   C5   C6   N6   N1   C2   N3   C4 
+ A   302   C1   O1   C2   O2   C3   N1   O3   O4   C4   C5   N2   O5   O6   C6 

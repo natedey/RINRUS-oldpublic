@@ -183,8 +183,10 @@ def get_model_res(idx_list,freqf,res_id):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Distance rule based model generator')
+    parser.add_argument('-type', dest='typef', default=None, help='"mass" or "avg"')
+    parser.add_argument('-nohydro', action='store_true', help='If flag present, ignore hydrogen atoms from distance calculations')
     parser.add_argument('-pdb', dest='pdbf', default=None, help='pdb_to_treat')
-    parser.add_argument('-cut', dest='coff', default=3, help='cut_off_dist')
+    parser.add_argument('-cut', dest='coff', default=3, help='cut_off_dist, default=3')
     parser.add_argument('-s', dest='seed', default=None, help='center_residues, examples: A:300,A:301,A:302')
 
     args = parser.parse_args()
@@ -196,6 +198,7 @@ if __name__ == '__main__':
     cres_atom = {}
 
 
+    type=args.typef
     pdbf = args.pdbf
     pdb, res_info, tot_charge = read_pdb(pdbf)
 
@@ -215,16 +218,30 @@ if __name__ == '__main__':
     sel_coord = []
     for i in range(len(center_res)):
         for atom in pdb:
+            if args.nohydro==True and atom[14].strip()=="H": 
+                continue
             if idx_list[i][0] == atom[5].strip() and idx_list[i][1] == atom[6]:
                 sel_atoms.append(Atoms[atom[14].strip()][1])
                 sel_coord.append([atom[8],atom[9],atom[10]])
     sel_coord = array(sel_coord)
     sel_atoms = array(sel_atoms)
-    com = center_of_mass(sel_atoms,sel_coord)
+
+   ## On July 2022-Tejas Suhagia, added step to generate based on center of mass and average of xyz with and without hydrogen , also changed README for that.
+
+    if args.nohydro==True:
+            print("-nohydrogen is selected so hydrogen is neglacted")
+    if type=="mass":
+        com = center_of_mass(sel_atoms,sel_coord)
+        print("Center of mass type is selected")
+    elif type=="avg":    
+        com=avg_coord(sel_coord)
+        print("XYZ average type is selected")
 
     ###### Calculate atom-pair distances ######
     dist_atom = []
     for atom in pdb:
+        if args.nohydro==True and atom[14].strip()=="H": 
+                continue
         dist_atom.append([calc_dist(array([atom[8],atom[9],atom[10]]),com),atom[5].strip(),atom[6],atom[2].strip()])
 
 
@@ -243,8 +260,9 @@ if __name__ == '__main__':
             d_res.write(' %-6s'%res_id[key][v])
         d_res.write('\n')
     d_res.close()
-   ## On 7th June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
-    atom_res = open('res_atoms_%.2f.dat'%cut,'w')
+
+   ## On June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
+    atom_res = open('res_atom-%.2f.dat'%cut,'w')
     for key in res_id.keys():
         atom_res.write('%-2s %-5s '%(key[0],key[1]))
         for v in range(1,len(res_id[key])):
