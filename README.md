@@ -178,7 +178,7 @@ This script produces `res_NN.pdb` for the largest model, where `NN` is the numbe
 python3 ~/git/RINRUS/bin/pymol_scripts.py res_16.pdb 202 
 ```
 ## NOTE: The pymol_scripts.py script does not  work for now, so you need to copy `log.pml` from some old directory and edit the res_NN and the substrates information accordingly in `log.pml` file
- If this is your start time building models with RINRUS, copy log.pml file from here: `/home/dagbaglo/chem/2cht/XTAL/arpeggio/res_13-ts-01`
+ If this is your start time building models with RINRUS, copy log.pml file from here: `/home/dagbaglo/chem/2cht/XTAL/arpeggio/res_13-ts-01` (**This path needs to be changed for public**)
  Run log.pm as:
  ```bash
  pymol -qc log.pml
