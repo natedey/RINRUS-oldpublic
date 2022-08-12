@@ -1,0 +1,10 @@
+%chk=1.chk
+%nprocshared=1
+%mem=10GB
+opt(nomicro)
+freq
+external='xtb-gaussian --gbsa h2o --input 1.fix --verbose'
+#geom=(checkpoint,step=10)
+#iop(1/8=1)
+model
+fix

@@ -1,0 +1,36 @@
+jobtype: opt/freq
+method: b3lyp
+basis: gen
+ecp: gen
+solvent_method: pcm
+#
+#def_pcm:
+#    theory: CPCM
+#    method: swig
+#
+def_basis:
+$basis
+MG     0
+lanl2dz
+****
+S     0
+6-31G(d,p)
+****
+O     0
+6-31G(d,p)
+****
+N     0
+6-31G(d,p)
+****
+C     0
+6-31G
+****
+H     0
+6-31G
+****
+$end
+$ecp
+MG     0
+fit-lanl2dz
+****
+$end
