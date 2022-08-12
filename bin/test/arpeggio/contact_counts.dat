@@ -1,45 +1,45 @@
-      A    301     114    CB     O     C   OXT   C3'   O3'   O2'    CA    CG     N    CE    SD   C5'   C2'   C4'   O4'   C1'    N9    C4    N3    C2    N1    C8    N7    C5    C6    N6
-      A    302      50    O6    N2    C2    O3    N1    O4    C6    C5    C4    C3    O1    C1    O2    O5
-      A    141      22   OD1   OD2    CG    CB     O    CA     C
-      A    300      15    MG
-      A    170      15   ND2    CG   OD1    CB
-      A     72      13    CA    CB     N    OG
-      A    143      13   CZ3   CH2   CZ2   CE2   CE3   CD2     N   NE1    CA   CD1    CG    CB
-      A     40      11     C     O    CE    CB    SD    CA    CG
-      A     90      10   OE1    CD   OE2    CG    CB    CA     N     O     C
-      A    199      10   OE2    CD   OE1    CG
-      A     68       8   CD2    CG    CB    CA     C     N   CE1   CD1
-      A     66       8     O     C    CA     N
-      A    411       8     O
-      A     38       7   CZ2   CE2   CZ3   CH2
-      A    119       7    OG     N    CB    CA
-      A    441       6     O
-      A     42       5    CB   CG1    CA     N     C   CG2
-      A    142       5    CA     O     C     N    CB    CG   CD2   NE2
-      A    169       5   OD2   OD1    CG    CB
-      A    144       5    NZ    CE    CD    CG
-      A     91       4     N   CG2    CB   CD1   CG1    CA
-      A    402       3     O
-      A     71       3   CD2    CB    CG     C    CA     N
-      A    198       3   CD2    CG   CD1
-      A    458       3     O
-      A     67       1     N     O     C    CA
-      A    174       1    CD    CG
-      A    442       1     O
-      A    118       1    CA     C     N    CB     O
-      A    120       1   OE1     N   NE2    CD
-      A     41       0     N    CA    CB     C     O    CG   ND2
-      A    484       0     O
-      A     92       0    CB    CA     N
-      A     95       0    SG    CB
-      A     64       0   OE2    CD    CG   OE1
-      A    403       0     O
-      A     70       0     C     N
-      A    424       0     O
-      A     46       0    NZ
-      A    173       0     O
-      A    498       0     O
-      A    146       0    CG    CB    CD    NE
-      A    139       0   CE2    CZ   CD2
-      A     89       0     O     C   CG2    CB
-      A    117       0     O     C
+       A     301     114    CB     O     C   OXT   C3'   O3'   O2'    CA    CG     N    CE    SD   C5'   C2'   C4'   O4'   C1'    N9    C4    N3    C2    N1    C8    N7    C5    C6    N6
+       A     302      50    O6    N2    C2    O3    N1    O4    C6    C5    C4    C3    O1    C1    O2    O5
+       A     141      22   OD1   OD2    CG    CB     O    CA     C
+       A     300      15    MG
+       A     170      15   ND2    CG   OD1    CB
+       A      72      13    CA    CB     N    OG
+       A     143      13   CZ3   CH2   CZ2   CE2   CE3   CD2     N   NE1    CA   CD1    CG    CB
+       A      40      11     C     O    CE    CB    SD    CA    CG
+       A      90      10   OE1    CD   OE2    CG    CB    CA     N     O     C
+       A     199      10   OE2    CD   OE1    CG
+       A      68       8   CD2    CG    CB    CA     C     N   CE1   CD1
+       A      66       8     O     C    CA     N
+       A     411       8     O
+       A      38       7   CZ2   CE2   CZ3   CH2
+       A     119       7    OG     N    CB    CA
+       A     441       6     O
+       A      42       5    CB   CG1    CA     N     C   CG2
+       A     142       5    CA     O     C     N    CB    CG   CD2   NE2
+       A     169       5   OD2   OD1    CG    CB
+       A     144       5    NZ    CE    CD    CG
+       A      91       4     N   CG2    CB   CD1   CG1    CA
+       A     402       3     O
+       A      71       3   CD2    CB    CG     C    CA     N
+       A     198       3   CD2    CG   CD1
+       A     458       3     O
+       A      67       1     N     O     C    CA
+       A     174       1    CD    CG
+       A     442       1     O
+       A     118       1    CA     C     N    CB     O
+       A     120       1   OE1     N   NE2    CD
+       A      41       0     N    CA    CB     C     O    CG   ND2
+       A     484       0     O
+       A      92       0    CB    CA     N
+       A      95       0    SG    CB
+       A      64       0   OE2    CD    CG   OE1
+       A     403       0     O
+       A      70       0     C     N
+       A     424       0     O
+       A      46       0    NZ
+       A     173       0     O
+       A     498       0     O
+       A     146       0    CG    CB    CD    NE
+       A     139       0   CE2    CZ   CD2
+       A      89       0     O     C   CG2    CB
+       A     117       0     O     C
