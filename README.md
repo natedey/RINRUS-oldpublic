@@ -37,7 +37,7 @@ which require
 - CMake >= 3.10
 - Any C/C++ compiler suite with C++11 support
 
-Current production-level use cases are described in `/bin/test`.
+Current production-level use cases are described in `bin/`.
 
 ## Usage example 1 - generating a single or a few input files with probe interaction count ranking 
 

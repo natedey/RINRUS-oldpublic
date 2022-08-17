@@ -1,6 +1,10 @@
+<<<<<<< HEAD:template_files/input_template/input_temp
 10 80
+=======
+10  120
+>>>>>>> c6676a993e7f1dfd35e054904d5928a0d63e4f16:template_files/input_temp
 b3lyp/genecp
-opt(modred) SD,301,CE,301;CE,301,O2,302 F  ## use SD,301,CE,301,HB1,301;CE,301,O2,302 F for angle and bond modred F
+opt(modred) SD,301,CE,301;CE,301,O2,302 F 
 freq
 #guess=read
 #geom=(checkpoint,step=10)
