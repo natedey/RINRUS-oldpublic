@@ -1,4 +1,4 @@
-big
+10 80
 b3lyp/genecp
 opt(modred) SD,301,CE,301;CE,301,O2,302 F  ## use SD,301,CE,301,HB1,301;CE,301,O2,302 F for angle and bond modred F
 freq

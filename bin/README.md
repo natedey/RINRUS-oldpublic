@@ -38,39 +38,39 @@ $HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_
 ###Does this automatically use chain A if chain isn't specified? No, defaults are wonky, especially if there is no chain ID in the PDB. We need to make better defaults here. 
 8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chein:ResID)
 ``` bash
-python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s 'A:300,A:301,A:302'
+python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s A:300,A:301,A:302
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
-*****GenResAtoms.py*******
-9. Run "GenResAtoms.py" to generate models. You need the correct freq_per_res.dat file and the res_atoms.dat file. This part is a little trickier because we will more broadly define the "seed" as any fragments or residues that must be in ALL models. This will often be a set of the seed and other residues. 
-
-``` bash
-*****GenResAtoms.py*******
-python3 $HOME/git/RINRUS/bin/GenResAtoms.py -freq freq_per_res.dat -atom res_atoms.dat -seed A:300,A:301,A:302
-```
-
-This creates a `res_atoms_x.dat` file that associates model sizes (residue count) with the residue numbers in that model, plus a `res_NNN.pdb` for each model, where `NNN` is the number of residues in that model.
-- For example, if the largest model generated from the network has 34 residues, and the network seed contained 3 residues, then 32 files will be created: `res_34.pdb`, `res_33.pdb`, ..., `res_4.pdb`, and `res_3.pdb`.
 
 10. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
 ```bash
-python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:300,A:301,A:302 -ratom res_atoms.dat -pdb 3bwm_h_modify.pdb 
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb 
 ```
-This generates `res_NNN.pdb` for the largest model, where `NNN` is the number of residues in that model.
-#Note: if you want to automatically generate the entire "ladder" of possible models based on a ranking scheme, you will need to write a script to do everything in a single pass by iterating over the -ratom flag.
+This generates automatically generate the entire "ladder" of possible models based on a ranking scheme which contain `res_NNN.pdb`, `res_NNN_froz_info.dat` and `res_NNN_atom_info.dat` for the all models, where `NNN` is the number of residues in that model.
+
+#Note: if you want to  generate one model based on a any ranking scheme, you will need to run a same script with the flag `-model NNN` as 
+```bash
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb -model NNN
+```
 
 11. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
-You will have to write a bash or python script to loop over all the models, which Dr. D hates
-#The pymol script file (log.pml) is correct, but it currently doesn't run automatically. Need to manually run log.pml scripts in pymol to add hydrogens
-#How does pymol_scripts read resids if they are in a different chain?! - NJD
 
-```bash
-python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename res_.pdb
-```
+
+#####The pymol script file (log.pml) is correct, but it currently doesn't run automatically. Need to manually run log.pml scripts in pymol to add hydrogens###
+####How does pymol_scripts read resids if they are in a different chain?! - NJD###
+
 which
 - generates a `log.pml` PyMOL input file containing commands that perform the hydrogen addition, and then
 - runs PyMOL to perform the addition.
 If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. 
+```bash
+python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename res_.pdb
+```
+
+Note-You will have to write a bash or python script to loop over all the models. Example of bash loop is given here.
+```bash
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
+```
 
 12. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
@@ -96,7 +96,7 @@ this will generate res_atom_XX.dat for all models separately which has informati
 
 4. Then run (for any number of res_atoms_XX.dat models)
 ````bash
-ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir ${i}-01; cd ${i}-01; mv ../res_atoms_${i}.dat .; ***********python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py********** -s A:300,A:301,A:302 -ratom res_atoms_${i}.dat -pdb ../3bwm_h.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done			
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .;mv ../res_${i}_h.pdb .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done			
 ````
 This will generate the H added pdb files for all models from res_atoms_XX.dat in separate directories and generate pdbs folder containing all protonated pdb and res_atoms_xx.dat
 

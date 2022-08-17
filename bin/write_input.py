@@ -122,7 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('-pdb1', dest='pdb1', default=None, help='minima_pdb_file')
     parser.add_argument('-pdb2', dest='pdb2', default=None, help='ts_pdb_file')
     parser.add_argument('-parts', dest='parts', default=None, help='ts_frag_indo')
-    parser.add_argument('-format',dest='fmat',default=None,help='input_file_format')
+    parser.add_argument('-format',dest='fmat',default=None,help="input_file_format eg.'gaussian','qchem','gau-xtb'")
 #    parser.print_help()
 
     args = parser.parse_args()
