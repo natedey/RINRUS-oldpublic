@@ -41,20 +41,7 @@ Current production-level use cases are described in `/bin/test`.
 
 ## Usage example 1 - generating a single or a few input files with probe interaction count ranking 
 
-<<<<<<< HEAD
 ## Usage example 2 - generating a single or a few input files with distance-based ranking
-=======
-6. To add hydrogens to fill the place where bonds were broken when the model was trimmed away, run the command below.
-```bash
-python3 ~/git/RINRUS/bin/pymol_scripts.py res_16.pdb 202 
-```
-## NOTE: The pymol_scripts.py script does not  work for now, so you need to copy `log.pml` from some old directory and edit the res_NN and the substrates information accordingly in `log.pml` file
- If this is your start time building models with RINRUS, copy log.pml file from here: `/home/dagbaglo/chem/2cht/XTAL/arpeggio/res_13-ts-01` (**This path needs to be changed for public**)
- Run log.pm as:
- ```bash
- pymol -qc log.pml
-```
->>>>>>> 9b06a28c84ddda7d7f0d996a2e30fde529cc98fd
 
 ## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking
 
