@@ -77,7 +77,7 @@ If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE
 python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.pdb -adh res_NN_h.pdb
 ```
 
-## Usage example 2 - generating a single or a few input files with distance-based ranking: TJ is working on this
+## Usage example 2 - generating a single or a few input files with distance-based ranking: 
 
 1. Follow step 1-5 from example 1 to get protonated pdb, in this case we will work with `3bwm.pdb` and after step 2 of example 1 it will generate `3bwm_h.pdb`, if you have modified anything from `3bwm_h.pdb` then use that for following process.
 
@@ -118,7 +118,7 @@ After running arpeggio, The `arpeggio.py` will generate many files but the most 
 Note: Arpeggio can be run on the web but Do not use the web base 
 if the pdb is not clean because it does not take care of the conformation issue with some pdbs. 
 
-3.*********(needs to change to arpeggio2rins.py****** Use the `arpeggio-contact.py` script to generate contact list and res_atoms.dat file to generate models. 
+3. Use the `arpeggio-contact.py` script to generate contact list and res_atoms.dat file to generate models. 
 ````bash
 python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
 ````
