@@ -83,7 +83,7 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.
 
 2. Run (For 5 Angstrom from center of mass of seed residues A:300,A:301,A:302, change seed and distance as per requirement)
 ```bash
-python3 ~/git/RINRUS/bin/pdb_2dist_freq.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5
+python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5
 ```
 this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atoms.dat` which contain information about important atoms to be included in selected residues. 
 
