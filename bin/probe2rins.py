@@ -186,13 +186,12 @@ def write_res_freq(res_list, res_acts, res_atoms):
 
 def write_res_atom(res_dict,res_atoms):
     f_res = open('res_atoms.dat','w')
-    for key in sorted(res_dict.keys()):
-        for i in sorted(res_dict[key]):
-            f_res.write('%-4s %-8d'%(key,i))
-            akey = key+':'+str(i)
-            for act in unique(res_atoms[akey]):
-                f_res.write(' %-4s'%act)
-            f_res.write('\n')
+    for k in sorted(res_atoms, key=lambda k:len(res_atoms[k]),reverse=True):
+        cha,res = k.split(':')
+        f_res.write('%-4s %-8s %-8d'%(cha,res,len(res_atoms[k])))
+        for i in unique(res_atoms[k]):
+            f_res.write(' %-4s'%i)
+        f_res.write('\n')
     f_res.close()
 
 def write_rin(actions):
