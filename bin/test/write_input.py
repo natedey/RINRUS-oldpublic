@@ -9,7 +9,7 @@ from numpy import *
 import argparse
 from read_write_pdb import *
 from glob import glob
-from input_suits import *
+from input_suite import *
 
 
 def system_run(cmd):
