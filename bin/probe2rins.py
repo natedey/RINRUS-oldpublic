@@ -210,7 +210,7 @@ def write_sif(siflines):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate interaction information from probe file.\
-            Usage: probe2rins.py -p probe_file -s seed')
+            Usage: probe2rins.py -f probe_file -s seed')
     parser.add_argument('-f',dest='probefile',default=None,help='probe_file')
     parser.add_argument('-s',dest='seed',default=None,help='seed for select RIN, in the format of "A:300,A:301,A:302"')
 
