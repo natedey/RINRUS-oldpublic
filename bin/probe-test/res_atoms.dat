@@ -1,0 +1,34 @@
+A    301      4090     C    C1'  C2   C4   C4'  C5   C5'  C6   C8   CA'  CB'  CE   CG   H01  H02  H03  H1'  H2   H2'  H3'  H4'  H5'1 H5'2 H8   HA   HB1  HB2  HE1  HE2  HE3  HG1  HG2  HN61 HN62 HO2' HO3' N    N1   N3   N6   N7   N9   O    O2'  O3'  O4'  OXT  SD  
+A    302      1100     C1   C2   C3   C4   C5   C6   H01  H02  H03  H04  O1   O2  
+A    300      554      O   
+A    40       491      CB   CE   CG   HB2  HE1  HE3  HG3  O    SD  
+A    141      478      CB   CG   HB3  O    OD1  OD2 
+A    143      378      CD1  CD2  CE2  CE3  CG   CH2  CZ2  CZ3  H    NE1 
+A    91       335      CB   CG2  H    HB   HG21 HG22 N   
+A    170      304      CG   HD21 ND2  OD1 
+A    68       294      CA   CB   CD1  CG   H    HA   HB2  HB3  HD1  N   
+A    411      285      H?   O   
+A    72       278      CB   H    HB3  N    OG  
+A    66       275      C    CA   HA2  HA3  O   
+A    142      266      CB   HA   HB2  HD2 
+A    90       264      CA   CD   HA   OE1  OE2 
+A    199      183      CD   OE1  OE2 
+A    441      166      H?   O   
+A    119      158      CB   H    N    OG  
+A    144      133      CE   HE2  HZ1  NZ  
+A    402      98       H?   O   
+A    42       96       CB   H    HB   N   
+A    458      96       H?   O   
+A    174      81       CD   CG   HD3  HG2 
+A    67       67       C    O   
+A    169      54       OD2 
+A    41       53       HA  
+A    89       52       C    HG22
+A    118      51       HA  
+A    71       51       HB3 
+A    198      46       HD11
+A    120      45       OE1 
+A    38       36       CH2  HH2 
+A    139      29       CE2  HE2 
+A    146      29       HG3 
+A    117      8        O   

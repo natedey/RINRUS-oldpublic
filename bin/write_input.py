@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+"""
+This is a program written by Qianyi Cheng 
+at university of memphis.
+Date 8.10.2022
+"""
 import os, sys, re, filecmp
 from numpy import *
 import argparse
 from read_write_pdb import *
 from glob import glob
+from input_suite import *
 
 
 def system_run(cmd):
@@ -69,99 +75,6 @@ def pdb_replace(tmppdb,newpdb,parts):
 
     return tmp_pdb, tot_charge_t #, xyz, atom, hold
 
-def write_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_count):
-    ### inp_name default can be 1.inp, but first is name.input such as 9.input
-    ### inp_type list which includes [small/large, level_theory, basis, opt, freq,  
-    ### input_template line0: size
-    ### input_template line1: level
-    ### input_template line2: opt + calcfc/readfc or opt + modred + info
-    ### input_template line3: freq
-    ### input_template line4: guess=read
-    ### input_template line5: geom=checkpoint
-    ### input_template line6: iop
-    ### input_template line7: scf_info
-    ### input_template line8: scrf_info
-
-    print("charge= %d, tot_charge_without'-c'= %d"%(charge,tot_charge))
-    with open(inp_temp) as f:
-        lines = f.readlines()
-
-    inp = open('%s'%inp_name,'w')
-    inp.write("%chk=1.chk\n")           #write check file into 1.chk
-    v = lines[0].split()
-    if len(v) == 1:
-        inp.write("%nprocshared=10\n")      #use 10 processors
-    else:
-        inp.write("%nprocshared="+v[-1]+'\n')
-    inp.write("%mem="+v[0]+'\n')
-
-    inp.write("#P ")      
-
-    if lines[1][0] != '#':
-        inp.write("%s "%lines[1].strip())      
-
-#    if bool(lines[2].strip()): line is empty
-    if lines[2][0] != '#':
-        optl = lines[2].split()
-        inp.write("%s "%optl[0])
-        if 'modred' in lines[2]:
-            f_atom = []
-            modred_info, modred_code = optl[1:3]
-            pairs = modred_info.split(';')
-            lmod = []
-            for pair in pairs:
-                ar = pair.split(',')
-                lmod.append(int(len(ar)/2))
-                for i in range(0,len(ar),2):
-                    for atom in pic_atom:
-#                        if ar[i] in atom[2] and ar[i+1] in atom[4]:
-                        if ar[i] == atom[2].strip() and int(ar[i+1]) == atom[6]:
-                            f_atom.append(pic_atom.index(atom)+1)
-    for l in range(3,9):
-#        if bool(lines[l].strip()):
-        if lines[l][0] != '#':
-            inp.write("%s "%lines[l].strip())
-
-    inp.write("\n\n")
-#    inp.write("info_line\n")
-    inp.write("%s\n"%res_count)
-    inp.write("\n")
-    inp.write("%d %d\n"%(charge+tot_charge,multiplicity))
-
-    if lines[5][0] == '#':
-        ### pm7 with opt only will be relax h step/ pm7 with opt(modred) otherwise
-#        if lines[1][0] != '#' and 'pm' in lines[1] and lines[2].strip() == 'opt':
-        if lines[1][0] != '#' and 'sto-3g' in lines[1] and lines[2].strip() == 'opt':
-            for atom in pic_atom:
-                if atom[14].strip() == 'H':
-                    inp.write("%4s %6s         %8.3f %8.3f %8.3f\n"%(atom[14].strip(),'0',atom[8],atom[9],atom[10])) 
-                else:
-                    inp.write("%4s %6s         %8.3f %8.3f %8.3f\n"%(atom[14].strip(),'-1',atom[8],atom[9],atom[10])) 
-        else:
-            for atom in pic_atom:
-                inp.write("%4s %6s         %8.3f %8.3f %8.3f\n"%(atom[14].strip(),atom[16],atom[8],atom[9],atom[10])) 
-    inp.write("\n")
-
-    count = 0
-    if lines[2][0] != '#' and 'modred' in lines[2]:
-        for l in lmod:
-            for i in range(l):
-                inp.write("%d "%f_atom[count+i])
-            inp.write("%s\n"%modred_code)
-            count += l
-        inp.write("\n")
-
-    if lines[10][0] != '#' and 'basis' in lines[10]:
-        for l in lines[11:]:
-            inp.write("%s"%l)
-        if len(lines) <= 10:
-            inp.write('\n')
-
-    if lines[8][0] != '#' and 'scrf' in lines[8]:
-        inp.write('radii=uff\nalpha=1.2\neps=4.0\n\n')
-    
-    inp.close()
-
 
 def gen_pdbfiles(wdir,step,tmppdb):
     new_dir = '%s/step%spdbs'%(wdir,step)
@@ -171,7 +84,6 @@ def gen_pdbfiles(wdir,step,tmppdb):
     else:
         system_run('mkdir %s'%new_dir)
     os.chdir(new_dir)
-#    system_run('gopt_to_pdb.py %s %s/step-%s-out 0'%(tmppdb,wdir,step))
     system_run('python3 $HOME/git/RINRUS/bin/gopt_to_pdb.py -p %s -o %s/step-%s-out -f -1'%(tmppdb,wdir,step))
     os.chdir('%s'%wdir)
     pdb_name = []
@@ -196,10 +108,6 @@ if __name__ == '__main__':
             'step1: read outputwrite_modred_inp, input_template, write_second_inp, \n' +
             'step2: read new pdb file, input_template, write_new_inp \n' +
             'step3: read pdb1 and pdb2 for replacing the fragment in pdb1 with pdb2 coordinates and write new input')
-#    parser.add_argument('-step', dest='step', default=0, type=int, 
-#            help='step0: read noh, addh pdbs, write_final_pdb and read input_template write_first_inp,\
-#          step1: read outputwrite_modred_inp, input_template, write_second_inp,\
-#          step2: read outputwrite_modred_inp, input_template, write_new_inp')
     parser.add_argument('-wdir', dest='output_dir', default=os.path.abspath('./'), help='working dir')
     parser.add_argument('-tmp', dest='tmp_pdb', default=None, help='template_pdb_file')
     parser.add_argument('-noh', dest='no_h_pdb', default=None, help='trimmed_pdb_file')
@@ -214,6 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('-pdb1', dest='pdb1', default=None, help='minima_pdb_file')
     parser.add_argument('-pdb2', dest='pdb2', default=None, help='ts_pdb_file')
     parser.add_argument('-parts', dest='parts', default=None, help='ts_frag_indo')
+    parser.add_argument('-format',dest='fmat',default=None,help='input_file_format')
 #    parser.print_help()
 
     args = parser.parse_args()
@@ -227,13 +136,13 @@ if __name__ == '__main__':
 
     nohpdb   = args.no_h_pdb
     adhpdb   = args.h_add_pdb
-#    newpdb   = args.new_pdb    # in step 2 it will all this
     int_tmp  = args.input_tmp
     gauout   = args.gau_out
     inp_name = args.inp_name
     multi    = args.multiplicity
     charge   = args.ligand_charge
     wdir     = args.output_dir
+    ifmat    = args.fmat
 
     if step == 0:
         pic_atom, tot_charge = pdb_after_addh(nohpdb,adhpdb)
@@ -253,7 +162,6 @@ if __name__ == '__main__':
                 system_run( 'cp 1.chk step-%s-chk'%(i_step) )
         else:
             i_step = max(i_name)
-#            if filecmp.cmp('1.inp','%s/step-%s-inp'%(wdir,i_step)) is False and filecmp.cmp('1.out','%s/step-%s-out'%(wdir,i_step)) is False:
             if filecmp.cmp('1.out','%s/step-%s-out'%(wdir,i_step)) is False:
                 i_step += 1
                 system_run( 'cp 1.inp step-%s-inp'%(i_step) )
@@ -287,4 +195,11 @@ if __name__ == '__main__':
         pic_atom, tot_charge = pdb_replace(pdb1,pdb2,parts)    
         res_count = args.pdb1
 
-    write_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
+    if ifmat == "gaussian":
+        write_gau_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
+    elif ifmat == "qchem":
+        write_qchem_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
+    elif ifmat == "gau-xtb":
+        write_xtb_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
+    else:
+        print("Please provide a input format that you want to run your calculation!")
