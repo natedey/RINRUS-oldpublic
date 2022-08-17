@@ -118,13 +118,15 @@ After running arpeggio, The `arpeggio.py` will generate many files but the most 
 Note: Arpeggio can be run on the web but Do not use the web base 
 if the pdb is not clean because it does not take care of the conformation issue with some pdbs. 
 
-3. Use the `arpeggio-contact.py` script to generate contact list and res_atoms.dat file to generate models. 
+3. Use the `arpeggio2rins.py` script to generate: "contact_counts.dat",  "contype_counts.dat" and, "node_info.dat"  
 ````bash
-python3 ~/git/RINRUS/bin/arpeggio-contacts.py -c 2cht_h-TS.contacts -s C:202 -p 1
+python3 ~/git/RINRUS/bin/arpeggio2rins.py -f 2cht_h-TS.contacts -s C:202
 ````
- Run this command to sort contact_counts.dat file 
+Then you can choose to use either contact_counts or contype_counts to generate model by running:
+
+Run the commend below to generate specific model say model 7 
  ```bash
- sort -nr contact_counts.dat > sort_counts.dat
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -pdb 2cht_h-TS.pdb -c contact_counts.dat -s C:202 -model 7
 ```
 If you want to ignor proximal add `-p 1` at the end as shown above. If there are multiple substrates it should be define this way A:300,A:301,A:302  
 This step generates `sort_counts.dat`, `node_info.dat`, `res_atom.dat files`
