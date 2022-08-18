@@ -81,7 +81,7 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.
 
 1. Follow step 1-5 from example 1 to get protonated pdb, in this case we will work with `3bwm.pdb` and after step 2 of example 1 it will generate `3bwm_h.pdb`, if you have modified anything from `3bwm_h.pdb` then use that for following process.
 
-2. Run (For 5 Angstrom from center of mass OR average of xyz cordinate of seed residues A:300,A:301,A:302, and with OR without hydrogen example is given below). Add "-nohydro" to neglact hydrogen if needed, and change seed (Chain:Resid,Chain:Resid) and distance as per requirement in -cut flag.
+2. For 5 Angstrom from center of mass OR average of xyz cordinate of seed residues A:300,A:301,A:302, and with OR without hydrogen example is given below. Add "-nohydro" to neglact hydrogen if needed, and change seed (Chain:Resid,Chain:Resid) and distance as per requirement in -cut flag.
 ```bash
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type avg -nohydro
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type avg
@@ -90,7 +90,7 @@ python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -
 ```
 this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atom-5.00.dat` which contain information about important atoms to be included in selected residues. 
 
-3. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
+3. Once the `res_atom-5.00.dat` file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
 ```bash
 python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h.pdb -c res_atom-5.00.dat 
 ```
