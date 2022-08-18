@@ -184,8 +184,7 @@ ls res_atoms_*.dat > list
 
 5. Open the list and remove "res_atoms_" and ".dat" to leave only the model numbers within list, run the command below after you 
 ```bash
-*********rinrus_trim.py needs to be changed******
-for i in `cat list`; do python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -pdb 2cht_h.pdb -s A:203 -ratom res_atoms_${i}.dat; mv res_*_atom_info.dat atom_info_${i}.dat; mv res_*_froz_info.dat froz_info_${i}.dat; mv res_*.pdb model_${i}.pdb; done
+for i in `cat list`; do python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -pdb 2cht_h.pdb -s A:203 -ratom res_atoms_${i}.dat; mv res_*_atom_info.dat atom_info_${i}.dat; mv res_*_froz_info.dat froz_info_${i}.dat; mv res_*.pdb model_${i}.pdb; done
 ```
 
 6. To identify which pdbs are identical, create a new list of the various model pdb names and run the identifiles.py script
