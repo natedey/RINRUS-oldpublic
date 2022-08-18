@@ -46,7 +46,7 @@ python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s A:300,A:301
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-10. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
+9. With the res_atoms.dat file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
 ```bash
 python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb 
 ```
@@ -65,7 +65,7 @@ python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_mo
                  will generate the 7th model
 ```
 
-11. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
+10. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
 
 
 #####The pymol script file (log.pml) is correct, but it currently doesn't run automatically. Need to manually run log.pml scripts in pymol to add hydrogens###
@@ -88,7 +88,7 @@ Note-You will have to write a bash or python script to loop over all the models.
 ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
 ```
 
-12. Run `write_input.py` for a single model to generate a template file and input file:
+11. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
 python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_template.txt -format gaussian -c -2 -noh res_NN.pdb -adh res_NN_h.pdb 
 ```
@@ -113,20 +113,15 @@ python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type mass -nohydro
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type mass
 ```
+```bash
+  -type       "mass" or "avg"
+  -nohydro     If flag present, ignore hydrogen atoms from distance calculations               
+  -cut COFF    cut_off_dist, default = 3 Å
+  -s SEED      center_residues, examples: A:300,A:301,A:302
+```
 this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atom-5.00.dat` which contain information about important atoms to be included in selected residues. 
 
-3. Once the `res_atom-5.00.dat` file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
-```bash
-python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h.pdb -c res_atom-5.00.dat 
-```
-This generates automatically generate the entire "ladder" of possible models based on a ranking scheme which contain `res_NNN.pdb`, `res_NNN_froz_info.dat` and `res_NNN_atom_info.dat` for the all models, where `NNN` is the number of residues in that model.
-
-#Note: if you want to  generate one model based on a any ranking scheme, you will need to run a same script with the flag `-model NNN` as 
-```bash
-python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h.pdb -c res_atom-5.00.dat -model NNN
-```
-
-4. follow step 11 and 12 of example 1 to protonate pdb and generate a template file and input file.
+3. Once the `res_atom-5.00.dat` file generated, use this file to generate the trimmed PDB model using the RINRUSv2. Follow step 9 and 11 of example 1 to protonate pdb and generate a template file and input file.
 
 ## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: 
 
