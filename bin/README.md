@@ -74,34 +74,33 @@ ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_
 
 12. Run `write_input.py` for a single model to generate a template file and input file:
 ```bash
-python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.pdb -adh res_NN_h.pdb
+python3 ~/git/RINRUS/bin/write_input.py -intmp input_template -c -2 -noh res_NN.pdb -adh res_NN_h.pdb -format gaussian
 ```
 
 ## Usage example 2 - generating a single or a few input files with distance-based ranking: 
 
 1. Follow step 1-5 from example 1 to get protonated pdb, in this case we will work with `3bwm.pdb` and after step 2 of example 1 it will generate `3bwm_h.pdb`, if you have modified anything from `3bwm_h.pdb` then use that for following process.
 
-2. For 5 Angstrom from center of mass OR average of xyz cordinate of seed residues A:300,A:301,A:302, and with OR without hydrogen example is given below. Add "-nohydro" to neglact hydrogen if needed, and change seed (Chain:Resid,Chain:Resid) and distance as per requirement in -cut flag.
+2. Run (For 5 Angstrom from center of mass of seed residues A:300,A:301,A:302, change seed and distance as per requirement)
 ```bash
-python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type avg -nohydro
-python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type avg
-python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type mass -nohydro
-python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type mass
+python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5
 ```
-this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atom-5.00.dat` which contain information about important atoms to be included in selected residues. 
+this will generate a file named `dist_per_res-5.00.dat` which contain information about all residue atoms within 5 Angstrom distance in increasing order. and `res_atoms.dat` which contain information about important atoms to be included in selected residues. 
 
-3. Once the `res_atom-5.00.dat` file generated, use this file to generate the trimmed PDB model using the RINRUSv2 script:
+3. Then run 
 ```bash
-python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h.pdb -c res_atom-5.00.dat 
+*****GenResAtoms.py*******
+python3 ~/git/RINRUS/bin/GenResAtoms.py -freq dist_per_res-5.00.dat -atom res_atoms_5.00.dat -seed A:300,A:301,A:302
 ```
-This generates automatically generate the entire "ladder" of possible models based on a ranking scheme which contain `res_NNN.pdb`, `res_NNN_froz_info.dat` and `res_NNN_atom_info.dat` for the all models, where `NNN` is the number of residues in that model.
+this will generate res_atom_XX.dat for all models separately which has information about all important atoms of main chain and side chain needs to be included in model.
 
-#Note: if you want to  generate one model based on a any ranking scheme, you will need to run a same script with the flag `-model NNN` as 
-```bash
-python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h.pdb -c res_atom-5.00.dat -model NNN
-```
+4. Then run (for any number of res_atoms_XX.dat models)
+````bash
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .;mv ../res_${i}_h.pdb .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 300,301,302 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done			
+````
+This will generate the H added pdb files for all models from res_atoms_XX.dat in separate directories and generate pdbs folder containing all protonated pdb and res_atoms_xx.dat
 
-4. follow step 11 and 12 of example 1 to protonate pdb and generate a template file and input file.
+5. follow step 12 of example 1 to generate a template file and input file.
 
 ## Usage example 3 - generating a single or a few input files with arpeggio interaction-type ranking: 
 
@@ -134,7 +133,7 @@ python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename res_7.pdb
 ```bash
 ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
 ```
-7. Run `write_input.py` for a single model to generate a template file and input file:
+6. Run `write_input.py` for a single model to generate a template file and input file, the script can write input file for gaussian, qchem, and gua-xtb:
 ```bash
 python3 ~/git/RINRUS/bin/write_input.py -intmp input_temp -c -2 -noh res_8.pdb -adh res_8_h.pdb -format gaussian
 ```
@@ -148,7 +147,7 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp input_temp -c -2 -noh res_8.pdb -
 
 2. Run combifromcontacts.py script with the defined seed (chain/residue numbers) which takes combinations of the different interactions 
 ```bash
-python3 ~/git/RINRUS/combi_script/combifromcontacts.py 2cht_h.contacts A/203 2cht_h.sift 
+python3 ~/git/RINRUS/combi_script/combifromcontacts.py 2cht_h.contacts A:202 2cht_h.sift 
 ```
 This generates LongCombi.dat, SimpCombi.dat, and ModSimpCombi.dat
 
@@ -162,10 +161,9 @@ python3 ~/git/RINRUS/combi_script/genmodelfiles.py ModSimpCombi.dat
 ls res_atoms_*.dat > list
 ```
 
-5. Open the list and remove "res_atoms_" and ".dat" to leave only the model numbers within list, run the command below after you 
+5. Open the list and remove "res_atoms_" and ".dat" to leave only the model numbers within list, run the command below 
 ```bash
-*********rinrus_trim.py needs to be changed******
-for i in `cat list`; do python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -pdb 2cht_h.pdb -s A:203 -ratom res_atoms_${i}.dat; mv res_*_atom_info.dat atom_info_${i}.dat; mv res_*_froz_info.dat froz_info_${i}.dat; mv res_*.pdb model_${i}.pdb; done
+for i in `cat list`; do python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -pdb 2cht_h-TS.pdb -s C:202 -ratom res_atoms_${i}.dat; mv res_*_atom_info.dat atom_info_${i}.dat; mv res_*_froz_info.dat froz_info_${i}.dat; mv res_*.pdb model_${i}.pdb; done
 ```
 
 6. To identify which pdbs are identical, create a new list of the various model pdb names and run the identifiles.py script
@@ -179,7 +177,7 @@ The generated file (UniqueModels.dat) lists all the unique models and removes re
 
 7. Complete the valences by adding protons to severed bonds and waters via PyMol
  ```bash 
- for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; ~qcheng1/bin/pymol -qc log.pml; done
+ for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; done
  ```
 ## Usage example 5b - Combinatorial model building from probe
 1. Refer to usage example 1 steps 1 to 7 to generate arpeggio probe files to compute combinations
@@ -193,8 +191,6 @@ Note: Multiple seed indices can be indicated by space separation as A/202 A/202
 3. Run the next step which combine multiple step but remember to edit the necessary part
 
 ```bash
-
-*********rinrus_trim.py needs to be changed******
-ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim_pdb.py -s A:203 -ratom res_atoms_${i}.dat -pdb ../2cht_h_ac_aligned.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 203 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:203 -ratom res_atoms_${i}.dat -pdb ../2cht_h_ac_aligned.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 203 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done
 ```
 Be aware that while the res_atoms_#.dat model sets generated are technically unique to each other, once RINRUS generates the full trimmed QM-models, a lot of the them will no longer be unique and will be identical to others. So there a need to check to determine which QM-models are still unique (and not redundant)
