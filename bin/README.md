@@ -66,8 +66,10 @@ If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE
 ```bash
 python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename res_.pdb
 ```
+```bash
 -resid "300,301,302" (if RESIDS do not want to protonate)
 -resid "300,301,302 and not name NE2" (if specific atom also do not want to protonate)
+```
 
 Note-You will have to write a bash or python script to loop over all the models. Example of bash loop is given here.
 ```bash
@@ -78,6 +80,7 @@ ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_
 ```bash
 python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_template.txt -format gaussian -c -2 -noh res_NN.pdb -adh res_NN_h.pdb 
 ```
+```bash
 -noh NO_H_PDB     trimmed_pdb_file
 -adh H_ADD_PDB    hadded_pdb_file
 -intmp INPUT_TMP  template_for_write_input
@@ -85,7 +88,7 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_t
 -c LIGAND_CHARGE  charge_of_ligand
 -format FMAT      input_file_format eg.'gaussian','qchem','gau-xtb'
 "run python3 ~/git/RINRUS/bin/write_input.py --help" to see more information about flags
-
+```
 
 ## Usage example 2 - generating a single or a few input files with distance-based ranking: 
 
