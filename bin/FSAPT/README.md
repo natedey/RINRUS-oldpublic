@@ -9,7 +9,9 @@ indices do not need to be the same (e.g. it is okay that the chorismate
 is listed as the first body in the FSAPT calculation, but it does not 
 appear first in the PDB file, as long as the order of the chorismate 
 atoms is the same and the order of the rest of the enzyme atoms is the 
-same). The user wishes to automate the process of identifying the unique 
+same). NOTE: If there is more than one seed fragment, the fragments must be in the
+same order in the first body as they are in the pdb, even if they are noncontiguous 
+fragments. The user wishes to automate the process of identifying the unique 
 side/main chains and waters present in the cluster model and computing 
 the FSAPT interaction between the first body and each of these functional 
 groups.
