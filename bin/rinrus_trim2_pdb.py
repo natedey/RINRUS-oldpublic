@@ -172,7 +172,7 @@ if __name__ == '__main__':
     atomf = args.r_atom
     cres  = args.cres
     method = args.method
-    if cres is not 'None':
+    if cres != 'None':
         cres_atoms_all, cres_atoms_sc = get_noncanonical_resinfo(cres)
     else:
         cres_atoms_all = {}
