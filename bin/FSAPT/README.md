@@ -85,3 +85,6 @@ o	python3 gen-FG-analysis-arpeggio.py -c res_17_h.contacts -p res_17_h.pdb -s A/
 	number of given interaction types. The order of the interaction 
 	types column is the same as in the contacts file, which can be found in the README of Arpeggio
 
+
+python3 sapt2rins.py -p /home/qcheng1/projects/gnmt/sapt-rank/fsapt/gly/FG-SAPT.dat -c /home/qcheng1/projects/gnmt/arpeggio/sam-gly/contact_counts.dat -s A:293,A:294 will generate res_atoms.dat
+
