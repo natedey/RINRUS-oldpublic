@@ -83,6 +83,7 @@ def write_res_atom(res_list,res_part,key_list,res_atom,seed):
     for sd in seeds:
         if sd not in key_list:
             f.write('%8s%8s\n'%(sd[0],sd[1]))
+            idx = len(res_part)+1
         else:
             idx = key_list.index(sd)
             f.write('%8s%8s'%(key_list[idx][0],key_list[idx][1]))
@@ -90,7 +91,7 @@ def write_res_atom(res_list,res_part,key_list,res_atom,seed):
             for atom in res_atom[idx]:
                 f.write('%6s'%atom)
             f.write('\n')
-    print(idx)
+    #print(idx)
     for i in range(len(res_part)):
         if i != idx:
             f.write('%8s%8s'%(key_list[i][0],key_list[i][1]))
