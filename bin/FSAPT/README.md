@@ -26,6 +26,7 @@ it is located in the middle of the PDB ordering but as the first body in
 the FSAPT calculation) the atom indices printed in the outputfile will be 
 shifted according to the expected atom indices in the FSAPT calculation. 
 Example script usage:
+
 	input : python3 ~/git/RINRUS/bin/FSAPT/gen-FG-atomIDs.py -p template_27_1.pdb -s A:293,A:294
 	output: pdbFG.dat
 
@@ -65,6 +66,7 @@ then re-written using the next functional group in the pdbFG.dat file
 as the next enzyA functional group, and the process is repeated until 
 all of the functional groups interaction energies has been computed. 
 Example usage (within the fsapt directory):
+
 	input: python3 ~/git/RINRUS/bin/FSAPT/analyze-FG-SAPT.py -path /home/ndyonker/git/psi4/objdir/stage/share/psi4/fsapt/
 	output: ../FG-SAPT.dat
 
