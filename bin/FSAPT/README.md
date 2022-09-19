@@ -15,7 +15,7 @@ fragments. The user wishes to automate the process of identifying the unique
 side/main chains and waters present in the cluster model and computing 
 the FSAPT interaction between the first body and each of these functional 
 groups.
-Example using chorismate and chorismate mutase in path: /home/tsmmers1/chem/chorismate_mutase/SAPT/MD/f10000
+Example using GNMT with the SAM and GLY (A:293,A:294) as the seed
 
 1) Identify functional group atoms
 -	The gen-FG-analysis.py script is a rudimentary script that can be used 
@@ -26,7 +26,8 @@ it is located in the middle of the PDB ordering but as the first body in
 the FSAPT calculation) the atom indices printed in the outputfile will be 
 shifted according to the expected atom indices in the FSAPT calculation. 
 Example script usage:
-o	python3 gen-FG-atomIDs.py -p res_17_h.pdb -s A:128
+
+	input : python3 ~/git/RINRUS/bin/FSAPT/gen-FG-atomIDs.py -p template_27_1.pdb -s A:293,A:294
 	output: pdbFG.dat
 
 -	The output pdbFG.dat file contains info on: how many atoms are in 
@@ -65,7 +66,8 @@ then re-written using the next functional group in the pdbFG.dat file
 as the next enzyA functional group, and the process is repeated until 
 all of the functional groups interaction energies has been computed. 
 Example usage (within the fsapt directory):
-	python3 ../analyze-FG-SAPT.py
+
+	input: python3 ~/git/RINRUS/bin/FSAPT/analyze-FG-SAPT.py -path /home/ndyonker/git/psi4/objdir/stage/share/psi4/fsapt/
 	output: ../FG-SAPT.dat
 
 3) (Additional) Gather probe counts and arpeggio interactions for functional group atoms
@@ -89,4 +91,7 @@ The sapt2rins.py script generates the res_atoms.dat, which then allows you to cr
 
 Example usage:
 o	python3 sapt2rins.py -p ../FG-SAPT.dat -c ../contact_counts.dat -s A:293,A:294 
+=======
+	input: python3 ~/git/RINRUS_master/bin/FSAPT/sapt2rins.py -p FG-SAPT.dat -c contact_counts.dat -s A:293,A:294 will generate res_atoms.dat
+	output: res_atoms.dat 
 
