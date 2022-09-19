@@ -85,6 +85,8 @@ o	python3 gen-FG-analysis-arpeggio.py -c res_17_h.contacts -p res_17_h.pdb -s A/
 	number of given interaction types. The order of the interaction 
 	types column is the same as in the contacts file, which can be found in the README of Arpeggio
 
+The sapt2rins.py script generates the res_atoms.dat, which then allows you to create models for quantum chemistry software packages (step 9 of the original workflow)
 
-python3 sapt2rins.py -p /home/qcheng1/projects/gnmt/sapt-rank/fsapt/gly/FG-SAPT.dat -c /home/qcheng1/projects/gnmt/arpeggio/sam-gly/contact_counts.dat -s A:293,A:294 will generate res_atoms.dat
+Example usage:
+o	python3 sapt2rins.py -p ../FG-SAPT.dat -c ../contact_counts.dat -s A:293,A:294 
 
