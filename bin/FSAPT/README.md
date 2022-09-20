@@ -1,11 +1,13 @@
 Background: The user has a cluster model PDB file that has already been 
-cleaned/trimmed/protonated. A Psi4 FSAPT computation has been run on this 
-PDB structure wherein the "seed" species of interest (e.g. the chorismate of 
-chorismate mutase or glycine of GNMT) is listed as the first interacting body 
-and the enzyme is the second interacting body in the Psi4 input file. The atom 
-ordering of the first body is in the same order as in the PDB file, and the atom 
-ordering of the second body is in the same order as in the PDB file. The overall 
-atom indices do not need to be the same (e.g. it is okay that the chorismate 
+cleaned/trimmed/protonated, preferably the "maximal" model from the 
+probe or arpeggio RIN (probe in this example). A Psi4 FSAPT computation has 
+been run on this PDB structure wherein the "seed" species of interest 
+(e.g. the chorismate of chorismate mutase or glycine of GNMT) is listed 
+as the first interacting body and the enzyme is the second interacting 
+body in the Psi4 input file. The atom ordering of the first body is in 
+the same order as in the PDB file, and the atom ordering of the second 
+body is in the same order as in the PDB file. The overall atom indices 
+do not need to be the same (e.g. it is okay that the chorismate 
 is listed as the first body in the FSAPT calculation, but it does not 
 appear first in the PDB file, as long as the order of the chorismate 
 atoms is the same and the order of the rest of the enzyme atoms is the 
@@ -77,7 +79,7 @@ You must have Psi4 1.5 or later installed for RINRUS to work with FSAPT-D calcul
 Example usage (within the /fsapt directory):
 
 	input: python3 ~/git/RINRUS/bin/FSAPT/analyze-FG-SAPT.py -path <your local path where share/psi4/fsapt scripts are located> 
-	output: ../FG-SAPT.dat (and ../contact_counts.dat)????
+	output: ../FG-SAPT.dat 
 
 3) (Optional) Gather probe counts and arpeggio interactions for functional group atoms
 The gen-FG-analysis-probe.py script counts the contacts for 
