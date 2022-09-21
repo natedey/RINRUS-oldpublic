@@ -103,9 +103,9 @@ Example usage:
 should be equivalent to step 8 of the original workflow. The sapt2rins.py script generates res_atoms-fsapt.dat, which then allows you to create models for quantum chemistry software packages. 
 Example usage (in this case, we want the A:293 SAM cofactor to be included in the seed even though our FSAPT calculation only had A:294 GLY as fragA): 
 
-	input: python3 sapt2rins.py -p FG-SAPT.dat -c contact_counts.dat -s A:293,A:294 
-	output: res_atoms-fsapt.dat 
-	
+	input: python3 sapt2rins.py -p FG-SAPT.dat -c contact_counts.dat -s A:293,A:294
+	output: res_atoms-fsapt.dat
+
 This brings us to Step 9 on the original workflow, but you will need an additional argument "-c" when running rinrus_trim2_pdb.py to tell RINRUS to use the 
 FSAPT-based ranking.
 
