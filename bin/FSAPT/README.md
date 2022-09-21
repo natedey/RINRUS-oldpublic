@@ -85,6 +85,7 @@ Example usage (within the /fsapt directory):
 The gen-FG-analysis-probe.py script counts the contacts for 
 the functional groups interacting with a user-specified seed. Requires 
 a probe file to have been run on the PDB. 
+
 Example usage:
 
 	input: python3 gen-FG-analysis-probe.py -p 1nbh.probe -s A:294
@@ -92,7 +93,8 @@ Example usage:
 
 Similarly, the gen-FG-analysis-arpeggio.py script counts the interactions for 
 the functional groups interacting with a user-specified seed. 	
-Requires an arpeggio contacts file to have been run on the cluster PDB. 	
+Requires an arpeggio contacts file to have been run on the cluster PDB. 
+
 Example usage: 
 
 	input: python3 gen-FG-analysis-arpeggio.py -c contact_counts.dat -p template_27.pdb -s A:294 
@@ -101,10 +103,12 @@ Example usage:
 
 4) Generate QM-cluster model input files for quantum chemistry software packages based on the unsigned magnitude of the fragment FSAPT interaction energy. This
 should be equivalent to step 8 of the original workflow. The sapt2rins.py script generates res_atoms-fsapt.dat, which then allows you to create models for quantum chemistry software packages. 
-Example usage (in this case, we want the A:293 SAM cofactor to be included in the seed even though our FSAPT calculation only had A:294 GLY as fragA): 
+Note, in this case, we want the A:293 SAM cofactor to be included in the seed even though our FSAPT calculation only had A:294 GLY as fragA. 
 
-	input: python3 sapt2rins.py -p FG-SAPT.dat -c contact_counts.dat -s A:293,A:294
-	output: res_atoms-fsapt.dat
+Example usage: 
+
+	input: python3 sapt2rins.py -p FG-SAPT.dat -c contact_counts.dat -s A:293,A:294 
+	output: res_atoms-fsapt.dat 
 
 This brings us to Step 9 on the original workflow, but you will need an additional argument "-c" when running rinrus_trim2_pdb.py to tell RINRUS to use the 
 FSAPT-based ranking.
