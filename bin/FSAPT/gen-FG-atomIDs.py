@@ -6,7 +6,7 @@ from collections import defaultdict
 
 parser = argparse.ArgumentParser(description='Generates file documenting atom IDs of functional groups of PDB file')
 parser.add_argument('-p', help='name of PDB file to analyze')
-parser.add_argument('-s', nargs="+", default=['A:128'], help='residue(s) of seed in format chain:resID chain:resID')
+parser.add_argument('-s', help='residue(s) of seed in format chain:resID,chain:resID,...')
 parser.add_argument('-save', default='pdbFG.dat', help='name of savefile')
 args = parser.parse_args()
 
@@ -21,7 +21,7 @@ FGlist = []
 with open(args.p, 'r') as readfile:
     for line in readfile:
         if line == "END\n" or line[0:6] == "CONECT": continue
-        if line[21]+":"+line[22:26].strip() in args.s:
+        if line[21]+":"+line[22:26].strip() in args.s.split(","):
             seedatoms.append(line[21]+"/"+line[22:26].strip()+"/"+line[12:16].strip())
         if line[0:4] == "ATOM" or line[0:6] == "HETATM": modelsize +=1
 
@@ -30,7 +30,7 @@ with open(args.p, 'r') as readfile:
     atomID = len(seedatoms)+1
     for line in readfile:
         if line == "END\n": continue
-        if line[21]+":"+line[22:26].strip() in args.s: continue
+        if line[21]+":"+line[22:26].strip() in args.s.split(","): continue
         if line[17:20] == "WAT" or line[17:20] == "HOH":
             watatomnames[line[21]+":"+line[22:26].strip()].append(line[12:16].strip()+":"+str(atomID))
             atomID +=1
