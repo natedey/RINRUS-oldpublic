@@ -94,6 +94,7 @@ Similarly, the gen-FG-analysis-arpeggio.py script counts the interactions for
 the functional groups interacting with a user-specified seed. 
 Requires an arpeggio contacts file to have been run on the cluster PDB. 
 Example usage: 
+
         input: python3 gen-FG-analysis-arpeggio.py -c contact_counts.dat -p res_17_h.pdb -s A:294 
 	output: FG-arpeggio.dat which lists the functional groups and the 
 	number of given interaction types. The order of the interaction 
