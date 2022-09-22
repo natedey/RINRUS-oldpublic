@@ -93,13 +93,8 @@ def gen_res_atom(res_list,old_res_atom):
 
 #res_part, key_list, res_atom = gen_res_atom(res_list,'/home/qcheng1/projects/gnmt/arpeggio/sam-gly/contact_counts.dat')
 
-<<<<<<< HEAD
 def write_res_atom(res_list,res_part,key_list,res_atom,seed,res_score):
     f = open('res_atoms_fsapt.dat','w')
-=======
-def write_res_atom(res_list,res_part,key_list,res_atom,seed):
-    f = open('res_atoms-fsapt.dat','w')
->>>>>>> 64e74b5a2eba52e2c8640342a8e3a98bf1f691bd
     seeds_in = seed.split(',')
     seeds = []
     idx_list = []
