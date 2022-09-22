@@ -95,6 +95,16 @@ def gen_res_atom(res_list,old_res_atom):
 
 def write_res_atom(res_list,res_part,key_list,res_atom,seed,res_score):
     f = open('res_atoms_fsapt.dat','w')
+<<<<<<< HEAD
+=======
+=======
+def write_res_atom(res_list,res_part,key_list,res_atom,seed):
+    f = open('res_atoms-fsapt.dat','w')
+<<<<<<< HEAD
+=======
+>>>>>>> 64e74b5a2eba52e2c8640342a8e3a98bf1f691bd
+>>>>>>> 0cb4562daf782597302659d861a2f89ccdcaf147
+>>>>>>> 2941b23e80c1026bb3bf89f2c22ade3fad0ef166
     seeds_in = seed.split(',')
     seeds = []
     idx_list = []
