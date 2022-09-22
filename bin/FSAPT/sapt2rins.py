@@ -74,7 +74,7 @@ def gen_res_atom(res_list,old_res_atom):
 #res_part, key_list, res_atom = gen_res_atom(res_list,'/home/qcheng1/projects/gnmt/arpeggio/sam-gly/contact_counts.dat')
 
 def write_res_atom(res_list,res_part,key_list,res_atom,seed):
-    f = open('res_atoms.dat','w')
+    f = open('res_atoms-fsapt.dat','w')
     seeds_in = seed.split(',')
     seeds = []
     for sel in seeds_in:
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Get contact information from SAPT energy')
     parser.add_argument('-p', dest='fg',help='FG-sapt energy dat')
-    parser.add_argument('-c', dest='cf',help='contact data from other program')
+    parser.add_argument('-c', dest='cf',help='contact data from other programs')
     parser.add_argument('-s', dest='seed',help='seed residues, in the format "A:293,A;294"')
 
     args = parser.parse_args()
