@@ -6,7 +6,6 @@ memory 120GB
 #
 #to run FSAPT-D, change energy('fisapt0')
 #to energy('fisapt0-d3mbj')
-#FSAPT0 takes 7 days and one hour on 10 cores
 #
 molecule frame {
 -1 1
