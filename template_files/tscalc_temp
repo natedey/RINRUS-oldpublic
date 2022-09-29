@@ -1,8 +1,4 @@
-<<<<<<< HEAD:template_files/input_template/tscalc_temp
 10 80
-=======
-10  120
->>>>>>> c6676a993e7f1dfd35e054904d5928a0d63e4f16:template_files/tscalc_temp
 b3lyp/genecp
 opt(ts,noeigen,calcfc)
 freq
