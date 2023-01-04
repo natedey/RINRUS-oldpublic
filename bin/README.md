@@ -21,7 +21,7 @@ $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb
 
 5. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions). The user needs to protonate ligand and substrate properly since reduce does not recognize most substrates and may add H improperly. Check the ligand 2D drawing for the PDB entry on rcsb website for some guidance on substrate protonation if starting from scratch. Performing this step correctly is the user's responsibility! RINRUS will generate models from provided structure and does not yet have comprehensive sanity checks!
    
-6. If there are any "CA" or "CB" atoms in substrate/ligands/noncanonical amino acids, replace them with "CA'" and "CB'", respectively. An example of this would be if the substrate is a polypeptide (like in Tyrosyl DNA-phosphodiesterase 1). You would not want to freeze substrate Carbon alphas/betas. Renaming CA' / CA' will cause RINRUS to ignore a peptide substrate atoms when it makes the list of frozen atoms. We plan to automate this process eventually. 
+6. If there are any "CA" or "CB" atoms in substrate/ligands/noncanonical amino acids, replace them with "CA'" and "CB'", respectively. An example of this would be if the substrate is a polypeptide (like in Tyrosyl DNA-phosphodiesterase 1). You would not want to freeze substrate Carbon alphas/betas. Renaming to CA' / CB' will cause RINRUS to ignore a peptide substrate atoms when it makes the list of frozen atoms. We plan to automate this process eventually. 
 
 7. Use the new PDB file (`3bwm_h_modify.pdb`) to run `probe` to generate .probe file	
 ``` bash
