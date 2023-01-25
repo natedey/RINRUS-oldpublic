@@ -196,7 +196,7 @@ The generated file (UniqueModels.dat) lists all the unique models and removes re
  for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; ~qcheng1/bin/pymol -qc log.pml; done
  ```
 ## Usage example 5b - Combinatorial model building from probe
-1. Refer to usage example 1 steps 1 to 7 to generate arpeggio probe files to compute combinations
+1. Refer to usage example 1 steps 1 to 7 to generate probe files to compute combinations
 
 2. Run gen-probe-combi.py script with the defined seed (chain/residue numbers/atom(s)) which takes combinations of the different interactions 
 ```bash
