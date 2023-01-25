@@ -234,6 +234,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
     probefile = args.probefile
     sel_res = args.seed
+    error_test = sel_res
+    error = error_test.split(',') 
+    sel_res = ''
+     
+    for s in error:
+        if ':' in s:
+            sel_res+=s+','
+            pass
+        else:
+            print('Is seed number: ' + str(s)+ ' supposed to not have a Chain ID? If so, please rerun with Chain ID ')
+            sel_res+=':'+s+','
+    sel_res=sel_res[:-1]
+    print(sel_res)
 
     res_list, res_acts, actions, siflines, res_atoms = probe_analysis(probefile,sel_res)
     #res_dict = order_reslist(res_list)
