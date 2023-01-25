@@ -7,6 +7,7 @@ import os, sys, re
 from copy import *
 from numpy import *
 import argparse
+import pandas as pd
 
 
 aa_trans_dic = {
@@ -154,13 +155,23 @@ def probe_analysis(probefile,sel_res):
 
 
 def order_reslist(res_list):
+    print(res_list)
     res_dic = {}
-    for i in res_list:
+    for num,i in enumerate(res_list):
         c = i.split(':')
+        if c[0] == '':
+            c[0]=('nc'+'_'+str(num))
+            res_dic[c[0]] = [int(c[1])]
+        else:
+            res_dic[c[0]].append(int(c[1]))
+            
+        '''
         try:
             res_dic[c[0]].append(int(c[1]))
-        except:
+        except IndexError:
+            print('Exception occured: Chain ID does not exist. Check Chain ID')
             res_dic[c[0]] = [int(c[1])]
+        '''
     return res_dic
 
 def print_list(res_list):
@@ -175,16 +186,24 @@ def print_dict(dict):
 
 def write_res_freq(res_list, res_acts, res_atoms):
     f_res = open('freq_per_res.dat','w')
+    df = {'Chain':[],'Res_Freq':[]}
     for k in sorted(res_atoms, key=lambda k:len(res_atoms[k]),reverse=True):
         cha,res = k.split(':')
+        df['Chain'].append(cha)
+        df['Res_Freq'].append(res)
+        #print(cha,res)
         f_res.write('%-4s %-8s %-8d'%(cha,res,len(res_atoms[k])))
+        print(res_atoms[k])
         for act in res_acts[k]:
             f_res.write(' %-20s'%act)
         f_res.write('\n')
     f_res.close()
 
+    df= pd.DataFrame(df)
+    print(df)
 
-def write_res_atom(res_dict,res_atoms):
+
+def write_res_atom(res_atoms):
     f_res = open('res_atoms.dat','w')
     for k in sorted(res_atoms, key=lambda k:len(res_atoms[k]),reverse=True):
         cha,res = k.split(':')
@@ -218,9 +237,9 @@ if __name__ == "__main__":
     sel_res = args.seed
 
     res_list, res_acts, actions, siflines, res_atoms = probe_analysis(probefile,sel_res)
-    res_dict = order_reslist(res_list)
+    #res_dict = order_reslist(res_list)
 
     write_sif(siflines)
     write_rin(actions)
-    write_res_atom(res_dict,res_atoms)
+    write_res_atom(res_atoms)
     write_res_freq(res_list,res_acts,res_atoms)
