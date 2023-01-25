@@ -193,14 +193,13 @@ def write_res_freq(res_list, res_acts, res_atoms):
         df['Res_Freq'].append(res)
         #print(cha,res)
         f_res.write('%-4s %-8s %-8d'%(cha,res,len(res_atoms[k])))
-        print(res_atoms[k])
         for act in res_acts[k]:
             f_res.write(' %-20s'%act)
         f_res.write('\n')
     f_res.close()
 
     df= pd.DataFrame(df)
-    print(df)
+    #print(df)
 
 
 def write_res_atom(res_atoms):
