@@ -159,7 +159,12 @@ Here we'll discuss the formatting of freq_per_res.dat and res_atoms.dat and how 
 ## Usage example 5 - GENERATE ALL THE THINGS!!! Combinatorial model building from probe and arpeggio
 
 ## Usage example 5a - Combinatorial model building from arpeggio - Dr. D still needs to proofread this part!
-1. Refer to usage example 3 steps 1 to 3 to generate arpeggio contact files to compute combinations
+1. Refer to usage example 3 steps 1 to 2 to generate arpeggio contact files to compute the combinations
+
+````bash
+python3 ~/git/RINRUS/bin/arpeggio/arpeggio.py 2cht_h-TS.pdb -s /A/203/
+````  
+After generating the arpeggio contacts, the contact file is used for computing the combinations
 
 2. Run combifromcontacts.py script with the defined seed (chain/residue numbers) which takes combinations of the different interactions 
 ```bash
