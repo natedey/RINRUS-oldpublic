@@ -253,7 +253,7 @@ if __name__ == '__main__':
                 res_id[(dist_p[1],dist_p[2])][0] = min(dist_p[0],res_id[(dist_p[1],dist_p[2])][0])
                 res_id[(dist_p[1],dist_p[2])].append(dist_p[3])
     res_id = dict(sorted(res_id.items(),key=lambda x:x[1]))
-    d_res = open('dist_per_res-%.2f.dat'%cut,'w')
+    d_res = open('res_atom-%.2f.dat'%cut,'w')
     for key in res_id.keys():
         d_res.write('%-2s %-5s %-7.4f'%(key[0],key[1],res_id[key][0]))
         for v in range(1,len(res_id[key])):
@@ -261,12 +261,4 @@ if __name__ == '__main__':
         d_res.write('\n')
     d_res.close()
 
-   ## On June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
-    atom_res = open('res_atom-%.2f.dat'%cut,'w')
-    for key in res_id.keys():
-        atom_res.write('%-2s %-5s '%(key[0],key[1]))
-        for v in range(1,len(res_id[key])):
-            atom_res.write(' %-6s'%res_id[key][v])
-        atom_res.write('\n')
-    atom_res.close()
 
