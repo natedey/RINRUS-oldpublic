@@ -113,7 +113,7 @@ python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -
   -cut COFF    cut_off_dist, default = 3 Å
   -s SEED      center_residues, examples: A:300,A:301,A:302
 ```
-This script will generate a file named `dist_per_res-5.00.dat`, which has same format as `freq_per_res.dat`, contains information about all residue atoms within 5 Angstroms in increasing order of distance from the seed, and `res_atom-5.00.dat`, which has the same format as `res_atoms.dat`, contains information about important atoms to be included in the identified residues. 
+This script will generate a file named `res_atom-5.00.dat``, which has same format as `res_atoms.dat`, contains information about all residue atoms within 5 Angstroms in increasing order of distance from the seed, and contains information about important atoms to be included in the identified residues. 
 
 3. Once the `res_atom-5.00.dat` file is generated, generate the trimmed PDB model using RINRUS by following steps 9 and 11 of example 1 to protonate the pdbs and generate input files.
 
