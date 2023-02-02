@@ -266,6 +266,7 @@ if __name__ == '__main__':
              #   test_dict[(a,int(b)),dist_p[3]]=[0.00,dist_p[3]]
     #print(res_id)
     res_id = dict(sorted(res_id.items(),key=lambda x:x[1]))
+<<<<<<< HEAD
  
  #################################################### TAYLOR ADDITIONS #########################################################
     atom_dict_5 = {}
@@ -337,6 +338,9 @@ if __name__ == '__main__':
     
     
     d_res = open('dist_per_res-%.2f.dat'%cut,'w')
+=======
+    d_res = open('res_atom-%.2f.dat'%cut,'w')
+>>>>>>> 74b9f9a0c221ee1b693b9c2456ab2ade0a6d5a81
     for key in res_id.keys():
         d_res.write('%-2s %-5s %-7.4f'%(key[0],key[1],res_id[key][0]))
         for v in range(1,len(res_id[key])):
@@ -348,6 +352,7 @@ if __name__ == '__main__':
 
             
 
+<<<<<<< HEAD
    ## On June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
     atom_res = open('res_atom-%.2f.dat'%cut,'w')
     for key in res_id.keys():
@@ -457,4 +462,6 @@ df_test.to_csv('combined_output_-%.2f.csv'%cut,index=False)
 
     
     
+=======
+>>>>>>> 74b9f9a0c221ee1b693b9c2456ab2ade0a6d5a81
 

@@ -113,7 +113,7 @@ python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -
   -cut COFF    cut_off_dist, default = 3 Å
   -s SEED      center_residues, examples: A:300,A:301,A:302
 ```
-This script will generate a file named `dist_per_res-5.00.dat`, which has same format as `freq_per_res.dat`, contains information about all residue atoms within 5 Angstroms in increasing order of distance from the seed, and `res_atom-5.00.dat`, which has the same format as `res_atoms.dat`, contains information about important atoms to be included in the identified residues. 
+This script will generate a file named `res_atom-5.00.dat``, which has same format as `res_atoms.dat`, contains information about all residue atoms within 5 Angstroms in increasing order of distance from the seed, and contains information about important atoms to be included in the identified residues. 
 
 3. Once the `res_atom-5.00.dat` file is generated, generate the trimmed PDB model using RINRUS by following steps 9 and 11 of example 1 to protonate the pdbs and generate input files.
 
@@ -159,7 +159,12 @@ Here we'll discuss the formatting of freq_per_res.dat and res_atoms.dat and how 
 ## Usage example 5 - GENERATE ALL THE THINGS!!! Combinatorial model building from probe and arpeggio
 
 ## Usage example 5a - Combinatorial model building from arpeggio - Dr. D still needs to proofread this part!
-1. Refer to usage example 3 steps 1 to 3 to generate arpeggio contact files to compute combinations
+1. Refer to usage example 3 steps 1 to 2 to generate arpeggio contact files to compute the combinations
+
+````bash
+python3 ~/git/RINRUS/bin/arpeggio/arpeggio.py 2cht_h-TS.pdb -s /A/203/
+````  
+After generating the arpeggio contacts, the contact file is used for computing the combinations
 
 2. Run combifromcontacts.py script with the defined seed (chain/residue numbers) which takes combinations of the different interactions 
 ```bash
@@ -196,7 +201,7 @@ The generated file (UniqueModels.dat) lists all the unique models and removes re
  for i in `cat list`; do python3 ~/git/RINRUS/bin/pymol_scripts.py ${i} 203; ~qcheng1/bin/pymol -qc log.pml; done
  ```
 ## Usage example 5b - Combinatorial model building from probe
-1. Refer to usage example 1 steps 1 to 7 to generate arpeggio probe files to compute combinations
+1. Refer to usage example 1 steps 1 to 7 to generate probe files to compute combinations
 
 2. Run gen-probe-combi.py script with the defined seed (chain/residue numbers/atom(s)) which takes combinations of the different interactions 
 ```bash
