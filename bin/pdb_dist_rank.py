@@ -336,7 +336,7 @@ if __name__ == '__main__':
     
     
     
-    d_res = open('dist_per_res-%.2f.dat'%cut,'w')
+    
     d_res = open('res_atom-%.2f.dat'%cut,'w')
     for key in res_id.keys():
         d_res.write('%-2s %-5s %-7.4f'%(key[0],key[1],res_id[key][0]))
@@ -349,15 +349,7 @@ if __name__ == '__main__':
 
             
 
-   ## On June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
-    atom_res = open('res_atom-%.2f.dat'%cut,'w')
-    for key in res_id.keys():
-        atom_res.write('%-2s %-5s '%(key[0],key[1]))
-        for v in range(1,len(res_id[key])):
-            atom_res.write(' %-6s'%res_id[key][v])
-        atom_res.write('\n')
-    atom_res.close()
-    
+
     
     #### On Jan 2023 Taylor additions, creates a csv file and prints out a dataframe of results. The script reads the dist_per_res dat file and creates three lists 
     # with the chain id, residue number and distance. These three lists are turned into a pandas dataframe. The dataframe is then turned into a list. 
@@ -373,7 +365,7 @@ if __name__ == '__main__':
     atm_id = []
     amino_name = {}
     amino_name_lst = []
-    with open('dist_per_res-%.2f.dat'%cut,'r') as fp:
+    with open('res_atom-%.2f.dat'%cut,'r') as fp:
         lines = fp.readlines()
         for i in lines:
             a = i.split(' ')
