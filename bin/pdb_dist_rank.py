@@ -5,6 +5,9 @@ from read_write_pdb import *
 from copy import *
 import argparse
 import operator
+import pandas as pd
+import numpy as np
+
 
 Atoms = {'H' : [1,  1.00794],
          'HE': [2,  4.002602],
@@ -209,11 +212,11 @@ if __name__ == '__main__':
     center_res = cres.split(',')
     idx_list = []
     res_id = {}
+    test_dict = {}
     for i in range(len(center_res)):
         a,b = center_res[i].split(':')
         idx_list.append([a,int(b)])
         res_id[(a,int(b))] = [0.00]
-
     sel_atoms = []
     sel_coord = []
     for i in range(len(center_res)):
@@ -232,27 +235,107 @@ if __name__ == '__main__':
             print("-nohydrogen is selected so hydrogen is neglacted")
     if type=="mass":
         com = center_of_mass(sel_atoms,sel_coord)
+        
         print("Center of mass type is selected")
     elif type=="avg":    
         com=avg_coord(sel_coord)
         print("XYZ average type is selected")
+   
 
     ###### Calculate atom-pair distances ######
     dist_atom = []
+    dist_atom_dict = {}
     for atom in pdb:
         if args.nohydro==True and atom[14].strip()=="H": 
                 continue
         dist_atom.append([calc_dist(array([atom[8],atom[9],atom[10]]),com),atom[5].strip(),atom[6],atom[2].strip()])
-
-
+   
     for dist_p in dist_atom:
         if dist_p[0] <= cut:
             if (dist_p[1],dist_p[2]) not in res_id.keys():
                 res_id[(dist_p[1],dist_p[2])] = [dist_p[0],dist_p[3]]
+                test_dict[(dist_p[1],dist_p[2]),dist_p[3]]=[dist_p[0],dist_p[3]]
+
             else:
                 res_id[(dist_p[1],dist_p[2])][0] = min(dist_p[0],res_id[(dist_p[1],dist_p[2])][0])
+            
+                test_dict[(dist_p[1],dist_p[2]),dist_p[3]]=[dist_p[0],dist_p[3]]
+                
                 res_id[(dist_p[1],dist_p[2])].append(dist_p[3])
+             #   print((a,int(b)))
+             #   test_dict[(a,int(b)),dist_p[3]]=[0.00,dist_p[3]]
+    #print(res_id)
     res_id = dict(sorted(res_id.items(),key=lambda x:x[1]))
+ 
+ #################################################### TAYLOR ADDITIONS #########################################################
+    atom_dict_5 = {}
+    for val in res_id:
+        atom_dict_5[val]=[]
+    for val in res_id:
+        for lst in res_id[val][1:]:
+            atom_dict_5[val].append(test_dict[val,lst])
+    sorter_atom = {}
+    main = []
+    side = []
+    final = {}
+    num_5 = 0
+    num_6 = 0
+    aa = {}
+    df_6 = {'ChainID':[],'res_name':[],'res_num':[],'Main atm type':[],'Main Chain':[],'Side atm type':[],'Side Chain':[]}
+    for val_2 in res_id:
+        aa[val_2]={}
+    for key_3 in res_id:
+        for let in atom_dict_5[key_3]:
+            aa[key_3][let[1]]=let[0]
+    for val_3 in res_id:
+        df_6['ChainID'].append(val_3[0])
+        df_6['res_num'].append(val_3[1])
+        main ={}
+        side = {}
+        for key_3 in aa[val_3]:
+            if key_3 == 'N' or key_3 == 'CA' or key_3 == 'O' or key_3 == 'C':
+                main[val_3,key_3]=aa[val_3][key_3]
+            else:
+                side[val_3,key_3]=aa[val_3][key_3]
+        if main == {}:
+            df_6['Main atm type'].append('')
+            df_6['Main Chain'].append('')
+            pass
+        else:
+            first_hit = sorted(main.items(), key=lambda x: x[1])[0]
+            matm = first_hit[0][1]
+            dist = first_hit[1]
+            df_6['Main atm type'].append(matm)
+            df_6['Main Chain'].append(dist)
+        if side == {}:
+            df_6['Side atm type'].append('')
+            df_6['Side Chain'].append('')
+            pass
+        else:
+            first_hit = sorted(side.items(), key=lambda x: x[1])[0]
+            satm = first_hit[0][1]
+            dist = first_hit[1]
+            df_6['Side atm type'].append(satm)
+            df_6['Side Chain'].append(dist)
+    ##########################################################################################################################################
+
+    
+    
+
+        
+        
+
+    
+    
+
+
+           
+   
+
+ 
+    
+    
+    
     d_res = open('dist_per_res-%.2f.dat'%cut,'w')
     for key in res_id.keys():
         d_res.write('%-2s %-5s %-7.4f'%(key[0],key[1],res_id[key][0]))
@@ -260,6 +343,10 @@ if __name__ == '__main__':
             d_res.write(' %-6s'%res_id[key][v])
         d_res.write('\n')
     d_res.close()
+    
+
+
+            
 
    ## On June 2022-Tejas Suhagia, added step to generate res_atoms_xx.dat which is needed for next steps, also changed README for that.
     atom_res = open('res_atom-%.2f.dat'%cut,'w')
@@ -269,4 +356,105 @@ if __name__ == '__main__':
             atom_res.write(' %-6s'%res_id[key][v])
         atom_res.write('\n')
     atom_res.close()
+    
+    
+    #### On Jan 2023 Taylor additions, creates a csv file and prints out a dataframe of results. The script reads the dist_per_res dat file and creates three lists 
+    # with the chain id, residue number and distance. These three lists are turned into a pandas dataframe. The dataframe is then turned into a list. 
+    # This list is looped through the pdb file to find that res name based on the chain id and res num. Following, a csv file is printed out that includes the chain id, res name and res num. ####
+
+                    
+        #### On Jan 2023 Taylor additions, creates a csv file and prints out a dataframe of results. The script reads the dist_per_res dat file and creates three lists 
+    # with the chain id, residue number and distance. These three lists are turned into a pandas dataframe. The dataframe is then turned into a list. 
+    # This list is looped through the pdb file to find that res name based on the chain id and res num. Following, a csv file is printed out that includes the chain id, res name and res num. ####
+    chain_id = []
+    res_num = []
+    dist = []
+    atm_id = []
+    amino_name = {}
+    amino_name_lst = []
+    with open('dist_per_res-%.2f.dat'%cut,'r') as fp:
+        lines = fp.readlines()
+        for i in lines:
+            a = i.split(' ')
+            no_space = []
+            for sp in a:
+                if sp == '':
+                    pass
+                else:
+                    no_space.append(sp)
+            chain_id.append(no_space[0])
+            res_num.append(no_space[1])
+            dist.append(no_space[2])
+            atm_id.append(no_space[3:])
+
+    df = {'chain ID':chain_id,'res num':res_num,'Dist':dist}
+    look_up_these = []
+    for num,id in enumerate(df['chain ID']):
+        look_up_these.append((id,df['res num'][num],df['Dist'][num]))
+    aa = {}
+    for tup in look_up_these:
+        for line in pdb:
+            if str(tup[0]) == str(line[5]) and str(tup[1])==str(line[6]):
+                    aa[str(line[5])+','+str(line[4])+str(line[6])+','+str(tup[2])]=''
+                    amino_name[str(line[5])+','+str(line[4])+str(line[6])+','+str(tup[2])] = ''
+    for name in amino_name.keys():
+        #print(name)
+        name = name.split(',')
+        amino_name_lst.append(name[1])
+                    
+                    
+    with open('data_name-%.2f.csv'%cut,'w') as fp:
+        fp.write('Chain,' + 'res and ID,'+'distance\n')
+    with open('data_name-%.2f.csv'%cut,'a') as fp:
+        for i in aa.keys():
+            a = i.split(',')
+            df_6['res_name'].append(a[1])
+            fp.write(str(i)+'\n')
+            
+                 
+
+    
+    df_6 = pd.DataFrame(df_6)
+    #print(df_6)
+    df_6.to_csv('data_analysis_output_-%.2f.csv'%cut,index=False)
+    
+    #'Main atm type':[],'Main Chain':[],'Side atm type':[],'Side Chain':[]
+    
+df_test ={'ChainID':[],'res & ID':[],'comb_atm_type':[],'distance':[]} 
+for line in df_6['Main atm type']:
+    df_test['comb_atm_type'].append(line)
+for line in df_6['Main Chain']:
+    if line == '':
+        df_test['distance'].append(np.nan)
+    else:
+        df_test['distance'].append(round(float(line),4))
+for line in df_6['Side atm type']:
+    df_test['comb_atm_type'].append(line)
+for line in df_6['Side Chain']:
+    if line == '':
+        df_test['distance'].append(np.nan)
+    else:
+        df_test['distance'].append(round(float(line),4))
+for line in df_6['res_name']:
+    df_test['res & ID'].append(line)
+for line in df_6['res_name']:
+    df_test['res & ID'].append(line)
+    
+for line in df_6['ChainID']:
+    df_test['ChainID'].append(line)
+for line in df_6['ChainID']:
+    df_test['ChainID'].append(line)
+    
+df_test = pd.DataFrame(df_test)
+print(df_6)
+df_test = df_test.sort_values(by=['distance'])
+print(df_test)
+df_test.to_csv('combined_output_-%.2f.csv'%cut,index=False)
+    
+
+        
+        
+
+    
+    
 
