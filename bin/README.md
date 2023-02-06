@@ -215,3 +215,14 @@ Note: Multiple seed indices can be indicated by space separation as A/202 A/202
 ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:203 -ratom res_atoms_${i}.dat -pdb ../2cht_h_ac_aligned.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 203 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done
 ```
 Be aware that while the res_atoms_#.dat model sets generated are technically unique to each other, once RINRUS generates the full trimmed QM-models, a lot of the them will no longer be unique and will be identical to others. So there a need to check to determine which QM-models are still unique (and not redundant)
+
+## U Select the residues and the substrate (seed) IDs you want to generate res_atoms.dat from. 
+ 1. Obtain the pdb file (2cht) to use for generating res_atoms.dat file
+ 
+ 2. For example if you select the following residues are selected from 2cht: 
+    TSA-201, ASP-118, PRO-117, LEU-115, TYR-108, ARG-7 and ARG-90 from chain A
+
+ 3. To generate your own res_atoms.dat file from a list of residues:
+  copy an example of res_atoms.dat file and edit the atoms and chain IDs based on how you want to trim the selected residues. 
+
+
