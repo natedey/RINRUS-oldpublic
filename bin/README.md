@@ -100,18 +100,21 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_t
 
 1. Follow step 1-5 from example 1 to get protonated pdb. In this case we will work with `3bwm.pdb` and after step 2 of example 1 it will generate `3bwm_h.pdb`. If you have modified anything from `3bwm_h.pdb` then use that for following process.
 
-2. To create a ranking list of residues/fragments within 5 Angstroms from either the center of mass of the seed OR the average of Cartesian coordinates of the seed fragments (in this example, A:300,A:301,A:302), run pdb_dist_rank.py. This script can be run with or without hydrogens included in the calculation of distances by adding the "-nohydro" flag to neglect hydrogen.
+2. To create a ranking list of residues/fragments/atoms within 5 Angstroms from either the center of mass of the seed fragments/atoms OR the average of Cartesian coordinates of the seed fragments(in this example, A:300,A:301,A:302) or atoms (in this example A:301:C8,A:301:N9,A:302:C1,A:302:N1), run pdb_dist_rank.py. This script can be run with or without hydrogens included in the calculation of distances by adding the "-nohydro" flag to neglect hydrogen.
 ```bash
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type avg -nohydro
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type avg
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type mass -nohydro
 python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -s A:300,A:301,A:302 -cut 5 -type mass
+python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -satom A:301:C8,A:301:N9,A:302:C1,A:302:N1 -cut 5 -type mass -nohydro
+python3 ~/git/RINRUS/bin/pdb_dist_rank.py -pdb 3bwm_h.pdb -satom A:301:C8,A:301:N9,A:302:C1,A:302:N1 -cut 5 -type mass
 ```
 ```bash
   -type       "mass" or "avg"
   -nohydro     If flag present, ignore hydrogen atoms from distance calculations               
   -cut COFF    cut_off_dist, default = 3 Å
   -s SEED      center_residues, examples: A:300,A:301,A:302
+  -satom       center_atoms, examples: A:301:C8,A:301:N9,A:302:C1,A:302:N1
 ```
 This script will generate a file named `res_atom-5.00.dat``, which has same format as `res_atoms.dat`, contains information about all residue atoms within 5 Angstroms in increasing order of distance from the seed, and contains information about important atoms to be included in the identified residues. 
 
