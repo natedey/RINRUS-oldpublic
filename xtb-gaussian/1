@@ -1,0 +1,43 @@
+#!/bin/bash 
+#SBATCH --cpus-per-task=10
+#SBATCH --time=72:00:00
+#SBATCH --partition=shortq
+#SBATCH --mem-per-cpu=10GB
+
+mkdir /home/scratch/$USER/$SLURM_JOB_ID
+export TMPDIR=/home/scratch/$USER/$SLURM_JOB_ID
+echo Working directory is $SLURM_SUBMIT_DIR
+echo tmp directory is $TMPDIR
+echo env is $ENVIRONMENT
+echo Running on host `hostname`
+echo Directory is `pwd`
+echo job id is $SLURM_JOB_ID
+cp $SLURM_SUBMIT_DIR/1.fix /home/scratch/$USER/$SLURM_JOB_ID/
+
+export OMP_NUM_THREADS=4
+export MKL_NUM_THREADS=4
+module load intel/2019.5
+source /etc/profile.d/modules.sh
+module load gaussian/g16
+GAUSS_SCRDIR=$TMPDIR; export GAUSS_SCRDIR
+export g16root=/public/apps/gaussian
+. $g16root/g16/bsd/g16.profile
+#echo which g16 = `which g16`
+PATH=$PATH:/usr/bin:/cm/shared/public/apps/xtb/6.4.1/bin:/home/qcheng1/git/xtb-gaussian
+export $PATH
+
+cd $SLURM_SUBMIT_DIR/
+ls -alh
+du -k
+df -h
+hostname
+
+g16 < 1.inp >& 1.out
+
+cd $TMPDIR
+ls -alh
+du -k
+df -h
+
+cp $TMPDIR/xtbout $SLURM_SUBMIT_DIR/
+rm -rf $TMPDIR

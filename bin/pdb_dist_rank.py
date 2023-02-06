@@ -191,6 +191,7 @@ if __name__ == '__main__':
     parser.add_argument('-pdb', dest='pdbf', default=None, help='pdb_to_treat')
     parser.add_argument('-cut', dest='coff', default=3, help='cut_off_dist, default=3')
     parser.add_argument('-s', dest='seed', default=None, help='center_residues, examples: A:300,A:301,A:302')
+    parser.add_argument('-satom', dest='seedatoms', default=None, help='center_atoms, examples: A:301:C8,A:301:N9,A:302:C1,A:302:N1')
 
     args = parser.parse_args()
     res_atom = {}
@@ -199,49 +200,85 @@ if __name__ == '__main__':
     res_info = {}
     pdb_res_name = {}
     cres_atom = {}
-
+    catom= args.seedatoms
+    cres = args.seed
 
     type=args.typef
     pdbf = args.pdbf
     pdb, res_info, tot_charge = read_pdb(pdbf)
-
     cut = float(args.coff)
     
+    if catom and cres:
+        print("both by fragment and by atom can not be generated, select either -s or -satom")
+        sys.exit()
+   
+    ###### By atoms #########
+    ##On Feb 2023-Tejas Suhagia, added flag -satom to select center by specific atoms instead of entire for center of mass and average of xyz with and without hydrogen , also changed README for that.
+    idxa_list = []
+    res_ida = {}
+    test_dicta = {} 
+    if catom:
+        center_atoms = catom.split(',')
+        for i in range(len(center_atoms)):
+            a,b,c = center_atoms[i].split(':')
+            idxa_list.append([a,int(b),c])
+            res_ida[(a,int(b),c)] = [0.00]
+        sel_atomsa = []
+        sel_coorda = []
+        for i in range(len(center_atoms)):
+            for atom in pdb:
+                if args.nohydro==True and atom[14].strip()=="H": 
+                    continue
+                if idxa_list[i][0] == atom[5].strip() and idxa_list[i][1] == atom[6] and idxa_list[i][2] == atom[2].strip():
+                    sel_atomsa.append(Atoms[atom[14].strip()][1])
+                    sel_coorda.append([atom[8],atom[9],atom[10]])
+        sel_coorda = array(sel_coorda)
+        sel_atomsa = array(sel_atomsa)
+
     ###### Find center of mass point x,y,z ######
-    cres = args.seed
-    center_res = cres.split(',')
     idx_list = []
     res_id = {}
-    test_dict = {}
-    for i in range(len(center_res)):
-        a,b = center_res[i].split(':')
-        idx_list.append([a,int(b)])
-        res_id[(a,int(b))] = [0.00]
-    sel_atoms = []
-    sel_coord = []
-    for i in range(len(center_res)):
-        for atom in pdb:
-            if args.nohydro==True and atom[14].strip()=="H": 
-                continue
-            if idx_list[i][0] == atom[5].strip() and idx_list[i][1] == atom[6]:
-                sel_atoms.append(Atoms[atom[14].strip()][1])
-                sel_coord.append([atom[8],atom[9],atom[10]])
-    sel_coord = array(sel_coord)
-    sel_atoms = array(sel_atoms)
-
+    test_dict = {}   
+    
+    if cres:
+        center_res = cres.split(',')
+        for i in range(len(center_res)):
+            a,b = center_res[i].split(':')
+            idx_list.append([a,int(b)])
+            res_id[(a,int(b))] = [0.00]
+        sel_atoms = []
+        sel_coord = []
+        for i in range(len(center_res)):
+            for atom in pdb:
+                if args.nohydro==True and atom[14].strip()=="H": 
+                    continue
+                if idx_list[i][0] == atom[5].strip() and idx_list[i][1] == atom[6]:
+                    sel_atoms.append(Atoms[atom[14].strip()][1])
+                    sel_coord.append([atom[8],atom[9],atom[10]])
+        sel_coord = array(sel_coord)
+        sel_atoms = array(sel_atoms)
+    print("\n")
+    
    ## On July 2022-Tejas Suhagia, added step to generate based on center of mass and average of xyz with and without hydrogen , also changed README for that.
-
     if args.nohydro==True:
             print("-nohydrogen is selected so hydrogen is neglacted")
     if type=="mass":
-        com = center_of_mass(sel_atoms,sel_coord)
+        if cres:
+            print("Center of mass type and center by fragment is selected")
+            com = center_of_mass(sel_atoms,sel_coord)
+        elif catom:
+            print("Center of mass type and center by atoms is selected")
+            com = center_of_mass(sel_atomsa,sel_coorda)
         
-        print("Center of mass type is selected")
-    elif type=="avg":    
-        com=avg_coord(sel_coord)
-        print("XYZ average type is selected")
-   
-
+    elif type=="avg": 
+        if cres:
+            print("XYZ average type and center by fragment is selected")
+            com=avg_coord(sel_coord)
+        elif catom:
+            print("XYZ average type and center by atoms is selected")
+            com=avg_coord(sel_coorda)
+    print("\n")
+    
     ###### Calculate atom-pair distances ######
     dist_atom = []
     dist_atom_dict = {}
