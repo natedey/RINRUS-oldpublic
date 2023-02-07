@@ -12,6 +12,7 @@ PDB: 3BWM.pdb
 Seed: A:300,A:301,A:302
 RIN_program: probe
 Residue_to_add: A:299:c+s,A:120:n+s
+Histidine: 
 Model(s): all
 Substrate(s)_charge: +1
 Computational_program: gaussian

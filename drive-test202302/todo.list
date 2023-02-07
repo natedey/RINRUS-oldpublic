@@ -10,5 +10,5 @@ Program to be used to run calculations (selection among gaussian/xtb/qchem, and 
 
 ### System checking scripts ###
 0. driver-input read script, read all the parameters, and prepare the correct format
-1. PDB check: check missing residue, check hydrogen, check SEED information (format, chainID, resID), check list of residues needs to be added specifically
+1. PDB check: check missing residue, check hydrogen, check SEED information (format, chainID, resID), check list of residues needs to be added specifically #all pdb related issues
 2. 
