@@ -330,7 +330,7 @@ if __name__ == '__main__':
         main ={}
         side = {}
         for key_3 in aa[val_3]:
-            if key_3 == 'N' or key_3 == 'CA' or key_3 == 'O' or key_3 == 'C':
+            if key_3 == 'N' or key_3 == 'CA' or key_3 == 'O' or key_3 == 'C' or key_3=='HA' or key_3=='H':
                 main[val_3,key_3]=aa[val_3][key_3]
             else:
                 side[val_3,key_3]=aa[val_3][key_3]
@@ -468,7 +468,7 @@ for num,line in enumerate(df_6['ChainID']):
             if i[0] >= cut:
                 pass
             else: 
-                if i[1] == 'N'  or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                if i[1] == 'N'  or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C' or i[1]=='HA' or i[1]=='H':
     #                print(num,line)
                     pass
                 else:
@@ -489,7 +489,7 @@ for num,line in enumerate(df_6['ChainID']):
             if i[0]>=cut:
                 pass
             else:
-                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C' or i[1]=='HA' or i[1]=='H':
                     atom_let += '  '+str(i[1]).replace(' ','')+'  '+str(round(i[0],4))
                     atom_dct_ss[i[1]]=round(i[0],4)
         newlist_s_2 = ''
@@ -513,7 +513,7 @@ for num,line in enumerate(df_6['ChainID']):
             if i[0]>=cut:
                 pass
             else:
-                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C' or i[1]=='HA' or i[1]=='H':
                     atom_let_m +=str(i[1]).replace(' ','')+str(round(i[0],4)) + str(round(i[0],4))
                     atom_dct_m[i[1]]=round(i[0],4)
         
@@ -544,7 +544,7 @@ for num,line in enumerate(df_6['ChainID']):
             if i[0]>=cut:
                 pass
             else:
-                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C' or i[1]=='HA' or i[1]=='H':
                     atom_let_m +=str(i[1]).replace(' ','')+str(round(i[0],4)) + str(round(i[0],4))
                     atom_dct_m[i[1]]=round(i[0],4)
         
