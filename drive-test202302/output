@@ -1,0 +1,25 @@
+directory---/home/tsuhagia/git/RINRUS-Dev/drive-test202302
+PDB:---3bwm.pdb
+Seed:---A:300,A:301,A:302
+RIN_program:---probe
+Residue_to_add:---A:299:c+s,A:120:n+s
+Histidine:---
+Model(s):---all
+Substrate(s)_charge:---+1
+Multiplicity: ---3
+residues_not_to_protonate:---A:301,A:302
+seed_residues_want_to_freeze:---A:301,A:302
+Computational_program:---gaussian
+
+
+all script needs to run for ptobe is here:
+
+
+
+~/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb
+~/git/RINRUS/bin/probe -MC -self "all" -unformated 3bwm_h.pdb > 3bwm_h.probe
+python3 ~/git/RINRUS/bin/probe2rins.py -f 3bwm_h.probe -s A:300,A:301,A:302
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h.pdb
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -e .pdb |grep -e res| cut -d'_' -f2|cut -d'.' -f1>list; mkdir pdbs;for i in `cat list`; do mkdir ${i}-01; cd ${i}-01; mv ../res_${i}* .;python3 ~/git/RINRUS/bin/pymol_scripts.py -resids A:300,A:301,A:302 -pdbfilename *.pdb;cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_${i}_atom_info.dat ../pdbs/${i}.dat ; cd ..; done
+
+writeinput still needs to be generated

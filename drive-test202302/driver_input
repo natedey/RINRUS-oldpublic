@@ -1,0 +1,23 @@
+### PDB entry (provide 4 letter code, end with .pdb, example 3BWM.pdb):
+### Seed residue(s) (provide chainID, residueID, seperate multiple residues with ',', example A:300,A:301,A:302):
+### Program to be used to generate RIN and residue ranking (selection among probe/arpeggio/fsapt/distance, example probe or distance/5.0):
+### List residue(s) needs to be added specifically (provide chainID, residueID, n-term/c-term/sidechain/entire, example c+s or n+s or n+c or entire):
+### Models to be generated (All as the default, or only the maximal, example maximal):
+### Charge of the substrate+cofactor (example: +1)
+### Program to be used to run calculations (selection among gaussian/xtb/qchem, and please revise input template for specific level of theory and settings):
+
+
+
+PDB: 3bwm.pdb
+Seed: A:300,A:301,A:302
+RIN_program: probe
+Residue_to_add: A:299:c+s,A:120:n+s
+Histidine: 
+Model(s): all
+Substrate(s)_charge: +1
+Multiplicity: 3
+residues_not_to_protonate: A:301,A:302
+seed_residues_want_to_freeze: A:301,A:302
+Computational_program: gaussian
+input_template_path: ~/git/RINRUS-Dev/template_files/input_temp
+
