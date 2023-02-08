@@ -306,7 +306,7 @@ if __name__ == '__main__':
             matm = first_hit[0][1]
             dist = first_hit[1]
             df_6['Main atm type'].append(matm)
-            df_6['Main Chain'].append(dist)
+            df_6['Main Chain'].append(format(round(dist,4),'.4f'))
         if side == {}:
             df_6['Side atm type'].append('')
             df_6['Side Chain'].append('')
@@ -316,7 +316,9 @@ if __name__ == '__main__':
             satm = first_hit[0][1]
             dist = first_hit[1]
             df_6['Side atm type'].append(satm)
-            df_6['Side Chain'].append(dist)
+            df_6['Side Chain'].append(format(round(dist,4),'.4f'))
+
+    
     ##########################################################################################################################################
 
     
@@ -403,46 +405,228 @@ if __name__ == '__main__':
             a = i.split(',')
             df_6['res_name'].append(a[1])
             fp.write(str(i)+'\n')
+
             
                  
 
     
     df_6 = pd.DataFrame(df_6)
-    #print(df_6)
+    print(df_6)
     df_6.to_csv('data_analysis_output_-%.2f.csv'%cut,index=False)
     
-    #'Main atm type':[],'Main Chain':[],'Side atm type':[],'Side Chain':[]
+out_put = []
+side_output = []
+main_output = []
+for num,line in enumerate(df_6['ChainID']):
+    main = 0
+    side = 0
+    if df_6['Main Chain'][num] == '': 
+        chain_id = df_6['ChainID'][num]
+        res_num = str(df_6['res_num'][num])
+        atom_let = ''
+        atom_dct_mm={}
+    #    print((chain_id,int(res_num)))
+        for i in atom_dict_5[(chain_id,int(res_num))]:
+    #        print(i)
+            if i[0] >= cut:
+                pass
+            else: 
+                if i[1] == 'N'  or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+    #                print(num,line)
+                    pass
+                else:
+                    atom_let += '  '+str(i[1]).replace(' ','')+'  '+str(round(i[0],4))
+                    atom_dct_mm[i[1]]=round(i[0],4)
+        newlist_m_2 = ''
+        sorted_dct_m_2 = sorted(atom_dct_mm.items(), key=lambda x: x[1])
+        for key in sorted_dct_m_2:
+            newlist_m_2+=str(key[0]) + ' '
+        
+        out_put.append(chain_id+'  '+res_num+'  '+str(sorted_dct_m_2[0][1])+'   '+newlist_m_2)
+    elif df_6['Side Chain'][num] == '':
+        chain_id = df_6['ChainID'][num]
+        res_num = str(df_6['res_num'][num])
+        atom_let = ''
+        atom_dct_ss={}
+        for i in atom_dict_5[(chain_id,int(res_num))]:
+            if i[0]>=cut:
+                pass
+            else:
+                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                    atom_let += '  '+str(i[1]).replace(' ','')+'  '+str(round(i[0],4))
+                    atom_dct_ss[i[1]]=round(i[0],4)
+        newlist_s_2 = ''
+        sorted_dct_s_2 = sorted(atom_dct_ss.items(), key=lambda x: x[1])
+        for key in sorted_dct_s_2:
+            newlist_s_2+=str(key[0]) + ' '
+        
+        out_put.append(chain_id+'  '+res_num+'  '+str(sorted_dct_s_2[0][1])+'   '+newlist_s_2)
+        
+        
+        
+
+    elif float(df_6['Main Chain'][num])>float(df_6['Side Chain'][num]):
+        chain_id = df_6['ChainID'][num]
+        res_num = str(df_6['res_num'][num])
+        atom_let_s = ''
+        atom_let_m = ''
+        atom_dct_m = {}
+        atom_dct_s = {}
+        for i in atom_dict_5[(chain_id,int(res_num))]:
+            if i[0]>=cut:
+                pass
+            else:
+                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                    atom_let_m +=str(i[1]).replace(' ','')+str(round(i[0],4)) + str(round(i[0],4))
+                    atom_dct_m[i[1]]=round(i[0],4)
+        
+
+                else:
+                    atom_let_s +=str(i[1]).replace(' ','')+'  '+str(round(i[0],4))
+                    atom_dct_s[i[1]]=round(i[0],4)
+      #  out_put.append(chain_id+'  '+res_num+' '+atom_let)
+      #  print(sorted(atom_lst_m))
+        newlist_m = ''
+        newlist_s = ''
+        sorted_dct_m = sorted(atom_dct_m.items(), key=lambda x: x[1])
+        sorted_dct_s = sorted(atom_dct_s.items(), key=lambda x: x[1])
+        for key in sorted_dct_m:
+            newlist_m+=str(key[0]) + ' '
+        for key in sorted_dct_s:
+            newlist_s+=str(key[0]) + ' '
+        main_output.append(chain_id+'  '+res_num+'  '+str(sorted_dct_m[0][1])+'   '+newlist_m)
+        side_output.append(chain_id+'  '+res_num+'  '+str(sorted_dct_s[0][1])+'   '+newlist_s)
+    elif float(df_6['Main Chain'][num])<float(df_6['Side Chain'][num]):
+        chain_id = df_6['ChainID'][num]
+        res_num = str(df_6['res_num'][num])
+        atom_let_s = ''
+        atom_let_m = ''
+        atom_dct_m = {}
+        atom_dct_s = {}
+        for i in atom_dict_5[(chain_id,int(res_num))]:
+            if i[0]>=cut:
+                pass
+            else:
+                if i[1] == 'N' or i[1] == 'CA' or i[1] == 'O' or i[1] == 'C':
+                    atom_let_m +=str(i[1]).replace(' ','')+str(round(i[0],4)) + str(round(i[0],4))
+                    atom_dct_m[i[1]]=round(i[0],4)
+        
+
+                else:
+                    atom_let_s +=str(i[1]).replace(' ','')+'  '+str(round(i[0],4))
+                    atom_dct_s[i[1]]=round(i[0],4)
+      #  out_put.append(chain_id+'  '+res_num+' '+atom_let)
+      #  print(sorted(atom_lst_m))
+        newlist_m = ''
+        newlist_s = ''
+        sorted_dct_m = sorted(atom_dct_m.items(), key=lambda x: x[1])
+        sorted_dct_s = sorted(atom_dct_s.items(), key=lambda x: x[1])
+        for key in sorted_dct_m:
+            newlist_m+=str(key[0]) + ' '
+        for key in sorted_dct_s:
+            newlist_s+=str(key[0]) + ' '
+        main_output.append(chain_id+'  '+res_num+'  '+str(sorted_dct_m[0][1])+'   '+newlist_m)
+        side_output.append(chain_id+'  '+res_num+'  '+str(sorted_dct_s[0][1])+'   '+newlist_s)
+    elif float(df_6['Main Chain'][num])==float(df_6['Side Chain'][num]):
+        print('ERROR Main chain and side chain distances are the same please check input')
+        break
+
+
+
+
+
+
+
+
+
+
+
     
-df_test ={'ChainID':[],'res & ID':[],'comb_atm_type':[],'distance':[]} 
-for line in df_6['Main atm type']:
-    df_test['comb_atm_type'].append(line)
-for line in df_6['Main Chain']:
-    if line == '':
-        df_test['distance'].append(np.nan)
-    else:
-        df_test['distance'].append(round(float(line),4))
-for line in df_6['Side atm type']:
-    df_test['comb_atm_type'].append(line)
-for line in df_6['Side Chain']:
-    if line == '':
-        df_test['distance'].append(np.nan)
-    else:
-        df_test['distance'].append(round(float(line),4))
-for line in df_6['res_name']:
-    df_test['res & ID'].append(line)
-for line in df_6['res_name']:
-    df_test['res & ID'].append(line)
-    
-for line in df_6['ChainID']:
-    df_test['ChainID'].append(line)
-for line in df_6['ChainID']:
-    df_test['ChainID'].append(line)
-    
-df_test = pd.DataFrame(df_test)
-print(df_6)
-df_test = df_test.sort_values(by=['distance'])
-print(df_test)
-df_test.to_csv('combined_output_-%.2f.csv'%cut,index=False)
+df_fin = {'Chain ID':[],'Atom num':[],'Dist':[],'Atoms':[]}
+
+for line in out_put:
+    no_space = []
+    line = line.split(' ')
+    for spc in line:
+        if spc == '':
+            pass
+        else:
+            no_space.append(spc)
+    df_fin['Chain ID'].append(no_space[0])
+    df_fin['Atom num'].append(no_space[1])
+    df_fin['Dist'].append(no_space[2])
+    aa = ''
+    for atm in no_space[3:]:
+        aa+=str(atm)+'  '
+    df_fin['Atoms'].append(aa)
+for line in main_output:
+    no_space = []
+    line = line.split(' ')
+    for spc in line:
+        if spc == '':
+            pass
+        else:
+            no_space.append(spc)
+    df_fin['Chain ID'].append(no_space[0])
+    df_fin['Atom num'].append(no_space[1])
+    df_fin['Dist'].append(no_space[2])
+    aa = ''
+    for atm in no_space[3:]:
+        aa+=str(atm)+'  '
+    df_fin['Atoms'].append(aa)
+for line in side_output:
+    no_space = []
+    line = line.split(' ')
+    for spc in line:
+        if spc == '':
+            pass
+        else:
+            no_space.append(spc)
+    df_fin['Chain ID'].append(no_space[0])
+    df_fin['Atom num'].append(no_space[1])
+    df_fin['Dist'].append(no_space[2])
+    aa = ''
+    for atm in no_space[3:]:
+        aa+=str(atm)+'  '
+    #print(aa) 
+    df_fin['Atoms'].append(aa)
+
+ID = []
+NUM = []
+DIST = []
+ATM = []
+for num,i in enumerate(df_fin['Chain ID']):
+    ID.append(i)
+    NUM.append(df_fin['Atom num'][num])
+    DIST.append(df_fin['Dist'][num])
+    ATM.append(df_fin['Atoms'][num])
+df_fin = pd.DataFrame(df_fin)
+df_fin = df_fin.sort_values('Dist')
+df_fin.to_csv('test.csv',index=False)
+print(df_fin)
+reorg_ID = []
+reorg_num = []
+reorg_dist = []
+reorg_atms = []
+with open('test.csv','r') as fp:
+    data = fp.readlines()
+    for line in data[1:]:
+        new_line = line.split(',')
+        reorg_ID.append(new_line[0])
+        reorg_num.append(new_line[1])
+        reorg_dist.append(new_line[2])
+        reorg_atms.append(new_line[3])
+
+
+with open('res_atom-%.2f_new.dat'%cut,'w') as fp:
+    for num,i in enumerate(reorg_ID):
+        fp.write(str(reorg_ID[num])+'  '+str(reorg_num[num])+'  '+reorg_dist[num]+'  ' + reorg_atms[num])
+
+        
+
+
+
+
     
 
         
