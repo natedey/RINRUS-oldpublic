@@ -12,7 +12,7 @@ from glob import glob
 """
 write gaussian input files using gaussian template file
 """
-def write_gau_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_count):
+def write_gau_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,res_count,basisinfo):
     ### inp_name default is 1.inp, but first is name.input such as 9.input
     ### inp_type list which includes [small/large, level_theory, basis, opt, freq,  
     ### input_template line0: nprocshared and mem 
@@ -25,6 +25,8 @@ def write_gau_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,re
     ### input_template line7: scf_info
     ### input_template line8: scrf_info
     ### after the basis sets there needs to be an empty line in the end
+
+    
 
     print("charge= %d, tot_charge_without'-c'= %d"%(charge,tot_charge))
     with open(inp_temp) as f:
@@ -89,12 +91,46 @@ def write_gau_input(inp_name,inp_temp,charge,multiplicity,pic_atom,tot_charge,re
             inp.write("%s\n"%modred_code)
             count += l
         inp.write("\n")
-
-    if lines[10][0] != '#' and 'basis' in lines[10]:
-        for l in lines[11:]:
-            inp.write("%s"%l)
-        if len(lines) <= 10:
-            inp.write('\n')
+    
+    if basisinfo == None:
+        if lines[10][0] != '#' and 'basis' in lines[10]:
+            for l in lines[11:]:
+                inp.write("%s"%l)
+            if len(lines) <= 10:
+                inp.write('\n')
+    if basisinfo != None:
+        atomlist = []
+        for atom in pic_atom:
+            atomlist.append(atom[14])
+            used = set()
+            unique = [x for x in atomlist if x not in used and (used.add(x) or True)]
+        usednospace = [x.strip(' ') for x in used]
+        usednospace.sort()
+        for i in range(len(usednospace)):
+            usednospace[i] = usednospace[i].title()
+        basis = []
+        with open(basisinfo, 'r') as fo:
+            lines1= fo.readlines()
+            for i in range(len(lines1)):
+                line = lines1[i]
+                if "basis:" in line:           
+                    basis.append(i+1)
+                if "****" in line:
+                    basis.append(i+1)
+            for i in range(len(lines1)):   
+                if i in basis:                
+                    if (lines1[i].split(" ")[0].title()) in usednospace:
+                        for l in lines1[basis[basis.index(i)]:basis[basis.index(i)+1]]:
+                            inp.writelines(l)
+            inp.write("%s"%"\n")
+            except_lanl2dz=["C","H","O","N","S"]
+            for i in range(len(lines1)):   
+                if i in basis:
+                    if (lines1[i].split(" ")[0].title()) in usednospace:
+                        if (lines1[i].split(" ")[0].title()) not in except_lanl2dz:
+                            inp.writelines(lines1[i].split(" ")[0].title())
+                            inp.writelines("\nlanl2dz\n")                         
+    inp.write("%s"%"\n")
 
     if lines[8][0] != '#' and 'scrf' in lines[8]:
         inp.write('radii=uff\nalpha=1.2\neps=4.0\n\n')
