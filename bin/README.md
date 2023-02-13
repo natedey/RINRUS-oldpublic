@@ -84,7 +84,7 @@ ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_
 
 11. Run `write_input.py` for a single model to generate an input file for quantum chemistry packages. You will have to loop this with python or a shell script to iterate over all possible models. Simple DFT/xTB templates are included:
 ```bash
-python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_template.txt -format gaussian -c -2 -noh res_NN.pdb -adh res_NN_h.pdb 
+python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_template.txt -format gaussian -basisinfo ~/git/RINRUS/template_files/basisinfo -c -2 -noh res_NN.pdb -adh res_NN_h.pdb 
 ```
 ```bash
 -noh NO_H_PDB     trimmed_pdb_file
@@ -93,6 +93,7 @@ python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_t
 -m MULTIPLICITY   multiplicity
 -c LIGAND_CHARGE  charge_of_ligand
 -format FMAT      input_file_format eg.'gaussian','qchem','gau-xtb'
+-basisinfo        basisset library file(ONLY FOR GAUSSIAN- if prvided then it will automatically pull from the library based on atom present in model,other wise it will be from intmp)
 "run python3 ~/git/RINRUS/bin/write_input.py --help" to see more information about flags
 ```
 
