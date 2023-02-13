@@ -123,6 +123,7 @@ if __name__ == '__main__':
     parser.add_argument('-pdb2', dest='pdb2', default=None, help='ts_pdb_file')
     parser.add_argument('-parts', dest='parts', default=None, help='ts_frag_indo')
     parser.add_argument('-format',dest='fmat',default=None,help="input_file_format eg.'gaussian','qchem','gau-xtb'")
+    parser.add_argument('-basisinfo',dest='basisinfo',default=None,help="basis library file")
 #    parser.print_help()
 
     args = parser.parse_args()
@@ -143,6 +144,7 @@ if __name__ == '__main__':
     charge   = args.ligand_charge
     wdir     = args.output_dir
     ifmat    = args.fmat
+    basisinfo = args.basisinfo
 
     if step == 0:
         pic_atom, tot_charge = pdb_after_addh(nohpdb,adhpdb)
@@ -196,7 +198,7 @@ if __name__ == '__main__':
         res_count = args.pdb1
 
     if ifmat == "gaussian":
-        write_gau_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
+        write_gau_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count,basisinfo)
     elif ifmat == "qchem":
         write_qchem_input('%s/%s'%(wdir,inp_name),int_tmp,charge,multi,pic_atom,tot_charge,res_count)
     elif ifmat == "gau-xtb":
