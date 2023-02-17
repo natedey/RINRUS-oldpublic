@@ -19,5 +19,5 @@ Multiplicity: 3
 residues_not_to_protonate: A:301,A:302
 seed_residues_want_to_freeze: A:301,A:302
 Computational_program: gaussian
-input_template_path: ~/git/RINRUS-Dev/template_files/input_temp
-
+input_template_path: ~/git/RINRUS/template_files/input_temp
+basisset_library: ~/git/RINRUS/template_files/basisinfo
