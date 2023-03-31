@@ -51,70 +51,71 @@ def gen_res_seq(freqf,sel_key):
     return qf
 
 def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist):
+    test = {}
+    tot = {}
+    res_part_list = {}
     for i in range(sm):
         c = iratoms[i].split()
-        if c[0] in Alist:
-            cha = c[0]
-            res_id = int(c[1])
-            st = 3
-        else:
-            cha = ' '
-            res_id = int(c[1])
-            st = 2
-        if cha not in res_part_list.keys(): #res_part_list[key1=chainID]={[key2=resid]:[atoms]}
-            res_part_list[cha] = {}     #res_part_list[key1=chainID][key2=resid]=[atoms]
-            res_part_list[cha][res_id] = []
-            cha_res_list[cha] = [res_id]      #cha_res_list[cha]=[res_list]
+        res_part_list[(c[0],int(c[1]))]=[]
+    for i in range(sm):
+        c = iratoms[i].split()
+        res_part_list[(c[0],int(c[1]))].append(c[3:])
+    for i in res_part_list.keys():
+        if len(res_part_list[i]) == 2:
+            new_list = res_part_list[i][0] + res_part_list[i][1]
+            res_part_list[(i)]=new_list
+            
+        
         else: 
-            res_part_list[cha][res_id] = [] 
-            cha_res_list[cha].append(res_id)
-        res_part_list[cha][res_id] = []
-        for j in range(st,len(c)):
-            res_part_list[cha][res_id].append(c[j])
-        c_key = (cha, res_id)
-        if c_key in sel_key:
-            for atom in pdb:
-                if c_key[0] == atom[5].strip() and c_key[1] == atom[6]:
-                    res_part_list[cha][res_id].append(atom[2].strip())
+            new_list = res_part_list[i][0] 
+            res_part_list[(i)]=new_list
+    
+    
     ### check residue atoms itself according to pdb file ###
-    for cha in res_part_list.keys():
-        for res_id in sorted(res_part_list[cha].keys()):
-            key = (cha,res_id)
-            if key in sel_key or pdb_res_name[key] in ('HOH', 'WAT','O') or pdb_res_name[key][:2]=='WT':
-                res_part_list[cha][res_id] = pdb_res_atom[key]
-                res_atom[key] = deepcopy(res_part_list[cha][res_id])
-                res_info[key] = []
+    for key in sorted(res_part_list.keys()):
+        #for res_id in sorted(res_part_list[cha].keys()):
+        #    key = (cha,res_id)
+        if key in sel_key or pdb_res_name[key] in ('HOH', 'WAT','O') or pdb_res_name[key][:2]=='WT':
+            res_part_list[key] = pdb_res_atom[key]
+            #res_atom[key] = deepcopy(res_part_list[cha][res_id])
+            res_atom[key] = deepcopy(res_part_list[key])
+            res_info[key] = []
+        else:
+            #value_list = deepcopy(res_part_list[cha][res_id])
+            value_list = deepcopy(res_part_list[key])
+            res_atom[key] = check_sc(pdb_res_name[key],value_list,cres_atoms_sc)
+            if not bool(set(res_atom[key])&set(['N','CA','C','O','H','HA','HA2','HA3'])) and 'CB' in res_atom[key]:
+                res_info[key] = ['CA','CB']
+                res_atom[key].append('CA')
             else:
-                value_list = deepcopy(res_part_list[cha][res_id])
-                res_atom[key] = check_sc(pdb_res_name[key],value_list,cres_atoms_sc)
-                if not bool(set(res_atom[key])&set(['N','CA','C','O','H','HA','HA2','HA3'])) and 'CB' in res_atom[key]:
-                    res_info[key] = ['CA','CB']
-                    res_atom[key].append('CA')
+                res_info[key] = ['CA']
+                res_atom[key] = check_mc(pdb_res_name[key],res_atom[key])
+    #print(res_part_list['C',57],'Hey')
+    #for cha in res_part_list.keys():
+    #    for res_id in sorted(res_part_list[cha].keys()):
+    for key in sorted(res_part_list.keys()):
+        key = (key[0],key[1])
+        cha = key[0]
+        res_id = key[1]
+        if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
+        ### Check one residue before according to "N and H" ###    
+            #if bool(set(res_atom[key])&set(['N','H'])):
+            if bool(set(res_atom[key])&set(['N','H'])) and (cha,res_id-1) in pdb_res_name.keys():
+                if (cha,res_id-1) not in res_atom.keys():
+                    res_atom[(cha,res_id-1)] = ['CA','C','O','HA','HA2','HA3']
                 else:
-                    res_info[key] = ['CA']
-                    res_atom[key] = check_mc(pdb_res_name[key],res_atom[key])
-    for cha in res_part_list.keys():
-        for res_id in sorted(res_part_list[cha].keys()):
-            key = (cha,res_id)
-            if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
-            ### Check one residue before according to "N and H" ###    
-                #if bool(set(res_atom[key])&set(['N','H'])):
-                if bool(set(res_atom[key])&set(['N','H'])) and (cha,res_id-1) in pdb_res_name.keys():
-                    if (cha,res_id-1) not in res_atom.keys():
-                        res_atom[(cha,res_id-1)] = ['CA','C','O','HA','HA2','HA3']
-                    else:
-                        for atom in ['CA','C','O','HA','HA2','HA3']:
-                            if atom not in res_atom[(cha,res_id-1)]:
-                                res_atom[(cha,res_id-1)].append(atom)
-            ### Check one residue after according to "C and O" ###    
-                #if bool(set(res_atom[key])&set(['C','O'])):
-                if bool(set(res_atom[key])&set(['C','O'])) and (cha, res_id+1) in pdb_res_name.keys():
-                    if (cha,res_id+1) not in res_atom.keys():
-                        res_atom[(cha,res_id+1)] = ['CA','HA','HA2','HA3','N','H']
-                    else:
-                        for atom in ['CA','HA','HA2','HA3','N','H']:
-                            if atom not in res_atom[(cha,res_id+1)]:
-                                res_atom[(cha,res_id+1)].append(atom)
+                    for atom in ['CA','C','O','HA','HA2','HA3']:
+                        if atom not in res_atom[(cha,res_id-1)]:
+                            res_atom[(cha,res_id-1)].append(atom)
+        ### Check one residue after according to "C and O" ###    
+            #if bool(set(res_atom[key])&set(['C','O'])):
+            if bool(set(res_atom[key])&set(['C','O'])) and (cha, res_id+1) in pdb_res_name.keys():
+                if (cha,res_id+1) not in res_atom.keys():
+                    res_atom[(cha,res_id+1)] = ['CA','HA','HA2','HA3','N','H']
+                else:
+                    for atom in ['CA','HA','HA2','HA3','N','H']:
+                        if atom not in res_atom[(cha,res_id+1)]:
+                            res_atom[(cha,res_id+1)].append(atom)
 
     ### Check one "CACA" ###    
     for key in sorted(res_atom.keys()):
@@ -181,7 +182,6 @@ if __name__ == '__main__':
     sel_key = get_sel_keys(seed)
     with open(atomf) as f:
         iratoms = f.readlines()
-
     ### Find sequential of residues in the model ###
     #res_seq = gen_res_seq(atomf,sel_key)
 
@@ -196,6 +196,7 @@ if __name__ == '__main__':
             pdb_res_name[key] = line[4].strip()
             pdb_res_atom[key] = [line[2].strip()]
         else:
+            # print(key,line[2])
             pdb_res_atom[key].append(line[2].strip())
 
     ### get res_atom info ###
@@ -204,9 +205,11 @@ if __name__ == '__main__':
     Alist = [chr(i) for i in range(ord('A'),ord('Z')+1)]
     l_res = len(iratoms)
     
+    
     if method == 'All':
         for i in range(len(sel_key),l_res):
             trim_pdb_models(i+1,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist)
     else:
         res_l = int(method)
         trim_pdb_models(res_l,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist)
+       # print(pdb_res_atom[('C',57)])
