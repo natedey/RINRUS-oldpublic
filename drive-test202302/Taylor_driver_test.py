@@ -77,9 +77,9 @@ def commands_step3(probe,seed):
     result = subprocess.run(args)
     return
 
-def res_atom_count():
+def res_atom_count(filename):
     num = 0
-    with open('res_atoms.dat','r') as fp:
+    with open(filename,'r') as fp:
         data = fp.readlines()
         num += len(data)
         for i in data:
@@ -116,8 +116,33 @@ def command_step6(template,format,basisinfo,charge,model_num):
     return
 
 
+def distance(calc_type,hydro,pdb,seed,cut):
+    path = os.path.expanduser('~/git/RINRUS/bin/pdb_dist_rank.py')
+    if hydro.lower() == "nohydro":
+        arg = ['python3', path ,'-pdb',str(pdb),'-s',str(seed),'-cut',cut,'-type',calc_type,'-nohydro']
+        result = subprocess.run(arg)
+    else:
+        arg = ['python3', path ,'-pdb',str(pdb),'-s',str(seed),'-cut',cut,'-type',calc_type]
+        result = subprocess.run(arg)
+    return
 
+def arpreggio(pdb,seed):
+    path = os.path.expanduser('~/git/RINRUS/arpeggio/arpeggio.py')
+    arg = ['python3',path,str(pdb)]
+    result = subprocess.run(arg)
+    path = os.path.expanduser('~/git/RINRUS/bin/arpeggio2rins.py')
+    arg = ['python3',path,str(pdb),'-f',str(pdb).replace('pdb','contacts'),'-s',seed]
+    result = subprocess.run(arg)
+    return
 
+def commands_steparp(seed,pdb,model_num):
+    #print(pdb)
+    path = os.path.expanduser('~/git/RINRUS/bin/rinrus_trim2_pdb.py')
+    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb),'-c','contact_count.dat', '-model', str(model_num)]
+    result = subprocess.run(args)
+    
+    
+    return
 def main(file,nor):
     print(nor)
     driver_input_file = file
@@ -132,10 +157,54 @@ def main(file,nor):
         mod_pdb = commands_step1(pdb)
     
     
-        if RIN_program== 'probe':
+        if RIN_program.lower()== 'probe':
             probe = commands_step2(mod_pdb)
             commands_step3(probe,seed)
-            num_lines = res_atom_count()
+            num_lines = res_atom_count('res_atoms.dat')
+            option = list(range(amountofseed+1,num_lines+1))
+            option.append('all')
+            print('Insert '+ str(num_lines)+ ' for the largest model')
+            print('Other options are listed below')
+            print(option)
+            model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            if model_num=='all':
+                num_lines = res_atom_count('res_atoms.dat')
+                tot = []
+                for num in range(amountofseed+1,num_lines+1):
+                    print(num)
+                    tot.append(num)
+                    commands_step4(seed,mod_pdb,num)
+                    commands_step5(freeze,num)
+                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num))
+                    shutil.copy('1.inp',str(num)+'.inp')
+                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
+            else:
+                commands_step4(seed,mod_pdb,model_num)
+                commands_step5(freeze,model_num)
+                command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
+
+        if RIN_program.lower() == 'arpeggio':
+            arpreggio(pdb,seed)
+            model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            commands_steparp(seed,pdb,model_num)
+            if model_num=='all':
+                num_lines = res_atom_count('contact_counts.dat')
+                tot = []
+                for num in range(amountofseed+1,num_lines+1):
+                    print(num)
+                    tot.append(num)
+                    commands_steparp(seed,pdb,model_num)
+                    commands_step5(freeze,num)
+                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num))
+                    shutil.copy('1.inp',str(num)+'.inp')
+                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
+            else:
+                commands_steparp(seed,pdb,model_num)
+                commands_step5(freeze,model_num)
+                command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
+        if RIN_program.lower() == 'manual':
+            num_lines = res_atom_count('res_atoms.dat')
             option = list(range(amountofseed+1,num_lines+1))
             option.append('all')
             print('Insert '+ str(num_lines)+ ' for the largest model')
@@ -158,17 +227,17 @@ def main(file,nor):
                 commands_step4(seed,mod_pdb,model_num)
                 commands_step5(freeze,model_num)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
-
-        if RIN_program == 'arpeggio':
-            print('Needs orders')
-        if RIN_program == 'fsapt':
-            print(seed)
-            print('Needs orders')
-        if RIN_program == 'distance':
-            print('Needs orders')
+            print("Program assumes user has already created there own res_atom.dat file")
+            
+        if RIN_program.lower() == 'distance':
+            calc_type = input("Do you want distance based calc to be average or center of mass of the seed? (avg or mass): ")
+            hydro = input("Do you want (hydro or nohydro) ")
+            cut = input("What is the cutoff distance in angstroms? ")
+            distance(calc_type,hydro,pdb,seed,cut)
+            print('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
     if nor == 'True':
         mod_pdb=pdb
-        if RIN_program== 'probe':
+        if RIN_program.lower()== 'probe':
             probe = commands_step2(mod_pdb)
             commands_step3(probe,seed)
             num_lines = res_atom_count()
@@ -195,13 +264,56 @@ def main(file,nor):
                 commands_step5(freeze,model_num)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
 
-        if RIN_program == 'arpeggio':
-            print('Needs orders')
-        if RIN_program == 'fsapt':
-            print(seed)
-            print('Needs orders')
-        if RIN_program == 'distance':
-            print('Needs orders')
+        if RIN_program.lower() == 'arpeggio':
+            arpreggio(pdb,seed)
+            model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            commands_steparp(seed,pdb,model_num)
+            if model_num=='all':
+                num_lines = res_atom_count('contact_counts.dat')
+                tot = []
+                for num in range(amountofseed+1,num_lines+1):
+                    print(num)
+                    tot.append(num)
+                    commands_steparp(seed,pdb,model_num)
+                    commands_step5(freeze,num)
+                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num))
+                    shutil.copy('1.inp',str(num)+'.inp')
+                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
+            else:
+                commands_steparp(seed,pdb,model_num)
+                commands_step5(freeze,model_num)
+                command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
+        if RIN_program.lower() == 'manual':
+            num_lines = res_atom_count()
+            option = list(range(amountofseed+1,num_lines+1))
+            option.append('all')
+            print('Insert '+ str(num_lines)+ ' for the largest model')
+            print('Other options are listed below')
+            print(option)
+            model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            if model_num=='all':
+                num_lines = res_atom_count()
+                tot = []
+                for num in range(amountofseed+1,num_lines+1):
+                    print(num)
+                    tot.append(num)
+                    commands_step4(seed,mod_pdb,num)
+                    commands_step5(freeze,num)
+                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num))
+                    shutil.copy('1.inp',str(num)+'.inp')
+                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
+            else:
+                commands_step4(seed,mod_pdb,model_num)
+                commands_step5(freeze,model_num)
+                command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
+            print("Program assumes user has already created there own res_atom.dat file")
+        if RIN_program.lower() == 'distance':
+            calc_type = input("Do you want distance based calc to be average or center of mass of the seed? (avg or mass): ")
+            hydro = input("Do you want (hydro or nohydro) ")
+            cut = input("What is the cutoff distance in angstroms? ")
+            distance(calc_type,hydro,pdb,seed,cut)
+            print('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
         
         
          
