@@ -126,7 +126,7 @@ This script will generate a file named `res_atom-5.00.dat`, which has same forma
 #Note: Before starting, ensure that the pdb is cleaned. Use example 1, steps 1 to 7 above to clean your pdb
 1. Make sure openbabel libraries are available to properly use RINRUS with arpeggio
 
-2. Run the arpeggio.py script to generate the contact file 
+2. Run the arpeggio.py script to generate the contact file (you also need to make sure config.py is in the same directory as arpeggio.py)
 ````bash
 python3 ~/git/RINRUS/bin/arpeggio/arpeggio.py 2cht_h-TS.pdb
 ````  
