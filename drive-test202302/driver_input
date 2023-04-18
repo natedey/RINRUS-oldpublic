@@ -8,15 +8,15 @@
 
 
 
-PDB: 2cht.pdb
-Seed: A:203
-RIN_program: probe 
-### Residue_to_add: A:299:c+s,A:120:n+s
-### Histidine: 
+PDB: tdp1.pdb
+Seed: A:263,A:493,A:699,C:723,D:806
+RIN_program: arpeggio 
+Non_Seed_must_add: A:299:c+s,A:120:n+s
+Histidine: 
 Model(s): all
 Substrate(s)_charge: -2
 Multiplicity: 3
-residues_not_to_protonate: A:301,A:302
+pymol_ignore_residues_protonation: A:301,A:302
 seed_residues_want_to_freeze: A:301,A:302
 Computational_program: gaussian
 input_template_path: /home/tjsntlci/modred_temp.txt

@@ -3,6 +3,7 @@ import argparse
 import shutil
 import shlex,subprocess
 from pathlib import Path
+import sys
 
 
 def driver_file_reader(file):
@@ -59,22 +60,42 @@ def driver_file_reader(file):
 def commands_step1(pdb):
     path = os.path.expanduser('~/git/RINRUS/bin/reduce')
     pdb_2 = pdb.replace('.pdb','')
+    #args = [path,'-NOFLIP',str(pdb),'>',str(pdb_2)+'_h.pdb']
+    #subprocess.run(args)
+    #sys.stdout = open('test.txt', 'w') 
+    #print(args)
+  #  args.append('\n')
     os.system('~/git/RINRUS/bin/reduce -NOFLIP '+ str(pdb)+ ' > '+ str(pdb_2)+'_h.pdb')
     shutil.copy(str(pdb_2)+'_h.pdb',str(pdb_2)+'_h_modify.pdb')
-    mod_pdb = str(pdb_2)+'_h_modify.pdb' 
+    mod_pdb = str(pdb_2)+'_h_modify.pdb'
+    ''' 
+    with open('test.log','w') as fp:
+        for i in args:
+            fp.write(i+' ')
+    '''
     return mod_pdb
 def commands_step2(pdb):
     probe = pdb.replace('.pdb','')
     os.system('~/git/RINRUS/bin/probe -unformated -MC -self "all" '+ pdb +' > '+ probe + '.probe')
     probe = probe + '.probe'
+    '''
+    with open('test.log','a') as fp:
+        fp.write('~/git/RINRUS/bin/probe -unformated -MC -self "all" '+ pdb +' > '+ probe + '.probe\n')
+    '''
     return probe
 def commands_step3(probe,seed):
     print(probe)
     path = os.path.expanduser('~/git/RINRUS/bin/probe2rins.py')
     #os.system('python3 ~/git/RINRUS/bin/probe2rins.py -f '+ str(probe)+ ' -s ' + seed)
     args = ['python3',path, '-f',probe,'-s',seed.replace('\n','')]
+    args_2 = ['python3',path, '-f',probe,'-s',seed]
     print(args)
     result = subprocess.run(args)
+    '''
+    with open('test.log','a') as fp:
+        for line in args_2:
+            fp.write(line + ' ')
+    '''
     return
 
 def res_atom_count(filename):
@@ -91,8 +112,16 @@ def commands_step4(seed,pdb,model_num):
     #print(pdb)
     path = os.path.expanduser('~/git/RINRUS/bin/rinrus_trim2_pdb.py')
     args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb), '-model', str(model_num)]
-    result = subprocess.run(args)
+    #result = subprocess.run(args)
+    subprocess.run(args)
     
+    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb), '-model', str(model_num)]
+    args.append('\n')
+    '''
+    with open('test.log','a') as fp:
+        for line in args:
+            fp.write(line + ' ')
+    '''
     
     return
 
@@ -102,6 +131,13 @@ def commands_step5(freeze,model_num):
     arg= ['python3',path, '-resids', str(freeze),'-pdbfilename', name]
     print(arg) 
     result = subprocess.run(arg)
+    #arg= ['python3',path, '-resids', str(freeze),'-pdbfilename', name]
+    #args.append('\n')
+    '''
+    with open('test.log','a') as fp:
+        for line in args:
+            fp.write(line + ' ')
+    '''
     return
 
 def command_step6(template,format,basisinfo,charge,model_num):
@@ -113,6 +149,13 @@ def command_step6(template,format,basisinfo,charge,model_num):
     arg= ['python3', path ,'-intmp',str(template),'-format',str(format),'-basisinfo',path_2,'-c','-2','-noh',str(noh).replace(' ',''),'-adh',str(adh).replace(' ','')]
     print(arg)
     result = subprocess.run(arg)
+   # arg= ['python3', path ,'-intmp',str(template),'-format',str(format),'-basisinfo',path_2,'-c','-2','-noh',str(noh).replace(' ',''),'-adh',str(adh).replace(' ','')]
+   # args.append('\n')
+    '''
+    with open('test.log','a') as fp:
+        for line in args:
+            fp.write(line + ' ')
+    '''
     return
 
 
@@ -155,8 +198,6 @@ def main(file,nor):
     mod_pdb = pdb
     if nor == 'False':
         mod_pdb = commands_step1(pdb)
-    
-    
         if RIN_program.lower()== 'probe':
             probe = commands_step2(mod_pdb)
             commands_step3(probe,seed)
@@ -167,6 +208,7 @@ def main(file,nor):
             print('Other options are listed below')
             print(option)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            print(Seed)
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
@@ -183,6 +225,7 @@ def main(file,nor):
                 commands_step4(seed,mod_pdb,model_num)
                 commands_step5(freeze,model_num)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num)
+            
 
         if RIN_program.lower() == 'arpeggio':
             arpreggio(pdb,seed)
@@ -235,6 +278,7 @@ def main(file,nor):
             cut = input("What is the cutoff distance in angstroms? ")
             distance(calc_type,hydro,pdb,seed,cut)
             print('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
+    
     if nor == 'True':
         mod_pdb=pdb
         if RIN_program.lower()== 'probe':
