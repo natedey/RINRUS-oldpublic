@@ -11,13 +11,20 @@
 PDB: 2cht.pdb
 Seed: A:203
 RIN_program: probe 
-### Residue_to_add: A:299:c+s,A:120:n+s
-### Histidine: 
+skip_reduce: false ###Default = false
+Residue_to_add: A:299:c+s,A:120:n+s #### must have residues to be added in all (need to figure out, how c+n+s+c etc work)
+### Histidine:  ##histidine have different protonation style by reduce, so this flag can be used for that purpose, two keyword can be used: one to not flip histidine in reduce, second to allow user to double protonation
 Model(s): all
-Substrate(s)_charge: -2
+Substrate(s)_charge: -2 ## may be we need to explain how this calculated
 Multiplicity: 3
-residues_not_to_protonate: A:301,A:302
-seed_residues_want_to_freeze: A:301,A:302
+residues_not_to_protonate: A:301,A:302  ##pymol ignore residue protonation
+seed_residues_want_to_freeze: A:301,A:302    ##all seed by default either freeze or unfreeze, by using this flag user can reverse that freezing pattern
 Computational_program: gaussian
 input_template_path: /home/tjsntlci/modred_temp.txt
 basisset_library: ~/git/RINRUS/template_files/basisinfo
+
+## need driver in mut and output in terminal save to one file and should not overwrite if we run same thing again(this will be the log file)
+## before it makes model show the residue tree of all model in terminal ( print freq per res)
+##need error message if anywhere it does not match flag command e.g. avg>acg , mass>mas , A:203>A203 how it can recognize wrong terminal inputs or driver_input entries
+##can we add all basing required distance question in driver input only, same for Arpeggio.etc in future to save more user entries after driver starts
+
