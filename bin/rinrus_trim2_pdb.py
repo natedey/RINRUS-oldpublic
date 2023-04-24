@@ -133,6 +133,13 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
                     for atom in ['N','H']:
                         if atom not in res_atom[(cha,res_id+1)]:
                             res_atom[(cha,res_id+1)].append(atom)
+                if (cha,res_id-1) in res_atom.keys() and 'CA' in res_atom[(cha,res_id-1)]:
+                    for atom in ['C','O']:
+                        if atom not in res_atom[key]:
+                            res_atom[key].append(atom)
+                    for atom in ['N','H']:
+                        if atom not in res_atom[(cha,res_id-1)]:
+                            res_atom[(cha,res_id-1)].append(atom)
 
     ### Check frozen info ###
     for key in sorted(res_atom.keys()):
