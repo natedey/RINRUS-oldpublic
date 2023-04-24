@@ -19,9 +19,10 @@ Multiplicity: 3
 pymol_ignore_residues_protonation: A:301,A:302
 seed_residues_want_to_freeze: A:301,A:302
 Computational_program: gaussian
-input_template_path: /home/tjsntlci/modred_temp.txt
+## input_template_path: /home/tjsntlci/modred_temp.txt
+input_template_path:  ~/git/RINRUS/template_files/input_temp
 basisset_library: ~/git/RINRUS/template_files/basisinfo
-path_to_type_of_RIN='git/RINRUS-Dev'
+path_to_type_of_RIN: ~/git/RINRUS/bin
 ## need driver in mut and output in terminal save to one file and should not overwrite if we run same thing again(this will be the log file)
 ## before it makes model show the residue tree of all model in terminal ( print freq per res)
 ##need error message if anywhere it does not match flag command e.g. avg>acg , mass>mas , A:203>A203 how it can recognize wrong terminal inputs or driver_input entries
