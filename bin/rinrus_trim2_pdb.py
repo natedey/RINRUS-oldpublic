@@ -119,7 +119,8 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
 
     ### Check one "CACA" ###    
     for key in sorted(res_atom.keys()):
-        if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
+#        if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
+        if pdb_res_name[key] not in ('HOH', 'WAT','O') and pdb_res_name[key] in res_atoms_all.keys():
             cha = key[0]
             res_id = key[1]
             if 'CA' in res_atom[key]:
@@ -133,18 +134,17 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
                     for atom in ['N','H']:
                         if atom not in res_atom[(cha,res_id+1)]:
                             res_atom[(cha,res_id+1)].append(atom)
-                if (cha,res_id-1) in res_atom.keys() and 'CA' in res_atom[(cha,res_id-1)]:
-                    for atom in ['C','O']:
-                        if atom not in res_atom[key]:
-                            res_atom[key].append(atom)
-                    for atom in ['N','H']:
-                        if atom not in res_atom[(cha,res_id-1)]:
-                            res_atom[(cha,res_id-1)].append(atom)
 
     ### Check frozen info ###
     for key in sorted(res_atom.keys()):
         if key not in res_info.keys() and key not in sel_key:
             res_info[key] = ['CA']
+        elif key in sel_key and pdb_res_name[key] in res_atoms_all.keys():
+            if 'CA' not in res_info[key]:
+                try:
+                    res_info[key].append('CA')
+                except:
+                    res_info[key] =['CA']
     res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
     f1 = open('res_%s_atom_info.dat'%str(sm),'w')        
     f2 = open('res_%s_froz_info.dat'%str(sm),'w')        
