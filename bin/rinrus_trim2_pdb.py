@@ -145,7 +145,9 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
                     res_info[key].append('CA')
                 except:
                     res_info[key] =['CA']
+
     res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
+
     f1 = open('res_%s_atom_info.dat'%str(sm),'w')        
     f2 = open('res_%s_froz_info.dat'%str(sm),'w')        
     for key in sorted(res_atom.keys()):
