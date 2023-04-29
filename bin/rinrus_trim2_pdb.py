@@ -145,6 +145,10 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
                     res_info[key].append('CA')
                 except:
                     res_info[key] =['CA']
+            if pdb_res_name[key] in ['ARG','LYS','GLU','GLN','MET','TRP','TYR','PHE']:
+                res_info[key].append('CB')
+
+#    res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
 
     res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
 
