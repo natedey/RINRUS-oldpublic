@@ -187,7 +187,6 @@ def get_ufree_atom(ufree):
             ufree_atoms[key] = ['CA']
         elif cacb.lower() == 'cb':
             ufree_atoms[key] = 'CB'
-    print(ufree_atoms)
     return ufree_atoms
 
 
@@ -198,7 +197,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', dest='seed', default='None', help='Chain:Resid,Chain:Resid')
     parser.add_argument('-c', dest='r_atom', default='res_atoms.dat', help='atom info for each residue')
     parser.add_argument('-cres', dest='cres', default='None', help='Noncanonical residue information')
-    parser.add_argument('-ufree', dest='ufree', default='None', help='Seed canonical residue unfrozen CA/CB, chain:Resid:CACB,chain:Resid:CA')
+    parser.add_argument('-free', dest='ufree', default='None', help='Seed canonical residue unfrozen CA/CB, chain:Resid:CACB,chain:Resid:CA')
     parser.add_argument('-model', dest='method', default='All', help='generate one or all trimmed models, if "7" is given, then will generate the 7th model')
 
     args = parser.parse_args()
