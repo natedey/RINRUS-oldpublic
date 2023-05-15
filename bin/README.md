@@ -142,7 +142,11 @@ Then you can choose to use either rank by number of arpeggio contact counts betw
 python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -pdb 2cht_h-TS.pdb -c contact_counts.dat -s C:202 -model 7
 ```
 If you want to generate all the incremental models, use the command above without the '-model' flag
-
+But if you have freeze or unfreeze alpha carbon (CA) or beta carbon (CB) in any noncanonical residues, use -free flag
+```bash
+python3 ~/git/RINRUS_master/bin/rinrus_trim2_pdb.py -s A:203,A:7,C:63 -pdb 2cht_h_ac_aligned.pdb -c res_atoms.dat -free A:7:CACB,C:63:CA -model 26
+```
+For -free A:7:CACB,C:63:CA in the line above, both the CA and CB carbons are free in Arg7 and in Arg63 only CB atom is free in the model.
 5. Run the pymol_script.py to add hydrogens to cap trimmed residues:
  ```bash
 python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename res_7.pdb 
