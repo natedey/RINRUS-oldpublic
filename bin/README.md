@@ -53,16 +53,20 @@ This generates automatically generate the entire "ladder" of possible models bas
 
 #Note: if you want to generate one model based on a any ranking scheme, you will need to use the flag `-model NNN`:
 ```bash
-python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb -model NNN
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb -model NNN 
 ```
 ```bash
   -pdb R_PDB     protonated pdbfile
   -s SEED        Chain:Resid,Chain:Resid
   -c R_ATOM      atom info for each residue (eg. res_atom.dat)
+  -fee A:146:CA  CA or CB atoms to free in noncanonical residues
   -model METHOD  generate one or all trimmed models, if "7" is given, then
                  will generate the 7th model
 ```
-
+#Note: if you want to unfreeze CA or CB or both atoms in noncanonical resides in your models, you will need to use the flag `-free Chain:residue_id:carbon atoms to unfreeze`:
+```bash
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb -model NNN -free A:146:CACB
+```
 10. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. You must have a local copy of pymol installed! Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
 
 which
@@ -123,7 +127,7 @@ This script will generate a file named `res_atom-5.00.dat`, which has same forma
 
 ## Usage example 3 - generating a single or a few input files with arpeggio ranking by either interaction counts or number of interaction types: 
 
-#Note: Before starting, ensure that the pdb is cleaned. Use example 1, steps 1 to 7 above to clean your pdb
+# Note: Before starting, ensure that the pdb is cleaned. Use example 1, steps 1 to 7 above to clean your pdb
 1. Make sure openbabel libraries are available to properly use RINRUS with arpeggio
 
 2. Run the arpeggio.py script to generate the contact file (you also need to make sure config.py is in the same directory as arpeggio.py)
@@ -141,8 +145,7 @@ Then you can choose to use either rank by number of arpeggio contact counts betw
  ```bash
 python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -pdb 2cht_h-TS.pdb -c contact_counts.dat -s C:202 -model 7
 ```
-If you want to generate all the incremental models, use the command above without the '-model' flag
-But if you have freeze or unfreeze alpha carbon (CA) or beta carbon (CB) in any noncanonical residues, use -free flag
+# Note: if you want to unfreeze CA or CB or both atoms in noncanonical resides in your models, you will need to use the flag `-free Chain:residue_id:carbon atoms to unfreeze`:
 ```bash
 python3 ~/git/RINRUS_master/bin/rinrus_trim2_pdb.py -s A:203,A:7,C:63 -pdb 2cht_h_ac_aligned.pdb -c res_atoms.dat -free A:7:CACB,C:63:CA -model 26
 ```
@@ -151,7 +154,7 @@ For -free A:7:CACB,C:63:CA in the line above, both the CA and CB carbons are fre
  ```bash
 python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename res_7.pdb 
 ```
-##Note: You can write a bash script to loop over all the models. See example below
+# Note: You can write a bash script to loop over all the models. See example below
 ```bash
 ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
 ```
