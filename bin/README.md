@@ -19,22 +19,20 @@ $HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb
 
 4. Check the new PDB file. Probe doesn't recognize covalent bonds between fragments, which becomes a problem with metalloenzymes and metal-ligand coordination. Our workaround is to replace a metal coordination center with an atom that probe recognizes as a H-bond donor or acceptor to capture interactions with the coordinating ligand atoms. For example in COMT, we replace Mg with O, and save as a new PDB file.
 
-5. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions). The user needs to protonate ligand and substrate properly since reduce does not recognize most substrates and may add H improperly. Check the ligand 2D drawing for the PDB entry on rcsb website for some guidance on substrate protonation if starting from scratch. Performing this step correctly is the user's responsibility! RINRUS will generate models from provided structure and does not yet have comprehensive sanity checks!
-   
-6. If there are any "CA" or "CB" atoms in substrate/ligands/noncanonical amino acids, replace them with "CA'" and "CB'", respectively. An example of this would be if the substrate is a polypeptide (like in Tyrosyl DNA-phosphodiesterase 1). You would not want to freeze substrate Carbon alphas/betas. Renaming to CA' / CB' will cause RINRUS to ignore a peptide substrate atoms when it makes the list of frozen atoms. We plan to automate this process eventually. 
+5. Check all ligands, make sure H atoms were added correctly (may need to delete or add more H based on certain conditions). The user needs to protonate ligand and substrate properly since reduce does not recognize most substrates and may add H improperly. Check the ligand 2D drawing for the PDB entry on rcsb website for some guidance on substrate protonation if starting from scratch. Performing this step correctly is the user's responsibility! RINRUS will generate models from provided structure and does not yet have comprehensive sanity checks.
 
-7. Use the new PDB file (`3bwm_h_modify.pdb`) to run `probe` to generate .probe file	
+6. Use the new PDB file (`3bwm_h_modify.pdb`) to run `probe` to generate .probe file	
 ``` bash
 $HOME/git/RINRUS/bin/probe -unformated -MC -self "all" 3bwm_h_modify.pdb > 3bwm_h_modify.probe 
 ```
 ###NOTE: When creating QM-cluster models, remember to replace metal atom in PDB if it was replaced with O in step 4
 
-***Step 8 is one of the most important steps of the QM-cluster model building process. The user must now define the "seed". What is the seed? Typically, the seed will be the substrate(s) (or ligand in biochemical terms) participating in the chemical reaction. Any amino acid residues, co-factors, or fragments which participate in the active site catalytic breaking and forming of chemical bonds may also need to be included as part of the seed, but this will generate much larger models compare to only using the substrate***
+***Step 7 is one of the most important steps of the QM-cluster model building process. The user must now define the "seed". What is the seed? Typically, the seed will be the substrate(s) (or ligand in biochemical terms) participating in the chemical reaction. Any amino acid residues, co-factors, or fragments which participate in the active site catalytic breaking and forming of chemical bonds may also need to be included as part of the seed, but this will generate much larger models compare to only using the substrate***
 
 ##Using the example of PDB:3BWM, we will select the PDB residue ID# of three fragments: 300(metal Mg2+), 301 (SAM) and 302 (Catechol - the substrate) as the seed. 3BWM only has one chain, so we must specify chain A throughout. If the PDB does not have chain identifiers, you will need to specify ":XXX" where XXX is residue id number to use them in this step and beyond. If the protein is multimeric, use the chain of your choice for seed fragments. Note that some multimeric x-ray crystal structures may not necessarily have equivalent active sites!
 ##NOTE: If there is no Chain ID in the PDB file, our defaults are wonky and need to be improved. 
 
-8. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chain:ResID)
+7. Run `probe2rins.py`. The seed is a comma-separated list of colon-separated pairs, the first part being the ID of the PDB subunit, the second part being the residue number in that subunit:(Chain:ResID)
 ``` bash
 python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s A:300,A:301,A:302
 ```
@@ -44,7 +42,7 @@ python3 $HOME/git/RINRUS/bin/probe2rins.py -f 3bwm_h_modify.probe -s A:300,A:301
 ```
 This produces `freq_per_res.dat`, `rin_list.dat`, `res_atoms.dat`, and `*.sif`.
 
-9. With the res_atoms.dat file generated, use run rinrus_trim2_pdb to generate the trimmed PDB model:
+8. With the res_atoms.dat file generated, use run rinrus_trim2_pdb to generate the trimmed PDB model:
 ```bash
 python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb 
 ```
@@ -56,18 +54,16 @@ This generates automatically generate the entire "ladder" of possible models bas
 python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb -model NNN 
 ```
 ```bash
-  -pdb R_PDB     protonated pdbfile
-  -s SEED        Chain:Resid,Chain:Resid
-  -c R_ATOM      atom info for each residue (eg. res_atom.dat)
-  -fee A:146:CA  CA or CB atoms to free in noncanonical residues
-  -model METHOD  generate one or all trimmed models, if "7" is given, then
-                 will generate the 7th model
+  -pdb R_PDB       protonated pdbfile
+  -s SEED          Chain:Resid,Chain:Resid
+  -c R_ATOM        atom info for each residue (eg. res_atom.dat)
+  -unfrozen        CA/CB/CACB to unfreeze backbone of seed canonical residues
+  -model METHOD    generate one or all trimmed models, if "7" is given, then
+                   will generate the 7th model
 ```
-#Note: if you want to unfreeze CA or CB or both atoms in noncanonical resides in your models, you will need to use the flag `-free Chain:residue_id:carbon atoms to unfreeze`:
-```bash
-python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_modify.pdb -model NNN -free A:146:CACB
-```
-10. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. You must have a local copy of pymol installed! Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
+#Note: if you include canonical residues in your seed, you may want to unfreeze CA/CB or both backbone atoms in the seed canonical residues. To do so, you will use the flag `-unfrozen Chain:residue_id:<carbon atoms>` where <carbon atoms> is CA for the alpha carbon only, CB for the beta carbon only, and CACB for both. 
+   
+9. The trimming procedure creates uncapped backbone pieces. Next use pymol_script.py to add capping hydrogens where bonds were broken when the model was trimmed. You must have a local copy of pymol installed! Run `pymol_scripts.py` to add hydrogens to one or more `res_NNN.pdb` files:
 
 which
 - generates a `log.pml` PyMOL input file containing commands that perform the hydrogen addition, and then
@@ -86,7 +82,7 @@ Note: To properly loop pymol_script.py over all possible models, you will have t
 ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
 ```
 
-11. Run `write_input.py` for a single model to generate an input file for quantum chemistry packages. You will have to loop this with python or a shell script to iterate over all possible models. Simple DFT/xTB templates are included:
+10. Run `write_input.py` for a single model to generate an input file for quantum chemistry packages. You will have to loop this with python or a shell script to iterate over all possible models. Simple DFT/xTB templates are included:
 ```bash
 python3 ~/git/RINRUS/bin/write_input.py -intmp ~/git/RINRUS/bin/gaussian_input_template.txt -format gaussian -basisinfo ~/git/RINRUS/template_files/basisinfo -c -2 -noh res_NN.pdb -adh res_NN_h.pdb 
 ```
