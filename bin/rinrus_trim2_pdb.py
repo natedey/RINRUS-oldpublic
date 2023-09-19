@@ -50,7 +50,7 @@ def gen_res_seq(freqf,sel_key):
                 qf[j][cha] = [res]
     return qf
 
-def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist):
+def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist,ufree_atoms):
     test = {}
     tot = {}
     res_part_list = {}
@@ -119,7 +119,8 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
 
     ### Check one "CACA" ###    
     for key in sorted(res_atom.keys()):
-        if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
+#        if key not in sel_key and pdb_res_name[key] not in ('HOH', 'WAT','O'):
+        if pdb_res_name[key] not in ('HOH', 'WAT','O') and pdb_res_name[key] in res_atoms_all.keys():
             cha = key[0]
             res_id = key[1]
             if 'CA' in res_atom[key]:
@@ -138,7 +139,24 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
     for key in sorted(res_atom.keys()):
         if key not in res_info.keys() and key not in sel_key:
             res_info[key] = ['CA']
+        elif key in sel_key and pdb_res_name[key] in res_atoms_all.keys():
+            if 'CA' not in res_info[key]:
+                try:
+                    res_info[key].append('CA')
+                except:
+                    res_info[key] =['CA']
+            if pdb_res_name[key] in ['ARG','LYS','GLU','GLN','MET','TRP','TYR','PHE']:
+                res_info[key].append('CB')
+            if key in ufree_atoms.keys():
+                if 'CA' in ufree_atoms[key]:
+                    res_info[key].remove('CA')
+                if 'CB' in ufree_atoms[key]:
+                    res_info[key].remove('CB')
+
+#    res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
+
     res_pick,res_info = final_pick2(pdb,res_atom,res_info,sel_key)
+
     f1 = open('res_%s_atom_info.dat'%str(sm),'w')        
     f2 = open('res_%s_froz_info.dat'%str(sm),'w')        
     for key in sorted(res_atom.keys()):
@@ -156,6 +174,21 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
     outf = 'res_%s.pdb'%str(sm)
     write_pdb(outf,res_pick)
 
+def get_ufree_atom(ufree):
+    ufree_atoms = {}
+    atoms = ufree.split(',')
+    for atom in atoms:
+        chain, resid, cacb = atom.split(':')
+#        print(chain,resid,cacb)
+        key = (chain,int(resid))
+        if len(cacb) == 4:
+            ufree_atoms[key] = ['CA','CB']
+        elif cacb.lower() == 'ca':
+            ufree_atoms[key] = ['CA']
+        elif cacb.lower() == 'cb':
+            ufree_atoms[key] = 'CB'
+    return ufree_atoms
+
 
 if __name__ == '__main__':
     
@@ -164,6 +197,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', dest='seed', default='None', help='Chain:Resid,Chain:Resid')
     parser.add_argument('-c', dest='r_atom', default='res_atoms.dat', help='atom info for each residue')
     parser.add_argument('-cres', dest='cres', default='None', help='Noncanonical residue information')
+    parser.add_argument('-unfrozen', dest='ufree', default='None', help='Seed canonical residue unfrozen CA/CB, chain:Resid:CACB,chain:Resid:CA')
     parser.add_argument('-model', dest='method', default='All', help='generate one or all trimmed models, if "7" is given, then will generate the 7th model')
 
     args = parser.parse_args()
@@ -172,13 +206,21 @@ if __name__ == '__main__':
     seed  = args.seed
     atomf = args.r_atom
     cres  = args.cres
+    ufree = args.ufree
     method = args.method
     if cres != 'None':
         cres_atoms_all, cres_atoms_sc = get_noncanonical_resinfo(cres)
     else:
         cres_atoms_all = {}
         cres_atoms_sc = {}
+
+    if ufree != 'None':
+        ufree_atoms = get_ufree_atom(ufree)
+    else:
+        ufree_atoms = {}
+
     pdb, tres_info, ttot_charge = read_pdb(r_pdb)
+
     sel_key = get_sel_keys(seed)
     with open(atomf) as f:
         iratoms = f.readlines()
@@ -208,8 +250,8 @@ if __name__ == '__main__':
     
     if method == 'All':
         for i in range(len(sel_key),l_res):
-            trim_pdb_models(i+1,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist)
+            trim_pdb_models(i+1,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist,ufree_atoms)
     else:
         res_l = int(method)
-        trim_pdb_models(res_l,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist)
+        trim_pdb_models(res_l,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list,cha_res_list,Alist,ufree_atoms)
        # print(pdb_res_atom[('C',57)])
