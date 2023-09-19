@@ -9,6 +9,7 @@ if __name__ == '__main__':
 args = parser.parse_args()
 summary={}
 summary["directory"]=os.getcwd()
+print(summary["directory"])
 with open(args.driver_input,'r') as fo:
     lines = fo.readlines()
     for line in lines:

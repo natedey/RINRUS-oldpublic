@@ -1,0 +1,3 @@
+python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:203 -pdb 2cht_h_corrected.pdb -model 25
+python3 ~/git/RINRUS/bin/pymol_scripts.py -resids "203" -pdbfilename res_25.pdb
+python3 ~/git/RINRUS/bin/write_input.py -intmp ~/modred_temp.txt -format gaussian -basisinfo ~/git/RINRUS/template_files/basisinfo -c -2 -noh res_25.pdb -adh res_25_h.pdb

@@ -167,7 +167,8 @@ def commands_step5(freeze,model_num,path_to_RIN,logger):
     
     path = os.path.expanduser(path_to_RIN+'/pymol_scripts.py')
     name = 'res_' + str(model_num)+'.pdb'
-    arg= ['python3',path, '-resids', str(freeze),'-pdbfilename', name]
+    loc = str(freeze).find(':')
+    arg= ['python3',path, '-resids',str(freeze[loc+1:]),'-pdbfilename', name]
     #out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
     out = subprocess.run(arg)
     logger.info('The inputted pymol script path: '+ str(out.args))
