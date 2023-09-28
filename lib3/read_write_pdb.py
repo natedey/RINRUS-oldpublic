@@ -8,6 +8,7 @@ from io import IOBase
 import re
 
 def read_pdb(pdbfile,TER=False):
+    print(pdbfile)
     f = open(pdbfile,'r')
     pdb = []
     res_info = []

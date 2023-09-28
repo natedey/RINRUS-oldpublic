@@ -250,7 +250,6 @@ if __name__ == "__main__":
 
     res_list, res_acts, actions, siflines, res_atoms = probe_analysis(probefile,sel_res)
     #res_dict = order_reslist(res_list)
-
     write_sif(siflines)
     write_rin(actions)
     write_res_atom(res_atoms)

@@ -16,10 +16,7 @@ Histidine:
 Model(s): all
 Substrate(s)_charge: -2 ## may be we need to explain how this calculated
 Multiplicity: 3
-pymol_ignore_residues_protonation: A:301,A:302
-seed_residues_want_to_freeze: A:301,A:302
 Computational_program: gaussian
-## input_template_path: /home/tjsntlci/modred_temp.txt
 input_template_path:  ~/git/RINRUS/template_files/input_temp
 basisset_library: ~/git/RINRUS/template_files/basisinfo
 path_to_type_of_RIN: ~/git/RINRUS/bin

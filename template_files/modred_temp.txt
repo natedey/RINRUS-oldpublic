@@ -1,0 +1,27 @@
+10 30
+b3lyp/gen
+opt C5,203,O7,203;C1,203,C9,203 F
+#freq
+#guess=read
+#geom=(checkpoint,step=10)
+#iop(1/7=500)
+scf=(xqc,maxcon=128,maxcyc=128)
+scrf(cpcm,read,solvent=water) EmpiricalDispersion=GD3BJ
+
+basis:
+S     0                               
+6-31G(d')                             
+****                                  
+O     0                               
+6-31G(d')                             
+****                                  
+N     0                               
+6-31G(d')                             
+****                                  
+C     0                               
+6-31G                                 
+****                                  
+H     0                               
+6-31G                                 
+****                                  
+

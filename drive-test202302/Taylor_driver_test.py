@@ -67,50 +67,41 @@ def driver_file_reader(file):
                     #print(line)
     return pdb,Seed,RIN_program,charge,multi,Computational_program,template_path,basis_set_library,seed,model_num,path_to_RIN
 def commands_step1(pdb,logger,path_to_RIN):
- 
-# Test messages
-    #logger.debug("Harmless debug Message")
-    #logger.info("Just an information")
-    #logger.warning("Its a Warning")
-    #logger.error("Did you try to divide by zero")
-    #logger.critical("Internet is down")
+    """
+    runs reduce with -NOFLIP flag and uses logger to log output
+    """
     path = os.path.expanduser(path_to_RIN+'/reduce')
     pdb_2 = pdb.replace('.pdb','')
-    #args = [path,'-NOFLIP',str(pdb),'>',str(pdb_2)+'_h.pdb']
     args = path_to_RIN + '/reduce -NOFLIP -Quiet  '+ str(pdb)+ ' > '+ str(pdb_2)+'_h.pdb'
-    #out = subprocess.run(args,shell=True,capture_output=True)
     io.StringIO(initial_value='', newline='\r')
     out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
     a = vars(out)
-    #print(a)
     print(out.stdout)
-    #print(type(a))
-    #out = sys.stderr(args)
     logger.info('The reduce command inputted: '+ str(out.args))
     logger.info('return code= '+ str(out.returncode))
     logger.info('Output from Reduce:\n'+ out.stdout)
-    
-
-        
-    
-    #print(out)
-    
-    #sys.stdout = open('test.txt', 'w') 
-    #print(args)
-  #  args.append('\n')
-   # os.system('~/git/RINRUS/bin/reduce -NOFLIP '+ str(pdb)+ ' > '+ str(pdb_2)+'_h.pdb')
     shutil.copy(str(pdb_2)+'_h.pdb',str(pdb_2)+'_h_modify.pdb')
     mod_pdb = str(pdb_2)+'_h_modify.pdb'
-    ''' 
-    with open('test.log','w') as fp:
-        for i in args:
-            fp.write(i+' ')
-    '''
     return mod_pdb
+
+
 def commands_step2(pdb,logger,path_to_RIN):
-    probe = pdb.replace('.pdb','')
-    #os.system('~/git/RINRUS/bin/probe -unformated -MC -self "all" '+ pdb +' > '+ probe + '.probe')
+    """_summary_
+    Hardcoded Flags:
+        -unformated
+        -MC
+        -self "all"
+        -Quiet
+    Args:
+        pdb (_type_): _h modified pdb
+        logger (_type_): shows the probe input, return code and output from the probe program
+        path_to_RIN (_type_): path to where file is
+
+    Returns:
+        _type_: .probe file
+    """
     
+    probe = pdb.replace('.pdb','')
     args = [path_to_RIN+'/probe -unformated -MC -self "all" -Quiet '+ pdb +' > '+ probe + '.probe']
     probe = probe + '.probe'
     out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
@@ -119,9 +110,21 @@ def commands_step2(pdb,logger,path_to_RIN):
     logger.info('The inputted probe: '+ str(out.args))
     logger.info('return code= '+ str(out.returncode))
     logger.info('Output from Probe:\n'+ out.stdout)
-    
     return probe
+
+
 def commands_step3(probe,seed,logger,path_to_RIN):
+    """_summary_
+
+    Args:
+        probe (_type_): _description_
+        seed (_type_): _description_
+        logger (_type_): _description_
+        path_to_RIN (_type_): _description_
+
+    Returns:
+        nothing
+    """
     print(probe)
     path = os.path.expanduser(path_to_RIN+'/probe2rins.py')
     #os.system('python3 ~/git/RINRUS/bin/probe2rins.py -f '+ str(probe)+ ' -s ' + seed)

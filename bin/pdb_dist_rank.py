@@ -630,22 +630,27 @@ for line in side_output:
 
 ID = []
 NUM = []
-DIST = []
+dist = []
 ATM = []
 for num,i in enumerate(df_fin['Chain ID']):
     ID.append(i)
     NUM.append(df_fin['Atom num'][num])
-    DIST.append(df_fin['Dist'][num])
+    dist.append(float(df_fin['Dist'][num]))
     ATM.append(df_fin['Atoms'][num])
+
 df_fin = pd.DataFrame(df_fin)
+df_fin = df_fin.astype({'Chain ID':'str','Atom num':'int','Dist':'float','Atoms':'str'})
+
+
 df_fin = df_fin.sort_values('Dist')
-df_fin.to_csv('test.csv',index=False)
-print(df_fin)
+df_fin.to_csv('res_atom-%.2f_new.csv'%cut,index=False)
+
+
 reorg_ID = []
 reorg_num = []
 reorg_dist = []
 reorg_atms = []
-with open('test.csv','r') as fp:
+with open('res_atom-%.2f_new.csv'%cut,'r') as fp:
     data = fp.readlines()
     for line in data[1:]:
         new_line = line.split(',')
