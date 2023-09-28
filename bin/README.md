@@ -70,7 +70,7 @@ which
 - runs PyMOL to perform the addition.
 If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. This step will also ignore re-protonating histidine side chain protons. Please check histidine protonation state of your pdb file before proceeding.
 ```bash
-python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename res_.pdb
+python3 $HOME/git/RINRUS/bin/pymol_scripts.py -ignore_ids "300,301,302" -pdbfilename res_.pdb
 ```
 ```bash
 -resid "300,301,302" (if you do not want pymol to re-protonate fragments 300, 301, and 302)
