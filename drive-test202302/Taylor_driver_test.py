@@ -153,12 +153,20 @@ def res_atom_count(filename):
                 num -= 1
     return num
 
-def commands_step4(seed,pdb,model_num,path_to_RIN,logger):
+def commands_step4(seed,pdb,model_num,path_to_RIN,RIN_program,logger):
     #print(pdb)
-    path = os.path.expanduser(path_to_RIN+'/rinrus_trim2_pdb.py')
-    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb), '-model', str(model_num)]
-    result = subprocess.run(args)
-    logger.info('The inputted rinrus trim path: ' + str(result.args))
+    if RIN_program.lower() == 'arpeggio':
+        path = os.path.expanduser(path_to_RIN+'/rinrus_trim2_pdb.py')
+        args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb),'-c','contact_counts.dat', '-model', str(model_num)]
+        logger.info('The model number is:' + str(model_num))
+        result = subprocess.run(args)
+        logger.info('The inputted rinrus trim path: ' + str(result.args))
+    else: 
+        path = os.path.expanduser(path_to_RIN+'/rinrus_trim2_pdb.py')
+        args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb), '-model', str(model_num)]
+        result = subprocess.run(args)
+        logger.info('The model number is:' + str(model_num))
+        logger.info('The inputted rinrus trim path: ' + str(result.args))
     #out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
     #logger.info('The inputted rinrus_trim2_pdb.py command: '+ str(out.args))
     #logger.info('return code= '+ str(out.returncode))
@@ -232,15 +240,6 @@ def arpreggio(pdb,seed,path_to_RIN,logger,):
     #logger.info('arpeggio2rins.py output' + result.args)
     return
 
-def commands_steparp(seed,pdb,model_num,path_to_RIN,logger):
-    #print(pdb)
-    path = os.path.expanduser(path_to_RIN+'/rinrus_trim2_pdb.py')
-    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb),'-c','contact_counts.dat', '-model', str(model_num)]
-    result = subprocess.run(args)
-    #logger.info('rintrus trim output'+result.args)
-    
-    
-    return
 def main(file,nor):
     logging.basicConfig(filename="newfile.log",
                     format='%(asctime)s %(message)s',
@@ -343,20 +342,19 @@ def main(file,nor):
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
-            commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
             if model_num=='all':
                 num_lines = res_atom_count('contact_counts.dat')
                 tot = []
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
                     tot.append(num)
-                    commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
+                    commands_step4(seed,pdb,num,path_to_RIN,RIN_program,logger)
                     commands_step5(freeze,num,path_to_RIN,logger)
                     command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
                     shutil.copy('1.inp',str(num)+'.inp')
                     shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
             else:
-                commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
+                commands_step4(seed,pdb,model_num,path_to_RIN,RIN_program,logger)
                 commands_step5(freeze,model_num,path_to_RIN,logger)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
         if RIN_program.lower() == 'manual':
@@ -471,20 +469,17 @@ def main(file,nor):
         if RIN_program.lower() == 'arpeggio':
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
-            commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
             if model_num=='all':
                 num_lines = res_atom_count('contact_counts.dat')
                 tot = []
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
                     tot.append(num)
-                    commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
                     commands_step5(freeze,num,path_to_RIN,logger)
                     command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
                     shutil.copy('1.inp',str(num)+'.inp')
                     shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
             else:
-                commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
                 commands_step5(freeze,model_num,path_to_RIN,logger)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
         if RIN_program.lower() == 'manual':
