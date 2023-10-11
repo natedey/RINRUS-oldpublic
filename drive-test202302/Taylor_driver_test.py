@@ -170,8 +170,15 @@ def commands_step5(freeze,model_num,path_to_RIN,logger):
     
     path = os.path.expanduser(path_to_RIN+'/pymol_scripts.py')
     name = 'res_' + str(model_num)+'.pdb'
-    loc = str(freeze).find(':')
-    arg= ['python3',path, '-resids',str(freeze[loc+1:]),'-pdbfilename', name]
+    #loc = str(freeze).find(':')
+    freeze_2 = ''
+    for i in freeze:
+        if i.isnumeric()==True:
+            freeze_2 += i
+        elif i == ',':
+            freeze_2 += i
+    #print(freeze_2)
+    arg= ['python3',path, '-resids',str(freeze_2),'-pdbfilename', name]
     #out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
     out = subprocess.run(arg)
     logger.info('The inputted pymol script path: '+ str(out.args))
@@ -212,22 +219,26 @@ def distance(calc_type,hydro,pdb,seed,cut,logger,path_to_RIN):
         logger.info('Output :\n'+ str(result.stdout))
     return
 
-def arpreggio(pdb,seed,logger,path_to_RIN):
-    path = os.path.expanduser(path_to_RIN+'/arpeggio.py')
+def arpreggio(pdb,seed,path_to_RIN,logger,):
+    print(path_to_RIN)
+    path = os.path.expanduser(path_to_RIN+'/arpeggio/arpeggio.py')
     arg = ['python3',path,str(pdb)]
+    logger.info(str(arg))
     result = subprocess.run(arg)
+    #logger.info('arpeggio.py output' + result.args)
     path = os.path.expanduser(path_to_RIN+'/arpeggio2rins.py')
-    arg = ['python3',path,str(pdb),'-f',str(pdb).replace('pdb','contacts'),'-s',seed]
+    arg = ['python3',path,'-f',str(pdb).replace('pdb','contacts'),'-s',seed]
     result = subprocess.run(arg)
-    logger.info('arpeggio.py output' + result.args)
+    logger.info(str(arg))
+    #logger.info('arpeggio2rins.py output' + result.args)
     return
 
-def commands_steparp(seed,pdb,model_num,logger,path_to_RIN):
+def commands_steparp(seed,pdb,model_num,path_to_RIN,logger):
     #print(pdb)
     path = os.path.expanduser(path_to_RIN+'/rinrus_trim2_pdb.py')
-    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb),'-c','contact_count.dat', '-model', str(model_num)]
+    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb),'-c','contact_counts.dat', '-model', str(model_num)]
     result = subprocess.run(args)
-    logger.info('rintrus trim output'+result.args)
+    #logger.info('rintrus trim output'+result.args)
     
     
     return
@@ -305,7 +316,7 @@ def main(file,nor):
             print(Seed)
             
             ##### I stopped here with adding logger functionality. The next steps are to include seed and add logger functionality to the rest of commands and everything below this
-            
+            print(Seed)
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
@@ -325,6 +336,12 @@ def main(file,nor):
             
 
         if RIN_program.lower() == 'arpeggio':
+            print(Seed)
+            seed_name = ''
+            for i in Seed:
+                seed_name+=i + ','
+            print(seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
             commands_steparp(seed,pdb,model_num,path_to_RIN,logger)
