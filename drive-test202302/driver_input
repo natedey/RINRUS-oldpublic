@@ -10,11 +10,12 @@
 
 PDB: 4Q1L_28093.pdb
 Seed:A:206,A:207,A:211,A:212 
-RIN_program: arpeggio 
+RIN_program: probe 
 ## Non_Seed_must_add: A:299:c+s,A:120:n+s
 Histidine: 
 Model(s): all
-Substrate(s)_charge: -2 ## may be we need to explain how this calculated
+Substrate(s)_charge: -5 
+## may be we need to explain how this calculated
 Multiplicity: 3
 Computational_program: gaussian
 input_template_path:  /home/tjsntlci/git/RINRUS/template_files/modred_temp.txt
