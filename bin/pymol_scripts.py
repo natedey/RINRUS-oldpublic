@@ -21,7 +21,9 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-pdbfilename", nargs="+")
-parser.add_argument("-resids")
+#parser.add_argument("-resids")
+parser.add_argument("-ignore_ids")
+#parser.add_argument("-")
 args = parser.parse_args()
 
 with open("log.pml", "w") as logf:
@@ -31,7 +33,7 @@ with open("log.pml", "w") as logf:
         logf.write(f"load {pdbfilename}\n")
         if args.resids is not None:
             logf.write(
-                f'cmd.select("sel","{name} and not resi {args.resids} and not name NH1 and not name NH2")\n'
+                f'cmd.select("sel","{name} and not resi {args.ignore_ids} and not name NH1 and not name NH2")\n'
             )
             logf.write('cmd.h_add("sel")\n')
         else:

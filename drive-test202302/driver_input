@@ -8,7 +8,7 @@
 
 
 
-PDB: tdp1.pdb
+PDB: 193_md
 Seed: A:263,A:493,A:699,C:723,D:806
 RIN_program: arpeggio 
 ## Non_Seed_must_add: A:299:c+s,A:120:n+s

@@ -30,6 +30,8 @@ For certain scripts (optional),
 - [probe](https://github.com/rlabduke/probe) - version 2.16.130520 is packaged with RINRUS
 - [reduce](https://github.com/rlabduke/reduce) - version 3.23 is packaged with RINRUS
 - [arpeggio](http://biosig.unimelb.edu.au/arpeggioweb)
+- obabel version = openbabel/2.4.1
+
 
 Currently, a precompiled copy of each is present in `bin/`.
 

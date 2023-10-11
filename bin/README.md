@@ -68,9 +68,9 @@ python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:300,A:301,A:302 -pdb 3bwm_h_mo
 which
 - generates a `log.pml` PyMOL input file containing commands that perform the hydrogen addition, and then
 - runs PyMOL to perform the addition.
-If `-resids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. This step will also ignore re-protonating histidine side chain protons. Please check histidine protonation state of your pdb file before proceeding.
+If `-ignore_ids` is specified, those residue IDs will not have hydrogens added. NOTE: This is an important part of the process and you will most likely want to put the seed residues in this list. If you don't, pymol might (probably will) reprotonate your noncanonical amino acids/substrate molecules and make very poor decisions. This step will also ignore re-protonating histidine side chain protons. Please check histidine protonation state of your pdb file before proceeding.
 ```bash
-python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename res_.pdb
+python3 $HOME/git/RINRUS/bin/pymol_scripts.py -ignore_ids "300,301,302" -pdbfilename res_.pdb
 ```
 ```bash
 -resid "300,301,302" (if you do not want pymol to re-protonate fragments 300, 301, and 302)
@@ -79,7 +79,7 @@ python3 $HOME/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename
 
 Note: To properly loop pymol_script.py over all possible models, you will have to write a bash or python script to loop. An example of a bash loop is given here:
 ```bash
-ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids "300,301,302" -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -ignore_ids "300,301,302" -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
 ```
 
 10. Run `write_input.py` for a single model to generate an input file for quantum chemistry packages. You will have to loop this with python or a shell script to iterate over all possible models. Simple DFT/xTB templates are included:
@@ -148,11 +148,11 @@ python3 ~/git/RINRUS_master/bin/rinrus_trim2_pdb.py -s A:203,A:7,C:63 -pdb 2cht_
 For -free A:7:CACB,C:63:CA in the line above, both the CA and CB carbons are free in Arg7 and in Arg63 only CB atom is free in the model.
 5. Run the pymol_script.py to add hydrogens to cap trimmed residues:
  ```bash
-python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename res_7.pdb 
+python3 ~/git/RINRUS/bin/pymol_scripts.py -ignore_ids 202 -pdbfilename res_7.pdb 
 ```
 # Note: You can write a bash script to loop over all the models. See example below
 ```bash
-ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 202 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E _atom_info |cut -c 5-6 |cut -d_ -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_${i}.pdb .;mv ../res_${i}_atom_info.dat  .;mv ../res_${i}_froz_info.dat .; python3 ~/git/RINRUS/bin/pymol_scripts.py -ignore_ids 202 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/ ; cd ..; done
 ```
 7. Run `write_input.py` for a single model to generate a template file and input file. You will have to loop this with python or a shell script to iterate over all possible models.
 ```bash
@@ -219,7 +219,7 @@ Note: Multiple seed indices can be indicated by space separation as A/202 A/202
 3. Run the next step which combine multiple step but remember to edit the necessary part
 
 ```bash
-ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:203 -ratom res_atoms_${i}.dat -pdb ../2cht_h_ac_aligned.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -resids 203 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done
+ls -lrt| grep -v slurm |awk '{print $9}'|grep -E res_atoms_|cut -c 11-12|cut -d. -f1>list; mkdir pdbs; for i in `cat list`; do mkdir model-${i}-01; cd model-${i}-01; mv ../res_atoms_${i}.dat .; python3 ~/git/RINRUS/bin/rinrus_trim2_pdb.py -s A:203 -ratom res_atoms_${i}.dat -pdb ../2cht_h_ac_aligned.pdb; python3 ~/git/RINRUS/bin/pymol_scripts.py -ignore_ids 203 -pdbfilename *.pdb; cp *_h.pdb model-${i}_h.pdb; cp model-${i}_h.pdb ../pdbs/; cp res_atoms_${i}.dat ../pdbs/${i}.dat ; cd ..; done
 ```
 Be aware that while the res_atoms_#.dat model sets generated are technically unique to each other, once RINRUS generates the full trimmed QM-models, a lot of the them will no longer be unique and will be identical to others. So there a need to check to determine which QM-models are still unique (and not redundant)
 
