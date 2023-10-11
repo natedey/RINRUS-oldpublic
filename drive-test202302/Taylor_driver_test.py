@@ -156,7 +156,7 @@ def res_atom_count(filename):
 def commands_step4(seed,pdb,model_num,path_to_RIN,logger):
     #print(pdb)
     path = os.path.expanduser(path_to_RIN+'/rinrus_trim2_pdb.py')
-    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb/,str(pdb), '-model', str(model_num)]
+    args = ['python3',path, '-s',str(seed).replace('\n',''), '-pdb',str(pdb), '-model', str(model_num)]
     result = subprocess.run(args)
     logger.info('The inputted rinrus trim path: ' + str(result.args))
     #out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
@@ -178,14 +178,13 @@ def commands_step5(freeze,model_num,path_to_RIN,logger):
         elif i == ',':
             freeze_2 += i
     #print(freeze_2)
-    arg= ['python3',path, '-resids',str(freeze_2),'-pdbfilename', name]
+    arg= ['python3',path, '-ignore_ids',str(freeze_2),'-pdbfilename', name]
     #out = subprocess.run(args,shell=True,stdout=PIPE,stderr=STDOUT,universal_newlines=True)
     out = subprocess.run(arg)
     logger.info('The inputted pymol script path: '+ str(out.args))
     #logger.info('The inputted pymol_scripts.py command: '+ str(out.args))
     #logger.info('return code= '+ str(out.returncode))
     #logger.info('Output :\n'+ out.stdout)
-    #arg= ['python3',path, '-resids', str(freeze),'-pdbfilename', name]
     #args.append('\n')
     return
 

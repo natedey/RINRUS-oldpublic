@@ -31,7 +31,7 @@ with open("log.pml", "w") as logf:
         name = os.path.splitext(pdbfilename)[0]
         outputfilename = f"{name}_h.pdb"
         logf.write(f"load {pdbfilename}\n")
-        if args.resids is not None:
+        if args.ignore_ids is not None:
             logf.write(
                 f'cmd.select("sel","{name} and not resi {args.ignore_ids} and not name NH1 and not name NH2")\n'
             )
