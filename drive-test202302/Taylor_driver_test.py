@@ -383,13 +383,13 @@ def main(file,nor):
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
                     tot.append(num)
-                    commands_step4(seed,mod_pdb,num,path_to_RIN,logger)
+                    commands_step4(seed,mod_pdb,num,path_to_RIN,RIN_program,logger)
                     commands_step5(freeze,num,path_to_RIN,logger)
                     command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
                     shutil.copy('1.inp',str(num)+'.inp')
                     shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
             else:
-                commands_step4(seed,mod_pdb,model_num,path_to_RIN,logger)
+                commands_step4(seed,mod_pdb,model_num,path_to_RIN,RIN_program,logger)
                 commands_step5(freeze,model_num,path_to_RIN,logger)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
             print("Program assumes user has already created there own res_atom.dat file")
@@ -459,7 +459,7 @@ def main(file,nor):
             print(Seed)
             
             ##### I stopped here with adding logger functionality. The next steps are to include seed and add logger functionality to the rest of commands and everything below this
-            
+            print(Seed)
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
@@ -467,15 +467,16 @@ def main(file,nor):
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
                     tot.append(num)
-                    commands_step4(seed,mod_pdb,num,path_to_RIN,logger)
+                    commands_step4(seed,mod_pdb,num,path_to_RIN,RIN_program,logger)
                     commands_step5(freeze,num,path_to_RIN,logger)
                     command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
                     shutil.copy('1.inp',str(num)+'.inp')
                     shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
             else:
-                commands_step4(seed,mod_pdb,model_num,path_to_RIN,logger)
+                commands_step4(seed,mod_pdb,model_num,path_to_RIN,RIN_program,logger)
                 commands_step5(freeze,model_num,path_to_RIN,logger)
                 command_step6(template_path,Computational_program,basis_set_library,charge,str(model_num),path_to_RIN,logger)
+            
 
         if RIN_program.lower() == 'arpeggio':
             print(Seed)
