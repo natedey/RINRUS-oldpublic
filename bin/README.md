@@ -73,8 +73,8 @@ If `-ignore_ids` is specified, those residue IDs will not have hydrogens added. 
 python3 $HOME/git/RINRUS/bin/pymol_scripts.py -ignore_ids "300,301,302" -pdbfilename res_.pdb
 ```
 ```bash
--resid "300,301,302" (if you do not want pymol to re-protonate fragments 300, 301, and 302)
--resid "300,301,302 and not name NE2" (to ignore fragments 300, 301, 302, and all NE2 atoms in the model. See [pymol boolean algebra](https://www.pymolwiki.org/index.php/Selection_Algebra) page for formatting details. 
+-ignore_ids "300,301,302" (if you do not want pymol to re-protonate fragments 300, 301, and 302)
+-ignore_ids "300,301,302 and not name NE2" (to ignore fragments 300, 301, 302, and all NE2 atoms in the model. See [pymol boolean algebra](https://www.pymolwiki.org/index.php/Selection_Algebra) page for formatting details. 
 ```
 
 Note: To properly loop pymol_script.py over all possible models, you will have to write a bash or python script to loop. An example of a bash loop is given here:
