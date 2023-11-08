@@ -55,6 +55,6 @@ Current production-level use cases are described in `bin/`.
 
 ### Contributors
 This code was conceptualized in the DeYonker group at the University of Memphis Department of Chemistry.
-Prof. Qianyi Cheng is the primary coder, and now contributes to RINRUS with her indepdenent research group.
+Prof. Qianyi Cheng is the primary coder, and now contributes to RINRUS with her independent research group.
 Additional conceptualization, documentation and code have been provided by
 Prof. Nathan DeYonker, Dr. Thomas Summers (University of Nevada-Reno), Donatus Agbaglo, Tejas Suhagia, Dr. Taylor Santaloci, Prof. Jose Fernando Ruggiero Bachega, (Universidade Federal de Ciências da Saúde de Porto Alegre), and Dr. Eric Berquist (Q-Chem, Inc.)
