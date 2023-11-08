@@ -52,3 +52,9 @@ Current production-level use cases are described in `bin/`.
 ## GENERATE ALL THE THINGS!!! Combinatorial model building from arpeggio or probe
 ## Usage example 5a - Combinatorial model building from arpeggio
 ## Usage example 5b - Combinatorial model building from probe
+
+#Contributors
+This code was conceptualized in the DeYonker group at the University of Memphis Department of Chemistry.
+Prof. Qianyi Cheng is the primary coder, and now contributes to RINRUS with her indepdenent research group.
+Additional conceptualization, documentation and code have been provided by
+Prof. Nathan DeYonker, Dr. Thomas Summers (University of Nevada-Reno), Donatus Agbaglo, Tejas Suhagia, Dr. Taylor Santaloci, Prof. Jose Fernando Ruggiero Bachega, (Universidade Federal de Ciências da Saúde de Porto Alegre), and Dr. Eric Berquist (Q-Chem, Inc.)
