@@ -53,7 +53,7 @@ Current production-level use cases are described in `bin/`.
 ## Usage example 5a - Combinatorial model building from arpeggio
 ## Usage example 5b - Combinatorial model building from probe
 
-#Contributors
+### Contributors
 This code was conceptualized in the DeYonker group at the University of Memphis Department of Chemistry.
 Prof. Qianyi Cheng is the primary coder, and now contributes to RINRUS with her indepdenent research group.
 Additional conceptualization, documentation and code have been provided by
