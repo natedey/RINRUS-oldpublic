@@ -32,12 +32,20 @@ For certain scripts (optional),
 - [arpeggio](http://biosig.unimelb.edu.au/arpeggioweb)
 - obabel version = openbabel/2.4.1
 
-
 Currently, a precompiled copy of each is present in `bin/`.
 
 which require
 - CMake >= 3.10
 - Any C/C++ compiler suite with C++11 support
+
+PDB HET groups (some ligands and noncanonical amino acids) can be protonated by reduce. 
+The connectivity table file is included with RINRIS: bin/reduce_wwPDB_het_dict.txt
+You must set a shell environment variable to allow reduce to use the reduce_wwPDB_het_dict file, 
+as the default location is /local:
+setenv REDUCE_HET_DICT /home/$USER/git/RINRUS/bin/reduce_wwPDB_het_dict.txt 
+or
+export REDUCE_HET_DICT=/home/$USER/git/RINRUS/bin/reduce_wwPDB_het_dict.txt
+Further preproccesing of ligands likely required!
 
 Current production-level use cases are described in `bin/`.
 
