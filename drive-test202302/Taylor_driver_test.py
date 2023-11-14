@@ -322,11 +322,14 @@ def main(file,nor):
                     print(option)
                     print("try again")
                     x = False
-            print(Seed)
-            
             ##### I stopped here with adding logger functionality. The next steps are to include seed and add logger functionality to the rest of commands and everything below this
-            print(Seed)
+            seed_name = ''
+            for i in Seed:
+                seed_name+=i + ','
+            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
                 tot = []
@@ -345,12 +348,13 @@ def main(file,nor):
             
 
         if RIN_program.lower() == 'arpeggio':
-            print(Seed)
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print(seed_name[0:-1])
+            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            logger.info('The user froze: '+  freeze)
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
             if model_num=='all':
@@ -376,7 +380,13 @@ def main(file,nor):
             print('Other options are listed below')
             print(option)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            seed_name = ''
+            for i in Seed:
+                seed_name+=i + ','
+            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count()
                 tot = []
@@ -456,11 +466,13 @@ def main(file,nor):
                     print(option)
                     print("try again")
                     x = False
-            print(Seed)
-            
-            ##### I stopped here with adding logger functionality. The next steps are to include seed and add logger functionality to the rest of commands and everything below this
-            print(Seed)
+            seed_name = ''
+            for i in Seed:
+                seed_name+=i + ','
+            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
                 tot = []
@@ -479,12 +491,13 @@ def main(file,nor):
             
 
         if RIN_program.lower() == 'arpeggio':
-            print(Seed)
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print(seed_name[0:-1])
+            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            logger.info('The user froze: '+  freeze)
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
             if model_num=='all':
@@ -510,20 +523,26 @@ def main(file,nor):
             print('Other options are listed below')
             print(option)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
+            seed_name = ''
+            for i in Seed:
+                seed_name+=i + ','
+            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count()
                 tot = []
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
                     tot.append(num)
-                    commands_step4(seed,mod_pdb,num,path_to_RIN,logger)
+                    commands_step4(seed,pdb,num,path_to_RIN,RIN_program,logger)
                     commands_step5(freeze,num,path_to_RIN,logger)
                     command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
                     shutil.copy('1.inp',str(num)+'.inp')
                     shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
             else:
-                commands_step4(seed,mod_pdb,model_num,path_to_RIN,logger)
+                commands_step4(seed,pdb,model_num,path_to_RIN,RIN_program,logger)
                 commands_step5(freeze,model_num,path_to_RIN,logger)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
             print("Program assumes user has already created there own res_atom.dat file")
