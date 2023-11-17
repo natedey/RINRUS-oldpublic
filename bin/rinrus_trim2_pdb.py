@@ -89,6 +89,11 @@ def trim_pdb_models(sm,res_atom,res_info,pdb_res_name,pdb_res_atom,res_part_list
                 res_atom[key].append('CA')
             else:
                 res_info[key] = ['CA']
+                ##### Taylor added the append statements below the GLY methyl problem and really any residue that had just CA in the res_atom file ######
+                res_atom[key].append('N')
+                res_atom[key].append('O')
+                res_atom[key].append('C')
+                ###########################
                 res_atom[key] = check_mc(pdb_res_name[key],res_atom[key])
     #print(res_part_list['C',57],'Hey')
     #for cha in res_part_list.keys():

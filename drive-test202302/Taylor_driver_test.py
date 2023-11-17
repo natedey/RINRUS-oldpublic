@@ -388,7 +388,6 @@ def main(file,nor):
             freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             if model_num=='all':
-                num_lines = res_atom_count()
                 tot = []
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
