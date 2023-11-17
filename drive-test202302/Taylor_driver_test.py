@@ -68,8 +68,8 @@ def driver_file_reader(file,logger):
     logger.info('Substrate Charge: ' + str(charge))
     logger.info('Multiplicity: ' + str(multi))
     logger.info('Computational Program: ' + str(Computational_program))
-    logger.info('Path too the input template file: ' + str(template_path))
-    logger.info('Path too the basis set library: ' + str(basis_set_library))
+    logger.info('Path to the input template file: ' + str(template_path))
+    logger.info('Path to the basis set library: ' + str(basis_set_library))
     logger.info('Seed: ' + str(seed))
     logger.info('Model number selection: ' + str(model_num))
     logger.info('Path to the RINRUS scripts bin directory: ' + str(path_to_RIN))
@@ -326,9 +326,9 @@ def main(file,nor):
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
@@ -351,9 +351,9 @@ def main(file,nor):
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
@@ -383,9 +383,9 @@ def main(file,nor):
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 tot = []
@@ -404,15 +404,15 @@ def main(file,nor):
             print("Program assumes user has already created there own res_atom.dat file")
             
         if RIN_program.lower() == 'distance':
-            calc_type = input("Do you want distance based calc to be average or center of mass of the seed? (avg or mass): ")
+            calc_type = input("Do you want distance based calc to be average Cartesian coordinates or center of mass of the seed? (avg or mass): ")
             logger.info('User inputted calc_type '+ str(calc_type))
-            hydro = input("Do you want (hydro or nohydro) ")
+            hydro = input("Do you want to include protons in the distance calc? (yes=hydro, no=nohydro) ")
             logger.info('User inputted whether nohydro or hydro '+ str(hydro))
             cut = input("What is the cutoff distance in angstroms? ")
             logger.info('User inputted cut off distance '+ str(cut))
             distance(calc_type,hydro,pdb,seed,cut,logger,path_to_RIN)
-            print('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
-            logger.info('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
+            print('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
+            logger.info('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
     if nor == 'True':
         mod_pdb=pdb
         if RIN_program.lower()== 'probe':
@@ -468,9 +468,9 @@ def main(file,nor):
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count('res_atoms.dat')
@@ -493,9 +493,9 @@ def main(file,nor):
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             arpreggio(pdb,seed,path_to_RIN,logger)
             model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
@@ -525,9 +525,9 @@ def main(file,nor):
             seed_name = ''
             for i in Seed:
                 seed_name+=i + ','
-            print('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not too protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protinate? (Typically, this is the seed) ")
+            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
+            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             if model_num=='all':
                 num_lines = res_atom_count()
@@ -546,15 +546,15 @@ def main(file,nor):
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
             print("Program assumes user has already created there own res_atom.dat file")
         if RIN_program.lower() == 'distance':
-            calc_type = input("Do you want distance based calc to be average or center of mass of the seed? (avg or mass): ")
+            calc_type = input("Do you want distance based calc to be average Cartesian coordinates or center of mass of the seed? (avg or mass): ")
             logger.info('User inputted calc_type '+ str(calc_type))
-            hydro = input("Do you want (hydro or nohydro) ")
+            hydro = input("Do you want to include protons in the distance calc? (yes=hydro, no=nohydro) ")
             logger.info('User inputted whether nohydro or hydro '+ str(hydro))
             cut = input("What is the cutoff distance in angstroms? ")
             logger.info('User inputted cut off distance '+ str(cut))
             distance(calc_type,hydro,pdb,seed,cut,logger,path_to_RIN)
-            print('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
-            logger.info('For cluster model creation, change create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
+            print('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
+            logger.info('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
         
         
          
