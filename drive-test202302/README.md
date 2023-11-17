@@ -1,3 +1,9 @@
+
+
+
 ```bash
-$HOME/git/RINRUS/bin/reduce -NOFLIP 3bwm.pdb > 3bwm_h.pdb 
+$HOME/git/RINRUS/bin/Taylor_driver_test.py -i driver_input -nor False 
 ``` 
+### Driver Flag options
+- i <filename>
+- nor <boolean>
