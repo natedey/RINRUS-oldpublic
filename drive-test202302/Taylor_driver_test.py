@@ -267,152 +267,9 @@ def main(file,nor):
     RIN_program = RIN_program.lower()
     amountofseed = len(Seed)
     print(amountofseed)
-    #pdb = input('What is pdb name? ')
-    #seed = input('What is the seeds name? ')
     mod_pdb = pdb
     if nor == 'False':
         mod_pdb = commands_step1(pdb,logger,path_to_RIN)
-        if RIN_program.lower()== 'probe':
-            probe = commands_step2(mod_pdb,logger,path_to_RIN)
-            commands_step3(probe,seed,logger,path_to_RIN)
-            num_lines = res_atom_count('res_atoms.dat')
-            logger.info('The Maximum amount of lines in res_atom.dat file is ' + str(num_lines))
-            option = list(range(amountofseed+1,num_lines+1))
-            option.append('all')
-            logger.info('The options for building models ' + str(option))
-            print('Insert '+ str(num_lines)+ ' for the largest model')
-            print('Other options are listed below')
-            print(option)
-            #model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
-            #logger.info('The user selected the model option: '+ str(model_num))
-            x = False
-            a = model_num.strip().isnumeric()
-            print(model_num)
-            print(a)
-            if a == True:
-                if int(model_num) in option:
-                        logger.info('The user selected the model option: '+ str(model_num))
-                        x = True
-                else:
-                    print("The user did not input a correct model mumber in driver_input file")
-                    logger.info("The user did not input a correct model mumber in driver_input file")
-            #model_num = ''
-            while x != True:
-                model_num = input('What models number would you like? (type "all" if you want all of the models ) ')
-                a = model_num.isnumeric()
-                if a==True:
-                        model_num = int(model_num)
-                        if model_num in option:
-                            model_num = str(model_num)
-                            logger.info('The user selected the model option: '+ str(model_num))
-                            x = True
-                        else:
-                            logger.error('User did not select a valid option. User selection was: '+ str(model_num))
-                            logger.info('The options are '+ str(option))
-                            print(option)
-                            print("try again")
-                            x =  False
-                elif model_num.lower()== 'all':
-                    logger.info('The user selected the model option: '+ str(model_num))
-                    x = True
-                else:
-                    logger.error('User did not select a valid option. User selection was: '+ str(model_num))
-                    print('4')
-                    logger.info('The options are '+ str(option))
-                    print(option)
-                    print("try again")
-                    x = False
-            ##### I stopped here with adding logger functionality. The next steps are to include seed and add logger functionality to the rest of commands and everything below this
-            seed_name = ''
-            for i in Seed:
-                seed_name+=i + ','
-            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
-            logger.info('The user froze: '+  freeze)
-            if model_num=='all':
-                num_lines = res_atom_count('res_atoms.dat')
-                tot = []
-                for num in range(amountofseed+1,num_lines+1):
-                    print(num)
-                    tot.append(num)
-                    commands_step4(seed,mod_pdb,num,path_to_RIN,RIN_program,logger)
-                    commands_step5(freeze,num,path_to_RIN,logger)
-                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
-                    shutil.copy('1.inp',str(num)+'.inp')
-                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
-            else:
-                commands_step4(seed,mod_pdb,model_num,path_to_RIN,RIN_program,logger)
-                commands_step5(freeze,model_num,path_to_RIN,logger)
-                command_step6(template_path,Computational_program,basis_set_library,charge,str(model_num),path_to_RIN,logger)
-            
-
-        if RIN_program.lower() == 'arpeggio':
-            seed_name = ''
-            for i in Seed:
-                seed_name+=i + ','
-            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
-            logger.info('The user froze: '+  freeze)
-            arpreggio(pdb,seed,path_to_RIN,logger)
-            model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
-            if model_num=='all':
-                num_lines = res_atom_count('contact_counts.dat')
-                tot = []
-                for num in range(amountofseed+1,num_lines+1):
-                    print(num)
-                    tot.append(num)
-                    commands_step4(seed,pdb,num,path_to_RIN,RIN_program,logger)
-                    commands_step5(freeze,num,path_to_RIN,logger)
-                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
-                    shutil.copy('1.inp',str(num)+'.inp')
-                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
-            else:
-                commands_step4(seed,pdb,model_num,path_to_RIN,RIN_program,logger)
-                commands_step5(freeze,model_num,path_to_RIN,logger)
-                command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
-        if RIN_program.lower() == 'manual':
-            num_lines = res_atom_count('res_atoms.dat')
-            option = list(range(amountofseed+1,num_lines+1))
-            option.append('all')
-            print('Insert '+ str(num_lines)+ ' for the largest model')
-            print('Other options are listed below')
-            print(option)
-            model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
-            seed_name = ''
-            for i in Seed:
-                seed_name+=i + ','
-            print('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
-            logger.info('copy and paste to tell pymol not to protonate the seed: '+  seed_name[0:-1])
-            freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
-            logger.info('The user froze: '+  freeze)
-            if model_num=='all':
-                tot = []
-                for num in range(amountofseed+1,num_lines+1):
-                    print(num)
-                    tot.append(num)
-                    commands_step4(seed,mod_pdb,num,path_to_RIN,RIN_program,logger)
-                    commands_step5(freeze,num,path_to_RIN,logger)
-                    command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
-                    shutil.copy('1.inp',str(num)+'.inp')
-                    shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
-            else:
-                commands_step4(seed,mod_pdb,model_num,path_to_RIN,RIN_program,logger)
-                commands_step5(freeze,model_num,path_to_RIN,logger)
-                command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
-            print("Program assumes user has already created there own res_atom.dat file")
-            
-        if RIN_program.lower() == 'distance':
-            calc_type = input("Do you want distance based calc to be average Cartesian coordinates or center of mass of the seed? (avg or mass): ")
-            logger.info('User inputted calc_type '+ str(calc_type))
-            hydro = input("Do you want to include protons in the distance calc? (yes=hydro, no=nohydro) ")
-            logger.info('User inputted whether nohydro or hydro '+ str(hydro))
-            cut = input("What is the cutoff distance in angstroms? ")
-            logger.info('User inputted cut off distance '+ str(cut))
-            distance(calc_type,hydro,pdb,seed,cut,logger,path_to_RIN)
-            print('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
-            logger.info('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
     if nor == 'True':
         mod_pdb=pdb
         if RIN_program.lower()== 'probe':
@@ -426,8 +283,6 @@ def main(file,nor):
             print('Insert '+ str(num_lines)+ ' for the largest model')
             print('Other options are listed below')
             print(option)
-            #model_num = input('What model number would you like? (type "all" if you want all of the models ) ')
-            #logger.info('The user selected the model option: '+ str(model_num))
             x = False
             a = model_num.strip().isnumeric()
             print(model_num)
@@ -439,7 +294,6 @@ def main(file,nor):
                 else:
                     print("The user did not input a correct model mumber in driver_input file")
                     logger.info("The user did not input a correct model mumber in driver_input file")
-            #model_num = ''
             while x != True:
                 model_num = input('What models number would you like? (type "all" if you want all of the models ) ')
                 a = model_num.isnumeric()
@@ -530,21 +384,21 @@ def main(file,nor):
             freeze = input("What residues do you not want PyMol to protonate? (Typically, this is the seed) ")
             logger.info('The user froze: '+  freeze)
             if model_num=='all':
-                num_lines = res_atom_count()
                 tot = []
                 for num in range(amountofseed+1,num_lines+1):
                     print(num)
                     tot.append(num)
-                    commands_step4(seed,pdb,num,path_to_RIN,RIN_program,logger)
+                    commands_step4(seed,mod_pdb,num,path_to_RIN,RIN_program,logger)
                     commands_step5(freeze,num,path_to_RIN,logger)
                     command_step6(template_path,Computational_program,basis_set_library,charge,str(num),path_to_RIN,logger)
                     shutil.copy('1.inp',str(num)+'.inp')
                     shutil.copy('template.pdb','template_'+str(num)+'_.pdb')
             else:
-                commands_step4(seed,pdb,model_num,path_to_RIN,RIN_program,logger)
+                commands_step4(seed,mod_pdb,model_num,path_to_RIN,RIN_program,logger)
                 commands_step5(freeze,model_num,path_to_RIN,logger)
                 command_step6(template_path,Computational_program,basis_set_library,charge,model_num,path_to_RIN,logger)
             print("Program assumes user has already created there own res_atom.dat file")
+            
         if RIN_program.lower() == 'distance':
             calc_type = input("Do you want distance based calc to be average Cartesian coordinates or center of mass of the seed? (avg or mass): ")
             logger.info('User inputted calc_type '+ str(calc_type))
@@ -555,7 +409,6 @@ def main(file,nor):
             distance(calc_type,hydro,pdb,seed,cut,logger,path_to_RIN)
             print('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
             logger.info('For cluster model creation, create your own res_atoms and change RIN program to manual. This program does not run center of mass or avg on center_atoms')
-        
         
          
     return
