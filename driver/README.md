@@ -2,7 +2,7 @@
 
 
 ```bash
-$HOME/git/RINRUS/drive-test202302/Taylor_driver_test.py -i driver_input -nor False 
+$HOME/git/RINRUS/driver/RINRUS_driver.py -i driver_input -nor False 
 ``` 
 ### Driver Flag options
 - -i <filename>:
@@ -12,7 +12,7 @@ $HOME/git/RINRUS/drive-test202302/Taylor_driver_test.py -i driver_input -nor Fal
   - **_True_** reduce is not used.
 
 ### Log file
-The driver log file is names **_newfile.log_**
+The driver log file is named **_newfile.log_**
 
 ## Input File Format
 - PDB filename
@@ -38,7 +38,7 @@ $HOME/git/RINRUS/bin/reduce -NOFLIP -Quiet PDB.pdb > PDB_h.pdb
 ```bash
 $HOME/git/RINRUS/bin/probe -unformated -MC -self "all" -Quiet ' PDB_h > PDB.probe
 ```
-Then runs the rinrus trim script, pymol script and write inputs script in the manual command section
+Then runs the rinrus trim script, pymol script and write_inputs script in the manual command section
 ### Arpeggio Command
 ```bash
 $HOME/git/RINRUS/bin/arpeggio/arpeggio.py PDB.pdb
@@ -51,14 +51,13 @@ $HOME/git/RINRUS/bin/arpeggio2rins.py -f PDB.contacts -s seed_number
 ```bash
 $HOME/git/RINRUS/bin/rinrus_trim2_pdb.py -s seed_number -pdb PDB.pdb -c contact_counts.dat -model NNN
 ```
-Then runs the pymol script and write inputs script in the manual command section
+Then runs the pymol script and write_inputs script in the manual command section
 
 ### Distance Command
 ```bash
 $HOME/git/RINRUS/bin/pdb_dist_rank.py -pdb PDB.pdb -s seed -cut distance -type avg/mass
 ```
--Once res_atom file made switch program option too manual
-
+-Once res_atom file made switch program option to manual
 
 ### Manual Command
 _Rinrus Trim script_
@@ -73,9 +72,3 @@ _Write Inputs script_
 ```bash
 $HOME/git/RINRUS/bin/write_input.py -intmp path_to_template -format computational_program -basisinfo path_to_basis_info -c charge -noh res_#.pdb -adh res_#_h.pdb
 ```
-
-
-
-
-
-
