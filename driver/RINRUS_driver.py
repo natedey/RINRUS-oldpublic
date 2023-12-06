@@ -252,7 +252,7 @@ def arpreggio(pdb,seed,path_to_RIN,logger,):
     return
 
 def main(file,nor):
-    logging.basicConfig(filename="newfile.log",
+    logging.basicConfig(filename="rinrus_log.out",
                     format='%(asctime)s %(message)s',
                     filemode='w')
     logger = logging.getLogger()
