@@ -12,7 +12,7 @@ $HOME/git/RINRUS/driver/RINRUS_driver.py -i driver_input -nor False
   - **_True_** reduce is not used.
 
 ### Log file
-The driver log file is named **_newfile.log_**
+The driver log file is named **_rinrus_log.out_**
 
 ## Input File Format
 - PDB filename
