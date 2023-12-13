@@ -4,6 +4,12 @@ Residue Interaction Network-based ResidUe Selector (RINRUS) is a QM-cluster mode
 - select important residues for chemical reactions, and
 - generate trimmed PDB files with the corresponding quantum chemical inputs.
 
+## Updates
+12/13/2023 Development version merged into public version
+- Prototype driver code in /driver
+- Improved distance-based model building
+- Arpeggio-based workflows added
+  
 ## Installation
 
 Clone this repository, then add the library code under `lib3` to your `PYTHONPATH`. For example, in `~/git`:
